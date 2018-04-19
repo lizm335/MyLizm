@@ -1,0 +1,101 @@
+<div class="padding10" data-id="english-degree-signup">
+  <div class="alert-panel padding15 font_gray">
+    <table width="100%">
+      <tbody>
+        <tr>
+          <td align="center" valign="top" width="110">
+            <i class="alert-icon alert-icon-0x0"></i>
+          </td>
+          <td>
+            <ul>
+              <li><b>报名说明:</b></li>
+              <li>
+                1、报考CET4的考生须为16春至17秋季报读的在读本科生（学号为13位）。
+              </li>
+              <li>2、报考CET6的考生须为16春至17秋季报读的在读本科生（学号为13位）且持有CET4合格证或者取得425分（含425分）以上的CET4成绩证书。</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="progress-tp">
+    <ol>
+      <li style="left:0%;">学员报名</li>
+      <li style="left:33.33%;">缴考试费</li>
+      <li style="left:66.67%;">上传照片</li>
+      <li style="left:100%;">报名成功</li>
+    </ol>
+  </div>
+  <div class="text-center">
+    <button type="button" class="btn btn-md btn-green border-radius min-width-120 disabled" data-role="signup" data-title="立即报名" disabled>立即报名</button>
+  </div>
+</div>
+
+<style type="text/css">
+  .progress-tp{
+    padding: 50px;
+  }
+  .progress-tp ol{
+    margin: 54px 60px;
+    height: 0;
+    border-top: 1px dashed #ccc;
+    position: relative;
+  }
+  .progress-tp li{
+    font-size: 25px;
+    color: #fff;
+    width: 116px;
+    height: 106px;
+    background-color: #999999;
+    color: #fff;
+    line-height: 108px;
+    text-align: center;
+    border: #666 1px solid;
+    position: absolute;
+    top: 50%;
+    margin-top: -54px;
+    margin-left: -58px;
+    border-radius: 100%;
+  }
+</style>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+  var $container=$('[data-id="english-degree-signup"]');
+
+  /*
+    var studentBaseInfo=$('body').data('studentBaseInfo');
+    var def=$.Deferred();
+    var $sign=$('[data-role="signup"]',$container);
+
+    if(studentBaseInfo){
+      def.resolve(studentBaseInfo);
+    }
+    else{
+      ajaxProcess({
+          url:'/pcenter/gjtUser/edit',
+          type:'GET',
+          success:function(renderData){
+            def.resolve(renderData.data);
+          },
+          fail:function(errorMessage){
+            def.reject();
+          }
+      });
+    }
+
+    def
+    .done(function(studentBaseInfo){
+      $sign.text('立即报名').removeClass('disabled').prop('disabled', false)
+      .on('click', function(event) {
+        window.open('http://eomp.oucnet.cn/eejy/xuewei/46.html?studentId='+studentBaseInfo['studentId']);
+      });
+    })
+    .fail(function(){
+      $sign.text('数据加载失败');
+    });
+  */
+});
+</script>

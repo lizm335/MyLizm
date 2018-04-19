@@ -1,0 +1,231 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+</head>
+<body class="body-pop">
+<div class="u-panel overlay-wrapper">
+    <form class="theform">
+      <div class="u-panel-head">
+        <span data-role="title"></span>收货地址
+        <span class="pop-close" data-role="pop-close"></span>
+      </div>
+      <div class="u-panel-body scroll-box">
+        <div class="padding_t15 padding_1l5 padding_r15" data-role="box">
+            
+        </div>
+      </div>
+      <div class="u-panel-footer">
+        <div class="in" align="right">
+          <button class="btn btn-md btn-gray margin_r10" data-role="pop-close" style="width:100px;">取消</button>
+          <button type="submit" class="btn btn-md btn-orange" data-role="sure" style="width:100px;">保存</button>
+        </div>
+      </div>
+    </form>
+    <div class="overlay bg-center" style="display:none;"></div>
+</div>
+
+<!--模板-->
+<script type="text/template" id="temp">
+  <table class="table-gray-th">
+      <tbody>
+        <tr>
+          <th width="25%" class="text-right">收货人：</th>
+          <td>
+            <div class="valid-control">
+              <input placeholder="收件人" class="form-control form-control-block" type="text" datatype="*" nullmsg="请填写收件人" data-id="receiver" name="receiver" {{receiver?('value='+receiver):''}}>
+
+              {{if addressId}}
+                <input type="hidden" name="addressId" value="{{addressId}}">
+              {{/if}}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th class="text-right">手机电话：</th>
+          <td>
+            <div class="valid-control">
+              <input placeholder="手机电话" class="form-control form-control-block" type="text" datatype="m" nullmsg="请填写手机电话" errormsg="手机电话格式不对" data-id="mobile" name="mobile" {{mobile?('value='+mobile):''}}>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th class="text-right">所在地区：</th>
+          <td>
+            <div class="col-offset-5 clearfix" data-role="city-select">
+              <div class="col-custom-3 valid-control">
+                <select class="form-control form-control-block prov" data-first-title="选择省份" datatype="*" nullmsg="请选择省份" name="provinceCode" {{provinceCode?('data-value='+provinceCode):''}}>
+                </select>
+              </div>
+              <div class="col-custom-3 valid-control">
+                <select class="form-control form-control-block city" data-first-title="选择城市" datatype="*" nullmsg="请选择城市" name="cityCode" {{cityCode?('data-value='+cityCode):''}}>
+                </select>
+              </div>
+              <div class="col-custom-3 valid-control">
+                <select class="form-control form-control-block dist" data-first-title="选择地区" datatype="*" nullmsg="请选择地区" name="areaCode" {{areaCode?('data-value='+areaCode):''}}>
+              </select>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th class="text-right">详细地址：</th>
+          <td>
+            <div class="valid-control">
+              <input placeholder="详细地址（无须重复填写省/市/区）" class="form-control form-control-block" type="text" datatype="*" nullmsg="请填写详细地址" data-id="address" name="address" {{address?('value='+address):''}}>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+  </table>
+</script>
+
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+  var operType=frameElement.data.operType;
+  var $wrapper=$('[data-role="box"]');
+
+  if(!operType) return;//为空是不执行以下代码
+
+  $('[data-role="title"]').html( operType=='add'?'添加':'编辑' );
+
+  $wrapper.html( template('temp',frameElement.data.content) )
+
+
+
+  //“x”关闭窗口
+  $('[data-role="pop-close"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  //省市区三级联动
+  require(['cityselect'],function(){
+    ajaxProcess({
+      url:'/pcenter/common/findAllArea',
+      type:'GET',
+      success:function(data){
+        if(data.msgCode==200 && data.data && data.data.length>0){
+          $('[data-role="city-select"]').cxSelect({
+              selects: ['prov', 'city', 'dist'],
+              jsonName: 'name',
+              jsonValue: 'code',
+              jsonSub: 'sub',
+              emptyStyle:"none",
+              data:data.data
+          });
+        }
+      }
+    });
+  });
+
+  //表单验证
+  require(['Validform'],function(){
+    JPlaceHolder.init();
+
+    $('.valid-control').append([
+      '<div class="tooltip yellow_tip t_arrow tooltip-valid">',
+        '<div class="tooltip-in"></div>',
+        '<span class="t_arrow"><i class="arrow"></i><i class="arrow arrow_inner"></i></span>',
+      '</div>'
+    ].join(''));
+
+    $('[data-role="city-select"] select').change(function(event) {
+      $('[data-role="city-select"] select').each(function(index, el) {
+          var g=$(this).closest('.valid-control').siblings();
+          g.each(function(index, el) {
+            $(this).find('.form-control').removeClass('Validform_error');
+            $(this).find('.tooltip').hide().children('.tooltip-in').empty();
+          });
+      });
+    });
+
+    $.Tipmsg.r='';
+    $(".theform").Validform({
+      //showAllError:true,
+      ajaxPost:true,
+      //ignoreHidden:true,
+      tiptype:function(msg,o,cssctl){
+        //msg：提示信息;
+          //o:{obj:*,type:*,curform:*},
+          //obj指向的是当前验证的表单元素（或表单对象，验证全部验证通过，提交表单时o.obj为该表单对象），
+          //type指示提示的状态，值为1、2、3、4， 1：正在检测/提交数据，2：通过验证，3：验证失败，4：提示ignore状态, 
+          //curform为当前form对象;
+        if(!o.obj.is("form")){
+          var objtip=o.obj.closest('.valid-control').find(".tooltip");
+          switch(o.type){
+              case 3:
+                objtip.children('.tooltip-in').text(msg).parent().show();
+                break;
+              default:
+                objtip.children('.tooltip-in').text('').parent().hide();
+                break;
+            }
+        }
+      },
+      beforeSubmit:function(curform){
+        $('.overlay').show();
+
+        var url=(operType=='add'?'/pcenter/textbook/addDeliveryAddress':'/pcenter/textbook/updateDeliveryAddress');
+
+        ajaxProcess({
+          url:url,
+          type:'POST',
+          data:$('.theform').serialize(),
+          success:function(data){
+            if(data.msgCode==200){
+              $('.overlay').hide();
+
+              $.when($.resultDialog(1,(operType=='add'?'添加':'编辑')+'成功'))
+              .done(function(){
+                  var $ifr=top.$('[data-pop-id="address-manage"] iframe');
+                  //$ifr.attr('src','pop-address-manage.html');
+                  $ifr.get(0).contentWindow.location.reload();
+                  parent.$.closeDialog(frameElement.api);
+              });
+            }
+            else{
+              $.resultDialog(0,data.message);
+            }
+          }
+        });
+        
+
+        return false;
+      },
+      callback:function(data){
+        //data 后台返回的数据对象结果
+        
+      }
+    });
+  });
+
+  if($(frameElement).height()>0){
+    $('.scroll-box').height($(frameElement).height()-90);
+  }
+
+  $('html,body').height('100%');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,390 @@
+<div class="padding10" data-role="inf-box">
+  <div class="text-center"><i class="loading"></i></div>
+</div>
+<!--模板-->
+<script type="text/template" id="xujgl-temp">
+  <!--0:注册中 2:在籍 3:待注册 8:毕业-->
+  <!--只有以上状态才会显示-->
+  {{if info.xjzt && (info.xjzt==='0' || info.xjzt==='2' || info.xjzt==='3' || info.xjzt==='8')}}
+    <table class="table-gray-th text-center margin_b25">
+      <tr>
+        <td width="30%">
+          <div class="{{(info.xjzt==2 || info.xjzt==8)?'text-green':'text-orange'}} font30">{{info.xjzt | DictionaryConvert:dicStudentNumberStatusList}}</div>
+          <div>学籍状态</div>
+        </td>
+        <td>
+          <div class="font_gray_per60 text-left">
+            {{if info.xjzt==='0'}}
+              你的学籍正在注册中 <br>
+              注册成功后可在学信网（<a href="http://www.chsi.com.cn/" target="_blank" class="text-blue">http://www.chsi.com.cn/</a>）查询
+            {{else if info.xjzt==2 || info.xjzt==8}}
+              你的学籍已注册 <br>
+              可在学信网（<a href="http://www.chsi.com.cn/" target="_blank" class="text-blue">http://www.chsi.com.cn/</a>）查询
+            {{else if info.xjzt==3}}
+              你的学籍待注册 <br>
+              注册成功后可在学信网（<a href="http://www.chsi.com.cn/" target="_blank" class="text-blue">http://www.chsi.com.cn/</a>）查询
+            {{/if}}
+          </div>
+        </td>
+      </tr>
+    </table>
+  {{/if}}
+  <!--学籍管理 内容-->
+  <h3 class="text-no-bold sub-title f18 margin_b10 clearfix">
+    基础信息
+  </h3>
+  <table class="table-gray-th position-relative">
+      <tbody>
+            <tr>
+              <th width="15%" class="text-right">姓名</th>
+              <td width="35%">{{info.xm}}</td>
+              <th width="15%" class="text-right">学号</th>
+              <td width="35%">{{info.xh}}</td>
+            </tr>
+            <tr>
+              <th class="text-right">性别</th>
+              <td>{{info.xbmName}}</td>
+              <th class="text-right">证件类型</th>
+              <td>{{info.certificatetype}}</td>
+            </tr>
+            <tr>
+              <th class="text-right">证件号</th>
+              <td>{{info.sfzh}}</td>
+              <th class="text-right">籍贯</th>
+              <td>
+                {{(!info.nativeplace)?'--':info.nativeplace}}
+              </td>
+            </tr>
+            <tr>
+              <th class="text-right">民族</th>
+              <td>
+                {{info.mzm | DictionaryConvert:dicNationList}}
+              </td>
+              <th class="text-right">政治面貌</th>
+              <td>
+                {{info.politicsstatus | DictionaryConvert:dicPoliticsstatuList}}
+              </td>
+            </tr>
+            <tr>
+              <th class="text-right">婚姻状态</th>
+              <td>
+                {{info.hyzkm | DictionaryConvert:dicMaritalList}}
+              </td>
+              <th class="text-right">户口性质</th>
+              <td>
+                {{info.hkxzm | DictionaryConvert:dicAccountsNatureList}}
+              </td>
+            </tr>
+            <tr>
+              <th class="text-right">出生日期</th>
+              <td>
+                {{!info.csrq?'--':info.csrq}}
+              </td>
+              <th class="text-right">在职状况</th>
+              <td>
+                {{info.isonjob | DictionaryConvert:dicOccupationList}}
+              </td>
+            </tr>
+            <tr>
+              <th class="text-right">户籍所在地</th>
+              <td>
+                {{!info.hkszd?'--':info.hkszd}}
+              </td>
+              <th class="text-right"></th>
+              <td></td>
+            </tr>
+      </tbody>
+  </table>
+
+  <h3 class="text-no-bold sub-title f18 margin-t30 margin_b10 clearfix">
+    通讯信息
+  </h3>
+  <table class="table-gray-th position-relative">
+      <tbody>
+          <tr>
+              <th width="15%" class="text-right">手机号码</th>
+              <td width="35%">
+                {{!info.sjh?'--':info.sjh}}
+              </td>
+              <th width="15%" class="text-right">固定电话</th>
+              <td width="35%">
+                {{!info.lxdh?'--':info.lxdh}}
+              </td>
+            </tr>
+            <tr>
+              <th class="text-right">邮箱</th>
+              <td>
+                {{!info.dzxx?'--':info.dzxx}}
+              </td>
+              <th class="text-right">通信地址</th>
+              <td>
+                {{!info.txdz?'--':info.txdz}}
+              </td>
+            </tr>
+            <tr>
+              <th class="text-right">邮编</th>
+              <td>
+                {{!info.yzbm?'--':info.yzbm}}
+              </td>
+              <th class="text-right">所在单位</th>
+              <td>
+                {{!info.scCo?'--':info.scCo}}
+              </td>
+            </tr>
+            <tr>
+              <th class="text-right">单位地址</th>
+              <td colspan="3">
+                {{!info.scCoAddr?'--':info.scCoAddr}}       
+              </td>
+            </tr>
+      </tbody>
+  </table>
+
+  <h3 class="text-no-bold sub-title f18 margin-t30 margin_b10 clearfix">
+    {{if info.isUndergraduateCourse==1}}
+      学籍信息
+    {{else if info.isUndergraduateCourse==0}}
+      报读信息
+    {{/if}}
+  </h3>
+  <table class="table-gray-th">
+      <tbody>
+          <tr>
+              <th width="15%" class="text-right">年级</th>
+              <td width="35%">
+                {{!info.gradeName?'--':info.gradeName}}
+              </td>
+              <th width="15%" class="text-right">专业</th>
+              <td width="35%">
+                {{!info.specialtyName?'--':info.specialtyName}}
+              </td>
+            </tr>
+            <tr>
+              <th class="text-right">层次</th>
+              <td>
+                {{!info.pyccName?'--':info.pyccName}}
+              </td>
+              <th class="text-right">学习方式</th>
+              <td>
+                {{!info.academic?'--':info.academic}}
+              </td>
+            </tr>
+            
+            <tr>
+              <th class="text-right">报读院校</th>
+              <td>
+                {{!info.xxmc?'--':info.xxmc}}
+              </td>
+              <th class="text-right">班级</th>
+              <td>
+                {{!info.bjmc?'--':info.bjmc}}
+              </td>
+            </tr>
+            {{if info.isUndergraduateCourse==1}}
+              <tr>
+                <th class="text-right">学习中心</th>
+                <td>
+                  {{!info.xxzxName?'--':info.xxzxName}}
+                </td>
+                <th class="text-right">学籍状态</th>
+                <td>
+                  {{info.xjzt | DictionaryConvert:dicStudentNumberStatusList}}
+                </td>
+              </tr>
+            {{else if info.isUndergraduateCourse==0}}
+              <tr>
+                <th class="text-right">学习中心</th>
+                <td colspan="3">
+                  {{!info.xxzxName?'--':info.xxzxName}}
+                </td>
+              </tr>
+            {{/if}}
+            
+      </tbody>
+  </table>
+
+  <h3 class="text-no-bold sub-title f18 margin-t30 margin_b10 clearfix">
+    原最高学历
+  </h3>
+  {{if info.userType=='42'}}
+    <table class="table-gray-th position-relative">
+        <tbody>
+              <tr>
+                <th width="15%" class="text-right">原学历层次</th>
+                <td width="35%">
+                  {{info.exedulevel | DictionaryConvert:dicExedulevelList}}
+                </td>
+                <th width="15%" class="text-right">原来毕业学校</th>
+                <td width="35%">
+                  {{!info.exschool?'--':info.exschool}}
+                </td>
+              </tr>
+        </tbody>
+    </table>
+  {{else}}
+    {{if info.isUndergraduateCourse==1}}
+      <table class="table-gray-th position-relative">
+          <tbody>
+              <tr>
+                  <th width="15%" class="text-right">原学历层次</th>
+                  <td width="35%">
+                    {{info.exedulevel | DictionaryConvert:dicExedulevelList}}
+                  </td>
+                  <th width="15%" class="text-right">原来毕业学校</th>
+                  <td width="35%">
+                    {{!info.exschool?'--':info.exschool}}
+                  </td>
+                </tr>
+                <tr>
+                  <th class="text-right">毕业时间</th>
+                  <td>
+                    {{!info.exgraduatedtime?'--':info.exgraduatedtime}}
+                  </td>
+                  <th class="text-right">原学科</th>
+                  <td>
+                    {{info.exsubject | DictionaryConvert:dicExsubjectList}}
+                  </td>
+                </tr>
+                <tr>
+                  <th class="text-right">原学科门类</th>
+                  <td>
+                    {{!info.exsubjectkind?'--':info.exsubjectkind}}
+                  </td>
+                  <th class="text-right">原学历学习类型</th>
+                  <td>
+                    {{info.exedubaktype | DictionaryConvert:dicExedubaktypeList}}
+                  </td>
+                </tr>
+                <tr>
+                  <th class="text-right">原学历所学专业</th>
+                  <td>
+                    {{!info.exedumajor?'--':info.exedumajor}}
+                  </td>
+                  <th class="text-right">原学历毕业证书编号</th>
+                  <td>
+                    {{!info.excertificatenum?'--':info.excertificatenum}}
+                  </td>
+                </tr>
+                <tr>
+                  <th class="text-right">原学历证明材料</th>
+                  <td>
+                    {{info.excertificateprove | DictionaryConvert:dicExcertificateproveList}}
+                  </td>
+                  <th class="text-right">原学历证明材料编号</th>
+                  <td>
+                    {{!info.excertificateprovenum?'--':info.excertificateprovenum}}
+                  </td>
+                </tr>
+                <tr>
+                  <th class="text-right">原学历姓名</th>
+                  <td>
+                    {{!info.exeduname?'--':info.exeduname}}
+                  </td>
+                  <th class="text-right">原学历证件类型</th>
+                  <td>
+                    {{info.exeducertificate | DictionaryConvert:dicExeduCertificateList}}
+                  </td>
+                </tr>
+                <tr>
+                  <th class="text-right">原学历证件号码</th>
+                  <td>{{info.exedunum}}</td>
+                  <th class="text-right">是否电大毕业</th>
+                  <td>
+                    {{!info.isgraduatebytv?'--':info.isgraduatebytv}}
+                  </td>
+                </tr>
+          </tbody>
+      </table>
+    {{else if info.isUndergraduateCourse==0}}
+      <table class="table-gray-th position-relative">
+          <tbody>
+                <tr>
+                  <th width="15%" class="text-right">原学历层次</th>
+                  <td width="35%">
+                    {{info.exedulevel | DictionaryConvert:dicExedulevelList}}
+                  </td>
+                  <th width="15%" class="text-right">原来毕业学校</th>
+                  <td width="35%">
+                    {{!info.exschool?'--':info.exschool}}
+                  </td>
+                </tr>
+                <tr>
+                  <th class="text-right">毕业时间</th>
+                  <td>
+                    {{!info.exgraduatedtime?'--':info.exgraduatedtime}}
+                  </td>
+                  <th class="text-right">是否电大毕业</th>
+                  <td>
+                    {{info.isgraduatebytv | DictionaryConvert:dicIsgraduatebytvList}}
+                  </td>
+                  <!--
+                    <th class="text-right">原学科</th>
+                    <td>
+                      {{info.exsubject | DictionaryConvert:dicExsubjectList}}
+                    </td>
+                  -->
+                </tr>
+          </tbody>
+      </table>
+    {{/if}}
+  {{/if}}
+
+  <h3 class="text-no-bold sub-title f18 margin-t30 margin_b10 clearfix">
+    签名
+  </h3>
+  <table class="table-gray-th text-center">
+    <tr>
+      <td>
+        {{if info.sign}}
+          <img src="{{info.sign}}" style="max-width:100%">
+        {{else}}
+          未签名
+        {{/if}}
+      </td>
+    </tr>
+  </table>
+</script>
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+  //数据绑定
+  ;(function(){
+    var $container=$('[data-role="inf-box"]');
+    var def=$.Deferred();
+
+    if(appJSON.studentRecordInfo){
+      def.resolve(appJSON.studentRecordInfo);
+    }
+    else{
+      var xhr=$.get('/pcenter/roll/getBaseInfo')
+      .done(function(renderData){
+          appJSON.studentRecordInfo=renderData;
+          def.resolve(renderData);
+      })
+      .fail(function(XMLHttpRequest, textStatus){
+          $container.html( textStatus )
+      });
+      window['jqAjaxCollectors'].push(xhr);
+    }
+
+    def.done(function(renderData){
+      if(renderData.msgCode==200){
+        if(renderData.data){
+          var render = template.compile($("#xujgl-temp").html(),{escape:false});
+          var renderHtml = render(renderData.data);
+            $container.html(renderHtml);
+
+          //缓存学生学籍信息
+          appJSON.studentRecordInfo=renderData;
+        }
+        else{
+          $container.html('无数据');
+        }
+      }
+      else{
+          $container.html( renderData.message )
+      }
+    });
+    
+  })();
+});
+</script>

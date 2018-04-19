@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- 微信公众号配置 -->
+	<bean id="weixinConfig" class="com.gzedu.xlims.third.weixin.send.Config">
+		<property name="url" value="http://wechat.eenet.com" />
+	</bean>
+
+	<!-- 微信公众号消息发送服务 -->
+	<bean id="messageSenderService" class="com.gzedu.xlims.third.weixin.send.MessageSenderService">
+		<property name="config">
+			<bean class="com.gzedu.xlims.third.weixin.send.Config" parent="weixinConfig">
+
+			</bean>
+		</property>
+	</bean>
+</beans>

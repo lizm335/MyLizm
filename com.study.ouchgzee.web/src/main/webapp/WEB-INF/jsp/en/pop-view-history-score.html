@@ -1,0 +1,128 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+</head>
+<body class="body-pop">
+<div class="u-panel overlay-wrapper">
+	  <div class="u-panel-head">
+	    查看历史成绩
+	    <span class="pop-close" data-role="pop-close"></span>
+  	</div>
+  	<div class="u-panel-body scroll-box">
+      <div class="padding15" data-role="box">
+          <div class="text-center"><i class="loading"></i></div>
+      </div>
+  	</div>
+  	<div class="u-panel-footer">
+  		<div class="in" align="right">
+        <button class="btn btn-md btn-gray min-width-100" data-role="pop-close">关闭</button>
+  		</div>
+  	</div>
+    <div class="overlay" style="display:none;background-position:center center;"></div>
+</div>
+<!--数据模板-->
+<script type="text/template" id="temp">
+  <table width="100%" class="table-gray-th text-center" style="table-layout:auto;">
+    {{each data}}
+      <thead>
+          <tr>
+              <th colspan="4">
+                  <div class="text-left text-bold">{{$value.TERM_NAME}}</div>
+              </th>
+          </tr>
+      </thead>
+      <tbody>
+          {{each $value.HISTORY_MSG}}
+            <tr>
+              <td class="padding10">
+                <div class="margin_b5">{{$value.XCX_SCORE}}</div>
+                <div>形成性成绩({{$value.XCX_PERCENT}}%)</div>
+              </td>
+              <td class="padding10 text-nowrap">
+                <div class="margin_b5">{{$value.ZJX_SCORE}}</div>
+                <div>终结性成绩({{$value.ZJX_PERCENT}}%)</div>
+              </td>
+              <td class="padding10">
+                <div class="margin_b5">{{$value.ZCJ_SCORE}}</div>
+                <div>总成绩</div>
+              </td>
+              <td class="padding10">
+                {{if $value.STATUS==='1'}}
+                  <div class="text-red margin_b5">不通过</div>
+                {{else if $value.STATUS==='0'}}
+                  <div class="text-green margin_b5">通过</div>
+                {{/if}}
+                <div>状态</div>
+              </td>
+            </tr>
+          {{/each}}
+      </tbody>
+    {{/each}}
+  </table>
+</script>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+  //“x”关闭窗口
+  $('[data-role="pop-close"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  if($(frameElement).height()>0){
+    $('.scroll-box').height($(frameElement).height()-90);
+  }
+
+  $('html,body').height('100%');
+
+  var frmJson=frameElement.data;
+  if( frmJson ){
+    var $container=$('[data-role="box"]');
+
+    ajaxProcess({
+      url:'/pcenter/course/viewDetials',
+      type:'POST',
+      data:{teachPlanId:frmJson.teachPlanId},
+      success:function(renderData){
+        if(renderData.msgCode==200){
+          if(renderData.data && renderData.data.length>0){
+            var renderHtml = template('temp',renderData);
+            $container.html(renderHtml);
+          }
+          else{
+            $container.html(top['noDataTips']);
+          }
+        }
+        else{
+            $container.html( renderData.message )
+        }
+      },
+      fail:function(textStatus){
+        $container.html( textStatus )
+      }
+    });
+  }
+});
+</script>
+</body>
+</html>

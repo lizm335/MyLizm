@@ -1,0 +1,380 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+<style type="text/css">
+html,body{height: 100%;}
+</style>
+</head>
+<body class="body-pop overlay-wrapper">
+<div class="u-panel">
+	  <div class="u-panel-head">
+	    提示
+	    <span class="pop-close" data-role="pop-close"></span>
+  	</div>
+  	
+</div>
+
+<div class="overlay bg-center" style="z-index:10000;"></div>
+
+<script type="text/template" id="temp">
+  <div class="u-panel-body scroll-box">
+    <div style="width:85%;" class="center-block">
+      <div class="text-center" style="padding:10px 0;">
+          {{if operationType===0}}
+            <span class="font24">预约考试</span>
+          {{else if operationType===1}}
+            <i class="alert-icon alert-icon-56x0 margin_r10"></i>
+            <span class="font24 text-green vertical-middle inline-block">已预约考试</span>
+
+          {{/if}}
+      </div>
+      <table class="table-gray-th">
+        <tr>
+          <th width="25%" class="text-right">学期</th>
+          <td>{{TERM_NAME}}{{TERM_CODE}}</td>
+        </tr>
+        <tr>
+          <th class="text-right">考试科目</th>
+          <td>{{COURSE_NAME}}</td>
+        </tr>
+        <tr>
+          <th class="text-right">考试方式</th>
+          <td>{{EXAM_STYLE}}</td>
+        </tr>
+        <tr>
+          <th class="text-right">考试时间</th>
+          <td>
+            {{if EXAM_STIME && EXAM_ETIME}}
+              {{EXAM_STIME}} 至 {{EXAM_ETIME}}
+            {{else}}
+              --
+            {{/if}}
+          </td>
+        </tr>
+        <tr>
+          <th class="text-right">预约时间</th>
+          <td>
+            {{if BOOK_STARTTIME && BOOK_ENDTIME}}
+              {{BOOK_STARTTIME}} 至 {{BOOK_ENDTIME}}
+            {{else}}
+              --
+            {{/if}}
+          </td>
+        </tr>
+        <tr>
+          <th class="text-right">是否补考</th>
+          <td>{{MAKEUP}}</td>
+        </tr>
+        <tr>
+          <th class="text-right">缴费状态</th>
+          <td>
+            {{if PAY_STATE==='0'}}
+              <span class="text-orange" data-role="pay">待缴费</span>
+            {{else if PAY_STATE==='1'}}
+              <span class="text-green" data-role="pay">已缴费</span>
+            {{else if PAY_STATE==='2'}}
+              <span class="gray" data-role="pay">无需缴费</span>
+            {{/if}}
+          </td>
+        </tr>
+        <tr>
+          <th class="text-right">预约状态</th>
+          <td>
+            {{if BESPEAK_STATE==='0'}}
+                <div class="text-orange">
+                  待预约
+                </div>
+            {{else if BESPEAK_STATE==='1'}}
+                <div class="text-green">
+                  已预约
+                </div>
+            {{else if BESPEAK_STATE==='2'}}
+              <div class="gray">无需预约</div>
+            {{/if}}
+          </td>
+        </tr>
+        {{if PAY_STATE==='0' && COURSE_COST}}
+          <tr>
+            <th class="text-right">补考费用</th>
+            <td>
+              <div class="text-orange">
+                {{COURSE_COST}}￥
+              </div>
+            </td>
+          </tr>
+        {{/if}}
+      </table>
+      <div class="alert-panel padding10 margin_t10 margin_b10 font12 gray">
+        <ol class="ol-decimal">
+          <li>请在预约考试时间内进行考试预约，过期将不能进行自主预约考试操作</li>
+          <li>错过了预约时间段没有预约考试的学员，若仍想预约考试，请联系你的班主任</li>
+          <li>若考试预约暂未开放，请留意考试开放预约通知或短信</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <div class="u-panel-footer">
+    <div class="in" align="right">
+      <button type="button" class="btn btn-md btn-gray btn-white min-width-100" data-role="pop-close">关闭</button>
+      <!--预约考试-->
+      {{if operationType===0}}
+        <button class="btn btn-md btn-orange min-width-100 margin_l10" data-role="sure">确定预约</button>
+
+      <!--取消预约-->
+      {{else if operationType===1}}
+        <button type="button" class="btn btn-md btn-orange margin_l10 min-width-100" data-role="sure">取消预约</button>
+
+      {{/if}}
+    </div>
+  </div>
+</script>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+  //“x”关闭窗口
+  $('body').on('click','[data-role="pop-close"]', function(event) {
+    event.preventDefault();
+    if(frmData.isUpload){//如果刚刚上传过头像，就刷新页面
+      top.curRoute.app.refresh();
+    }
+    else{
+      parent.$.closeDialog(frameElement.api);
+    }
+  });
+
+  var frmData=frameElement.data;
+  if(!frmData) return;
+
+  var $loading=$('.overlay');
+  var html=template('temp',frmData);
+  $('.u-panel').append(html);
+  $loading.hide();
+
+  //预约
+  function datingExam(){
+    $loading.show();
+    var xhr=ajaxProcess({
+      url:'/pcenter/exam/makeAppointment',
+      type:'POST',
+      data:{
+        REC_ID: frmData.REC_ID,
+        TEACH_PLAN_ID: frmData.TEACH_PLAN_ID,
+        EXAM_PLAN_ID: frmData.EXAM_PLAN_ID,
+        KSFS_FLAG: frmData.KSFS_FLAG,
+        COURSE_ID: frmData.COURSE_ID,
+        EXAM_BATCH_CODE: frmData.EXAM_BATCH_CODE
+      },
+      success:function(renderData){
+        if(renderData.msgCode==200 && renderData.data && renderData.data.result==1){ 
+
+          $.resultDialog(1,'预约成功')
+          .done(function(){
+            parent.curRoute.app.refresh();       
+          });
+
+        }
+        else{
+          $.resultDialog(0,'<span class="inline-block vertical-middle text-left" style="white-space: normal;line-height: 1.2;max-width: 180px;">'+(renderData.data.messageInfo?renderData.data.messageInfo:'预约失败')+'</span>');
+        }
+      },
+      always:function(){
+        $loading.hide();
+      }
+    });
+
+    return xhr;
+  }
+
+  //确定
+  $('[data-role="sure"]').on('click', function(event) {
+    event.preventDefault();
+
+    var def=$.Deferred();
+    
+    //确定预约
+    if( frmData.operationType==0 ){
+      //待缴费
+      if(frmData.PAY_STATE==='0'){
+        var path=frmData.url;
+
+
+          //由于360和火狐等一些浏览器会屏蔽window.open生成的窗口，因此必须用户点击的方式才能正常打开
+          var $payAlert=$.alertDialog({
+              title:'支付补考费',
+              width:340,
+              height:270,
+              content:[
+                '<i class="alert-icon alert-icon-0x0 margin_r10"></i>',
+                  '<span class="font18 text-orange vertical-middle inline-block">您还未支付补考费，请先支付</span>'
+              ].join(''),
+              okLabel:'确认支付',
+              okCss:'btn btn-normal btn-orange min-width-100 margin_l15 confirm-pay',
+              cancelCss:'btn btn-normal btn-gray min-width-100',
+              cancel:function(){
+                $.closeDialog($payAlert);
+              }
+          });
+
+          $('.confirm-pay',$payAlert).replaceWith('<a href="{0}" target="_blank _top" class="btn btn-normal btn-orange min-width-100 margin_l15 confirm-pay">确认支付</a>'.format(path));
+
+          $payAlert.on('click', '.confirm-pay', function(event) {            
+            var $payPop=$.alertDialog({
+                width:340,
+                height:270,
+                content:[
+                  '<i class="alert-icon alert-icon-0x0 margin_r10"></i>',
+                    '<span class="font18 text-orange vertical-middle inline-block">确定已成功缴费？</span>'
+                ].join(''),
+                okCss:'btn btn-normal btn-orange min-width-100',
+                ok:function(){
+                  $loading.show();
+                  //4.2 查询缴费状态
+                  ajaxProcess({
+                    url:'/pcenter/exam/accessPay',
+                    type:'POST',
+                    data:{
+                      REMARK:frmData.REMARK,
+                      REC_ID: frmData.REC_ID,
+                      TEACH_PLAN_ID: frmData.TEACH_PLAN_ID,
+                      EXAM_PLAN_ID: frmData.EXAM_PLAN_ID,
+                      EXAM_BATCH_CODE: frmData.EXAM_BATCH_CODE,
+                      COURSE_ID: frmData.COURSE_ID
+                    },
+                    success:function(renderData){
+                      var def=$.Deferred();
+                      if(renderData.msgCode==200 && renderData.data){
+                        var da=renderData.data;
+                        //缴费成功
+                        if(da.FLAG==1){
+                          $loading.hide();
+                          $('[data-role="pay"]').text('已缴费');
+                          frmData.PAY_STATE=1;
+
+                          $.when($.resultDialog(1,'缴费成功'))
+                          .done(function(){
+                            //预约考试
+                            datingExam();
+                            $.closeDialog($payPop);
+                          });
+                        }
+                        else if(da.FLAG==0){
+                          def=$.resultDialog(0,'不存在已经缴费订单',2000);
+                        }
+                        else if(da.FLAG==2){
+                          def=$.resultDialog(0,'参数不全');
+                        }
+                        else{
+                          def=$.resultDialog(0,'缴费异常');
+                        }
+                      }
+                      else{
+                        def=$.resultDialog(0,renderData.message)
+                      }
+                      def.done(function(){
+                        $.closeDialog($payPop);
+                      });
+                    },
+                    fail:function(textStatus){
+                      $.when($.resultDialog(2,textStatus,2000))
+                      .done(function(){
+                        $.closeDialog($payPop);
+                      });
+                    },
+                    always:function(){
+                      $loading.hide();
+                    }
+                  });
+                },
+                cancelCss:'btn btn-normal btn-gray margin_r15 min-width-100',
+                cancelLabel:'缴费失败',
+                cancel:function(){
+                  //4.2 查询缴费状态
+                  $.post('/pcenter/exam/accessPay',
+                    {
+                      REMARK:frmData.REMARK,
+                      REC_ID: frmData.REC_ID,
+                      TEACH_PLAN_ID: frmData.TEACH_PLAN_ID,
+                      EXAM_PLAN_ID: frmData.EXAM_PLAN_ID,
+                      EXAM_BATCH_CODE: frmData.EXAM_BATCH_CODE,
+                      COURSE_ID: frmData.COURSE_ID
+                    }
+                  );
+
+                  $.closeDialog($payPop);
+                }
+            });
+
+            $.closeDialog($payAlert);
+
+          });
+      }
+      else{
+        $loading.show();
+        var xhr=datingExam();
+        xhr.always(function(){
+          $('.overlay').hide();
+        });
+      }
+    }
+    //取消预约
+    else{
+      $loading.show();
+      ajaxProcess({
+        url:'/pcenter/exam/cancelAppointment',
+        type:'POST',
+        data:{
+          REC_ID: frmData.REC_ID,
+          TEACH_PLAN_ID: frmData.TEACH_PLAN_ID,
+          EXAM_PLAN_ID: frmData.EXAM_PLAN_ID,
+          KSFS_FLAG: frmData.KSFS_FLAG,
+          COURSE_ID: frmData.COURSE_ID,
+          EXAM_BATCH_CODE: frmData.EXAM_BATCH_CODE
+        },
+        success:function(renderData){
+          if(renderData.msgCode==200 && renderData.data && renderData.data.result==1){
+
+            $.resultDialog(1,'成功取消预约')
+            .done(function(){
+              parent.curRoute.app.refresh();
+            });
+
+          }
+          else{
+            $.resultDialog(0,'<span class="inline-block vertical-middle text-left" style="white-space: normal;line-height: 1.2;max-width: 180px;">'+(renderData.data.message?renderData.data.message:'取消预约失败')+'</span>');
+          }
+        }
+      })
+      .always(function(){
+        $('.overlay').hide();
+      });
+    }
+
+  });
+
+  if($(frameElement).height()>0){
+    $('.scroll-box').height($(frameElement).height()-90);
+  }
+});
+</script>
+</body>
+</html>

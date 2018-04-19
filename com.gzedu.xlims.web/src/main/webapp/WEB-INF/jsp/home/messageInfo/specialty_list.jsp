@@ -1,0 +1,174 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ include file="/WEB-INF/jsp/common/taglibs.jsp"%>
+
+<!DOCTYPE html>
+<html class="reset">
+<head>
+<title>管理系统 - 选择专业</title>
+<%@ include file="/WEB-INF/jsp/common/jslibs.jsp"%>
+</head>
+<body>
+<form id="listForm" action="${ctx }/admin/messageInfo/findSpecialty">
+<div class="box no-border no-shadow margin-bottom-none">
+	<div class="box-header with-border">
+		<h3 class="box-title">选择专业</h3>
+	</div>
+    <div >
+    	<div class="border-bottom pad-t15 pad-b15 clearfix" data-id="form">
+    		<div class="clearfix">
+                <div class="col-xs-4">
+                    <div class="media">
+		              <div class="media-left media-middle text-nowrap">专业规则号</div>
+		              <div class="media-body">
+		                <input class="form-control" name="search_EQ_ruleCode" value="${param.search_EQ_ruleCode }">
+		              </div>
+		            </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="media">
+		              <div class="media-left media-middle text-nowrap">专业名称</div>
+		              <div class="media-body">
+		                <input class="form-control" name="search_LIKE_zymc" value="${param.search_EQ_zymc }">
+		              </div>
+		            </div>
+                </div>
+                <div class="col-xs-4">
+                	<div class="media">
+		              <div class="media-left media-middle text-nowrap">层次</div>
+		              <div class="media-body">
+		                <select class="form-control" name="search_EQ_pycc">
+							<option value=''>全部</option>
+							<c:forEach items="${pyccMap }" var="map">
+								<option value="${map.key }" <c:if test="${param.search_EQ_pycc eq map.key }">selected</c:if>>${map.value }</option>
+							</c:forEach>
+						</select>
+		              </div>
+		              <div class="media-right">
+		              	<button type="submit" class="btn btn-primary">搜索</button>
+		              </div>
+		            </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-body pad-l15 pad-r15 pad-t15">
+        	<div class="scroll-box" data-id="box">
+	            <table class="table-gray-th text-center table-font">
+	                <thead>
+	                    <tr>
+	                        <th width="60">
+	                            <input type="checkbox" data-id="sel-all">
+	                        </th>
+	                        <th width="20%">专业规则号</th>
+	                        <th>专业名称</th>
+	                        <th width="20%">层次</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                	<c:choose>
+							<c:when test="${not empty pageInfo.content}">
+								<c:forEach items="${pageInfo.content}" var="info">
+									<c:if test="${not empty info}">
+			                    <tr>
+			                    	<td>
+			                            <input type="checkbox" name="r1" data-id="sel-item" data-json='{
+			                            	"majorName":"${info.zymc }_${info.ruleCode }",
+			                            	"id":"${info.specialtyId }"
+			                           	 }'>
+			                        </td>
+			                        <td>
+			                        	${info.ruleCode }
+			                        </td>
+			                        <td>
+			                        	${info.zymc }
+			                        </td>
+			                        <td>
+			                        	${pyccMap[info.pycc]}
+			                        </td>
+			                    </tr>
+	                    	</c:if>
+	                    </c:forEach>
+	                    </c:when>
+							<c:otherwise>
+								<tr>
+									<td align="center" colspan="5">暂无数据</td>
+								</tr>
+							</c:otherwise>
+						</c:choose>
+	                </tbody>
+	            </table>
+	            <tags:pagination page="${pageInfo}" paginationSize="5" />
+            </div>
+    	</div>
+    </div>
+</div>
+<div class="text-right pop-btn-box pad">
+	<span class="pull-left pad-t5">
+  		本次共选择 <b class="text-light-blue select-total">0</b> 个专业
+  	</span>
+	<button type="button" class="btn btn-default min-width-90px margin_r15" data-role="close-pop">取消</button>
+	<button type="button" class="btn btn-success min-width-90px" data-role="sure">确定</button>
+</div>
+</form>
+
+<script type="text/javascript">
+//关闭 弹窗
+$("[data-role='close-pop']").click(function(event) {
+	parent.$.closeDialog(frameElement.api)
+});
+
+//设置内容主体高度
+$('.scroll-box').height($(frameElement).height()-133-$('[data-id="form"]').outerHeight(true));
+
+//单选
+$('body').on('click', '[data-id="sel-item"]', function(event) {
+	if( $(this).prop('checked') ){
+		$(this).closest('tr').addClass('on');
+	}
+	else{
+		$(this).closest('tr').removeClass('on');
+	}
+	$('.select-total').text($('tbody tr.on').length);
+})
+//全选
+.on('click','[data-id="sel-all"]',function(event) {
+    if($(this).prop('checked')){
+        $('[data-id="sel-item"]').prop('checked',true);
+        $('tbody tr').addClass('on');
+    }
+    else{
+        $('[data-id="sel-item"]').prop('checked',false);
+        $('tbody tr').removeClass('on');
+    }
+    $('.select-total').text($('tbody tr.on').length);
+});
+
+//确定
+$('[data-role="sure"]').click(function(event) {
+    var $ck=$('[data-id="sel-item"]:checked');
+    if($ck.length>0){
+        var htmlTemp='\
+        				<span class="btn btn-default active">\
+					    	<input type="checkbox" checked name="specialtyIds" value="{1}_{0}" data-id="{1}"> {0}\
+					    	<i class="fa fa-remove pad-l5" data-toggle="tooltip" title="删除" data-role="remove-sel"></i>\
+					  	</span>\
+        			';
+        var result=[];
+        $ck.each(function(index, el) {
+            var obj=$(this).data('json');
+            result.push(htmlTemp.format(obj.majorName,obj.id));
+        });
+
+        var $container=parent.$('[data-role="add-major"]');
+
+        $container.siblings('[data-id="sel-all"]').removeClass('active')
+		.children(':checkbox').prop('checked',false);
+
+        $container.before(result.join(''));
+    }
+
+    parent.$.closeDialog(frameElement.api)
+});
+</script>
+</body>
+</html>

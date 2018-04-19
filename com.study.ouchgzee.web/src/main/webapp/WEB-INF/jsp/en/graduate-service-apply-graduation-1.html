@@ -1,0 +1,153 @@
+﻿<div class="graduate-cnt-box">
+   <div class="panel-tips padding15 tips-gray">
+      <dl class="oper-proc clearfix">
+        <dt>毕业生登记表</dt>
+        <dd class="bar clearfix">
+          <div class="u-proc-box warning fl">
+            <div class="u-proc-bar" style="width:80%;"></div>
+          </div>
+          <div class="fl txt">
+            <span class="f14">完成进度:</span>
+            <span class="font_orange f18">80%</span>
+          </div>
+        </dd>
+        <!--完成进度：100%
+        <dd class="bar clearfix">
+          <div class="u-proc-box success fl">
+            <div class="u-proc-bar" style="width:100%;"></div>
+          </div>
+          <div class="fl txt">
+            <span class="f14">完成进度:</span>
+            <span class="font_orange f18">100%</span>
+          </div>
+        </dd>
+        -->
+        <dd class="oper">
+          <a href="#">
+            <i class="u-icon u-icon-48x2"></i>
+            <span>预览</span>
+          </a>
+          <a href="#" class="margin_l25">
+            <i class="u-icon u-icon-0x25"></i>
+            <span>修改</span>
+          </a>
+        </dd>
+      </dl>
+   </div>
+   <ul class="page-process-box process-width-4 clearfix gray6 margin_t25 margin_b25">
+      <li class="page-process-item active">
+        <div class="in">
+          1、申请毕业
+          <span class="u-arrow">
+            <i></i>
+            <em></em>
+          </span>
+        </div>
+      </li>
+      <li class="page-process-item">
+        <div class="in">
+          2、确认签名
+          <span class="u-arrow">
+            <i></i>
+            <em></em>
+          </span>
+        </div>
+      </li>
+      <li class="page-process-item">
+        <div class="in">
+          3、毕业审核
+          <span class="u-arrow">
+            <i></i>
+            <em></em>
+          </span>
+        </div>
+      </li>
+      <li class="page-process-item">
+        <div class="in">
+          4、毕业证书发放
+        </div>
+      </li>
+   </ul>
+   <p class="font22 gray6 text-center padding_t25 margin_b25">
+      请选择是否申请学位
+   </p>
+   <div class="clearfix center-block" style="width:480px;">
+      <div class="fl" style="width:190px;">
+          <button class="btn btn-orange border-radius btn-lg" style="width:190px;" data-role="apply">申请学士学位</button>
+          <div class="gray font12 margin_t5">
+            申请学位的学员，毕业证书与学位证书一起申
+            请。如果你暂时没有达到学位申请要求，毕业
+            证书需在达到学位申请要求后才能领取。
+          </div>
+      </div>
+      <div class="fr" style="width:190px;">
+          <button class="btn btn-gray border-radius btn-lg" style="width:190px;" data-role="not-apply">不申请学士学位</button>
+          <div class="gray font12 margin_t5 text-center">
+            毕业审核通过后将不能再申请学位
+          </div>
+      </div>
+   </div>
+   <div class="margin_t20 text-center">
+      <a href="#/biye/bkqianming" class="btn btn-md btn-orange">进入确认签名</a>
+   </div>
+</div>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+  //不申请学士学位
+  $('[data-role="not-apply"]').on('click', function(event) {
+      event.preventDefault();
+      /*
+      var popId = 'not-apply';
+      $.mydialog({
+          id: popId,
+          width: 340,
+          height: 220,
+          zIndex: 1110,
+          html: true,
+          htmlConfig: {
+              title: '提示',
+              button: [{
+                  name: '取消',
+                  btnClass: 'btn btn-normal btn-gray bt-md',
+                  callback: function(ev) {
+                      var $box = $('[data-pop-id="' + popId + '"]');
+                      $.closeDialog($box);
+                  }
+              }, {
+                  name: '确定',
+                  btnClass: 'btn btn-normal btn-orange bt-md margin_l15',
+                  callback: function(ev) {
+                      var $box = $('[data-pop-id="' + popId + '"]');
+                      $.closeDialog($box);
+                  }
+              }]
+          },
+          content: ['<table width="100%" height="100%">', '<tr>', '<td valgin="middle" class="padding_l25">', '<i class="alert-icon alert-icon-0x0 margin_r10"></i>', '</td>', '<td class="padding_r25 font16 text-orange" style="line-height:1.4">', '毕业审核通过后将不能再申请学位确定不申请学位吗？', '</td>', '</tr>', '</table>'].join(''),
+          onLoad: function() {
+              var $box = $('[data-pop-id="' + this.id + '"]');
+              $('.u-panel-body', $box).height(this.height - 36 - parent.$(".u-panel-footer", $box).height());
+          }
+      });
+      */
+      $.alertDialog({
+        width:340,
+        height:230,
+        content:[
+          '<i class="alert-icon alert-icon-0x0 margin_r10"></i>',
+          '<span class="font16 text-orange vertical-middle inline-block text-left" style="line-height:1.4;width:220px;">毕业审核通过后将不能再申请学位确定不申请学位吗？</span>'
+        ].join('')
+      });
+  });
+  $('[data-role="apply"]').on('click', function(event) {
+      var that = this;
+      $.mydialog({
+          id: 'apply',
+          width: 720,
+          zIndex: 1000,
+          height: 575,
+          content: 'pop-graduation-service-apply-degree.html'
+      });
+  });
+});
+</script>

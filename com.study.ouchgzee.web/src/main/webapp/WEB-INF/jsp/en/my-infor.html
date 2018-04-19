@@ -1,0 +1,172 @@
+<div class="padding10" data-role="info-box">
+    <div class="text-center"><i class="loading"></i></div>
+</div>
+
+<script type="text/template" id="temp">
+    <h3 class="text-no-bold sub-title f18 margin_b10">报读信息</h3>
+    <table class="table-gray-th">
+        <tbody>
+          <tr>
+              <th width="15%" class="text-right">报读时间</th>
+              <td width="35%">{{createdDt}}</td>
+              <th width="15%" class="text-right">院校</th>
+              <td width="35%">{{schoolName}}</td>
+          </tr>
+          <tr>
+            <th class="text-right">年级</th>
+            <td>{{className}}</td>
+            <th class="text-right">专业</th>
+            <td>{{specialty}}</td>
+          </tr>
+          <tr>
+            <th class="text-right">层次</th>
+            <td>{{pycc}}</td>
+            <th class="text-right">学习方式</th>
+            <td>{{(!!studyPeriod && studyPeriod!=null)?studyPeriod:'--'}}</td>
+          </tr>
+          <tr>
+            <th class="text-right">姓名</th>
+            <td>{{xm}}</td>
+            <th class="text-right">证件类型</th>
+            <td>{{certificatetype}}</td>
+          </tr>
+          <tr>
+            <th class="text-right">证件号</th>
+            <td>{{sfzh}}</td>
+            <th class="text-right">手机号</th>
+            <td>{{sjh}}</td>
+          </tr>
+          <tr>
+            <th class="text-right">邮箱</th>
+            <td>{{dzxx}}</td>
+            <th class="text-right">服务机构</th>
+            <td>{{orgName}}</td>
+          </tr>
+          <tr>
+            <th class="text-right">报读状态</th>
+            <td>{{enrollStatus}}</td>
+            <th class="text-right">学籍状态</th>
+            <td>{{xjzt | wdbdXJZT}}</td>
+          </tr>
+          
+        </tbody>
+    </table>
+
+    <!--
+    {{if policyMap }}
+      <h3 class="text-no-bold sub-title f18 margin-t30 margin_b10">学费与优惠政策信息</h3>
+      <table class="table-gray-th">
+          <tbody>
+            <tr>
+                <th width="15%" class="text-right">全额学费</th>
+                <td width="35%">{{!!policyMap.PRODUCT_PRICE?policyMap.PRODUCT_PRICE:'--'}}</td>
+                <th width="15%" class="text-right">优惠金额</th>
+                <td width="35%">{{!!policyMap.SUBSIDY_PRICE?policyMap.SUBSIDY_PRICE:'--'}}</td>
+            </tr>
+            <tr>
+              <th class="text-right">优惠政策</th>
+              <td>{{!!policyMap.POLICY_NAME?policyMap.POLICY_NAME:'--'}}</td>
+              <th class="text-right">应交学费</th>
+              <td>
+                {{if !!policyMap.PRODUCT_PRICE && !!policyMap.SUBSIDY_PRICE && policyMap.PRODUCT_PRICE>=policyMap.SUBSIDY_PRICE}}
+                  {{policyMap.PRODUCT_PRICE - policyMap.SUBSIDY_PRICE}}
+                {{else}}
+                  --
+                {{/if}}
+              </td>
+            </tr>
+            <tr>
+              <th class="text-right">缴费方式</th>
+              <td>{{!!policyMap.PAY_STATUS_NAME?policyMap.PAY_STATUS_NAME:'--'}}</td>
+              <th class="text-right">缴费状态</th>
+              <td>
+                {{!!policyMap.GKXL_PAYMENT_TYPE?policyMap.GKXL_PAYMENT_TYPE:'--'}}
+              </td>
+            </tr>
+            <tr>
+              <th class="text-right">赠送物品</th>
+              <td colspan="3">
+                {{if !!policyMap.LARGESS_NAME}}
+                  <span class="margin_r25">{{policyMap.LARGESS_NAME}}</span>
+                {{/if}}
+                <a href="{{eeUrl}}" target="_blank" class="font_blue"><u>我没收到？</u></a>
+              </td>
+            </tr>
+          </tbody>
+      </table>
+    {{/if}}
+    -->
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+  template.helper('wdbdXJZT', function (orientVal) {
+    var result='--';
+    if(!!orientVal&&orientVal!=""){
+      switch(orientVal){
+        case '0':
+          result='注册中';
+          break;
+        case '1':
+          result='开除学籍';
+          break;
+        case '2':
+          result='在籍';
+          break;
+        case '3':
+          result='待注册';
+          break;
+        case '4':
+          result='休学';
+          break;
+        case '5':
+          result='退学';
+          break;
+        case '6':
+          result='学习期限已过';
+          break;
+        case '7':
+          result='延期';
+          break;
+        case '8':
+          result='毕业';
+          break;
+        case '9':
+          result='停学';
+          break;
+        case '10':
+          result='转学';
+          break;
+        default:
+          break;
+      }
+    }
+    return result;
+  });
+
+  //数据绑定
+  ;(function(){
+    var url=webSiteConfig['basePath']+'/pcenter/sign/querySignInfo';
+    var $container=$('[data-role="info-box"]');
+    var xhr=$.get(url)
+      .done(function(renderData){
+          if(renderData.msgCode==200){
+            if(renderData.data){
+              var renderHtml = template('temp',renderData.data);
+                $container.html(renderHtml);
+            }
+            else{
+              $container.html('无数据');
+            }
+          }
+          else{
+              $container.html( renderData.message )
+          }
+      })
+      .fail(function(XMLHttpRequest, textStatus){
+            $container.html( textStatus )
+        });
+    window['jqAjaxCollectors'].push(xhr);
+  })();
+});
+</script>

@@ -1,0 +1,249 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+<style type="text/css">
+html,body{
+    height: 100%;
+}
+</style>
+</head>
+<body class="body-pop">
+<div class="u-panel overlay-wrapper">
+    <div class="u-panel-head">
+      重要活动（<span data-id="total">0</span>）
+    </div>
+    <div class="u-panel-body scroll-box">
+      <div data-id="scroll-inner">
+
+      </div>
+    </div>
+
+    <div class="u-panel-footer">
+      <div class="in" align="right">
+          <button type="button" class="btn btn-md btn-white f14 margin_r10" style="min-width:200px;" data-role="ask-teacher">我有疑问，向TA提问</button>
+          <button type="button" data-role="oper" class="btn btn-md f14 btn-orange disabled" disabled style="min-width:200px;">我已阅读</button>
+      </div>
+    </div>
+</div>
+
+<div class="overlay bg-center"></div>
+
+<script type="text/template" id="tpl">
+    <div class="article-wrap" style="padding:20px 30px 25px;">
+      <div class="article-head text-center">
+        <h1 class="article-title">
+          {{if isStick==1}}
+            <span class="label label-warning f14 vertical-middle">置顶</span>
+          {{/if}}
+          {{infoTheme}}
+        </h1>
+        <div class="article-other">
+          <span class="padding_r20">类型：{{infoType}}</span>
+          <span class="padding_l20">分类：{{typeClassify}}</span>
+          <span class="padding_l20">发布：{{putUserName}}</span>
+          <span class="padding_l20">时间：{{createdDt}}</span>
+        </div>
+      </div>
+      <div class="article-content">
+        {{infoContent}}
+      </div>
+      {{if fileUrl}}
+        <div class="article-addon">
+          附件：<a href="{{fileUrl}}" target="_blank">{{fileName?fileName:'点击下载'}}</a>
+        </div>
+      {{/if}}
+    </div>
+    
+</script>
+
+<!--报错 模板-->
+<script type="text/template" id="error-tips-temp">
+  <table width="100%" height="{{boxSize}}" class="text-center">
+    <tr>
+      <td valign="middle">
+        <i class="alert-icon alert-icon-0x125 margin_r5"></i>
+        <span class="text-orange font16">{{message}}</span>
+      </td>
+    </tr>
+  </table>
+</script>
+
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+<script type="text/javascript">
+require(['jquery','artTemplate','domReady','common'], function ($,template,domReady) {
+  //图片加载方法
+  (function($){
+    /*
+    @callbackFun       :加载完内容后执行的回调函数
+    */
+      $.fn.loadImg = function(callbackFun){
+        return this.each(function(){
+          var jqImgCollector = $(this).find("img"),
+            loadedNum=0,//统计检查过的图片数
+            length=jqImgCollector.length;
+          
+          if(length>0){
+            jqImgCollector.each(function(i,ele){
+              if( this.complete || this.readyState=="complete"){//是否已加载过
+                loadedNum++;
+                if(loadedNum==length){
+                  callbackFun();
+                }
+              }
+              else{
+                $(this).load(function(){
+                  loadedNum++;
+                  if(loadedNum==length){
+                    setTimeout(function(){callbackFun();},500);
+                  }
+                })
+                $(this).error(function(){//图片加载出错，包括图片不存在时
+                  loadedNum++;
+                  $(this).hide();   //隐藏不存在的图片
+                  if(loadedNum==length){
+                    setTimeout(function(){callbackFun();},500);
+                  }
+                });
+              }
+              
+            });
+          }
+          else{
+            callbackFun();
+          }
+        });
+      }
+  })(jQuery);
+
+  var notesList=frameElement.data, noticeIndex=0, 
+      $btn=$('[data-role="oper"]'), 
+      $scrollBox=$('.scroll-box'),
+      $container=$('[data-id="scroll-inner"]'),
+      $loading=$('.overlay'),
+      $total=$('[data-id="total"]'),
+      boxSize=$(frameElement).height()-90;
+
+  (notesList && notesList.length>0) || (notesList=[]);
+
+  $total.text(notesList.length);
+
+  //数据初始化
+  function initHtml(){
+    $loading.show();
+    
+    ajaxProcess({
+        url:'/pcenter/home/message/view',
+        type:'GET',
+        data:{id:notesList[noticeIndex].messageId,isAll:0,platform:'0'},
+        success:function(renderData){
+          var rData=renderData.data;
+            if(renderData.msgCode==200 && rData){
+              var render = template.compile($("#tpl").html(),{escape:false});
+              var renderHtml = render(rData);
+
+              $container.html(renderHtml);
+
+              $container.loadImg(function(){
+                $scrollBox.scrollTop(0).trigger('scroll');
+              });
+
+            }
+            else{
+              $container.html( template('error-tips-temp',{message:renderData.message,boxSize:boxSize}) );
+            }
+        },
+        fail:function(errorMessage){
+            $container.html( template('error-tips-temp',{message:errorMessage,boxSize:boxSize}) );
+            
+        },
+        always:function(){
+          $loading.hide();
+        }
+    });
+  }
+
+  //内容滚动处理方法
+  function scrollFun(){
+    var contentSize=$('[data-id="scroll-inner"]').height();
+
+    if(notesList.length>1 && noticeIndex<notesList.length-1){
+      $btn.text('我已阅读，继续阅读下一个活动');
+    }
+
+    if( contentSize < boxSize || contentSize-boxSize-30<=$(this).scrollTop() ){
+      $btn.removeClass('disabled').removeAttr('disabled');
+    }
+  }
+
+  //dom加载
+  domReady(function(){
+    $scrollBox.height(boxSize)
+    .scroll(scrollFun);
+  });
+
+  if(notesList.length>0){
+    initHtml();
+  }
+  else{
+    $('.u-panel-footer').hide();
+    $container.html( template('error-tips-temp',{message:'暂无活动通知',boxSize:boxSize}) );
+  }
+
+  //点击“已阅读”
+  $btn.on('click', function(event) {
+    event.preventDefault();
+    ++noticeIndex;
+    $btn.addClass('disabled').attr('disabled','disabled');
+    //最后一条
+    if(noticeIndex==notesList.length){
+      parent.$.closeDialog(frameElement.api);
+    }
+    else{
+      //下一条是最后一条
+      if(noticeIndex==notesList.length-1){
+        $btn.text('我已阅读');
+      }
+
+      initHtml();
+    }
+  });
+  
+  //问班主任
+  $(document)
+  .on('click','[data-role="ask-teacher"]',function(event) {
+    event.preventDefault();
+
+    top.$.mydialog({
+      id:'ask-teacher',
+      width:640,
+      zIndex:1000,
+      height:500,
+      content: 'pop-ask-teacher.html'
+    });
+  });
+
+  
+});
+</script>
+</body>
+</html>

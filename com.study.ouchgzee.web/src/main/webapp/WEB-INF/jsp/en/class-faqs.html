@@ -1,0 +1,682 @@
+<div class="margin-offset-lr20" data-role="list-wrapper">
+	<div class="bzr_subnav padding_t10">
+		<div class="subnav_btn fl" data-role="type-tab">
+      <a href="#/bjdayi?id=0" class="active">待解答（<span data-role="tab-1">0</span>）</a>
+      <a href="#/bjdayi?id=1">已解答（<span data-role="tab-2">0</span>）</a>
+      <a href="#/bjdayi?id=2">常见问题（<span data-role="tab-3">0</span>）</a>
+    </div>
+		<div class="bzr_searchInput fr">
+      <span data-role="common-faq">
+        <!--常见问题类型列表-->
+      </span>
+
+      <input class="form-control input-search" placeholder="请输入关键词，回车搜索" style="width:210px;">
+      <button type="button" class="btn btn-sm btn-orange" data-role="create-question">提问题</button>
+    </div>
+	</div>
+	<div class="qa_box" data-role="type-content">
+    <div data-role="item-list-container" class="overlay-wrapper">
+      <div class="text-center"><i class="loading"></i></div>
+    </div>
+	</div>
+</div>
+
+<!--暂无待解答问题-->
+<script type="text/template" id="to-be-answer-no">
+  <div class="text-center margin-t30">
+    <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/qa_null.png" alt="">
+    <p class="font24 margin_b10" style="color:#b2b2b2;">{{message}}</p>
+    {{if type=='N'}}
+      <button type="button" class="btn btn-md btn-orange" data-role="create-question"><i class="new_q_icon"></i>提问题</button>
+    {{/if}}
+  </div>
+</script>
+
+<!--列表 模板-->
+<script type="text/template" id="list-render-temp">
+  <!--filterType 代表答疑类型，
+      'N'：待解答；'Y'：已解答；'C'：常见问题
+  -->
+  {{if pageInfo.totalElements>0}}
+    <ul class="qa-list" dat-role="item-list">
+      {{each pageInfo.content}}
+        <li class="item clearfix">
+          <div class="clearfix ask">
+            <label>问</label>
+            <div class="qa_txt">
+              {{if $value.title}}
+                <h2 style="width:100%;">
+                  {{$value.title}}
+
+                  {{if filterType=='Y'}}
+                    {{if $value.isSolve==1}}
+                      <span class="label label-success">已解决</span>
+                    {{else if $value.isSolve==0}}
+                      <span class="label label-warning">未解决</span>
+                    {{/if}}
+                    
+                  {{/if}}
+                </h2>
+              {{/if}}
+
+              {{if $value.content}}
+                <p>{{$value.content}}</p>
+              {{/if}}
+              {{if $value.imgUrls && $value.imgUrls.length>0}}
+                <div class="qa_img">
+                  {{each $value.imgUrls as item index}}
+                    <img src="{{item | imgUrlFormat:[80,80]}}" data-orient-url="{{item | imgUrlFormat}}" class="as-link" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/temp/qa.jpg'">
+                  {{/each}}
+                </div>
+              {{/if}}
+
+              <!--非常见问题显示-->
+              {{if filterType!='C'}}
+                <p class="from_tips">
+                  <span><em>我</em>{{$value.createDt}}提问</span>
+                  {{if !!$value.gjtFeedbackVoList && $value.gjtFeedbackVoList.length>0}}
+                    <a href="javascript:void(0);" class="fr down_btn"><span>收起</span><i class="icon active"></i></a>
+                  {{/if}}
+                </p>
+              {{/if}}
+            </div>
+          </div>
+          
+          {{if $value.gjtFeedbackVoList && $value.gjtFeedbackVoList.length>0}}
+              <!--非常见问题显示-->
+              {{if filterType!='C'}}
+                <div class="answer" style="display:block;">
+                  <div class="triangle_border_left">
+                      <span></span>
+                  </div>
+                  <label>答</label>
+                  <div class="answer_container padding20 clearfix">
+                    <!--显示班主任头像-->
+                    <img src="{{$value.gjtFeedbackVoList[0].teacherPhotoUrl | imgUrlFormat:[60,60]}}" alt="{{$value.gjtFeedbackVoList[0].teacherName}}" class="aq_head_user" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png'">
+
+                    <div class="answer_container_right">
+                      <h2>{{$value.gjtFeedbackVoList[0].teacherName}}<span>{{$value.gjtFeedbackVoList[0].teacherType}} {{$value.gjtFeedbackVoList[0].createDt}}回答：</span></h2>
+                      <div class="Box xo" data-text="{{$value.gjtFeedbackVoList[0].content}}">
+                        <div class="moreText" data-text="{{$value.gjtFeedbackVoList[0].content}}">
+                          {{$value.gjtFeedbackVoList[0].content}}<a class="moreoh">展开</a>
+                        </div>
+                      </div>
+                      {{if $value.gjtFeedbackVoList[0].imgUrls.length>0}}
+                        <div class="qa_img">
+                          {{each $value.gjtFeedbackVoList[0].imgUrls as val i}}
+                            <img src="{{val | imgUrlFormat:[80,80]}}" data-orient-url="{{val | imgUrlFormat}}" alt="{{$value.gjtFeedbackVoList[0].teacherName}}" class="as-link" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png'">
+                          {{/each}}
+                        </div>
+                      {{/if}}
+
+                        <!--输出问题的回答与追问-->
+                        {{each $value.gjtFeedbackVoList as faq index}}
+                          {{if index>0}}
+                            <div class="anser_more padding20">
+                              {{if faq.type=='reply'}}
+                                <h3 class="text-blue font14">回答</h3>
+                              {{else if faq.type='ask'}}
+                                <h3 class="text-orange font14">追问</h3>
+                              {{/if}}
+                              <p class="anser_more_desc">{{faq.content}}</p>
+
+                              {{if faq.imgUrls.length>0}}
+                                <div class="qa_img">
+                                  {{each faq.imgUrls as pic j}}
+                                    <img src="{{pic | imgUrlFormat:[80,80]}}" data-orient-url="{{pic | imgUrlFormat}}" class="as-link" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png'">
+                                  {{/each}}
+                                </div>
+                              {{/if}}
+
+                              <p class="from_tips">
+                                <span>
+                                  <em>{{faq.type=='reply'?(faq.teacherName+'-'+faq.teacherType):'我'}}</em>
+                                  {{faq.createDt}}
+                                  {{faq.type=='reply'?'回答':'提问'}}
+                                </span>
+                              </p>
+                            </div>
+                          {{/if}}
+                        {{/each}}
+
+                        <!--当有有解答记录，并且类型是'已解答'时，学生可以发表追问-->
+                        {{if $value.gjtFeedbackVoList.length>0 && filterType && filterType=='Y' && $value.isSolve==0}}
+                          <div data-role="faq-form">
+                            <div data-id="btn-group">
+                              <button type="button" class="btn btn-md btn-orange min-width-100 margin_r5" data-role="ask-again">未解决</button>
+                              <button type="button" class="btn btn-md btn-green min-width-100" data-role="confirm-solve" data-faq-id="{{$value.id}}">已解决</button>
+                            </div>
+                            
+                            <div data-role="faq-form-in" style="display:none;">
+                              <div class="margin_t20 padding10 bg-white">
+                                <form data-id="form">
+                                  <div class="margin_b5">该问题未解决，你可以继续追问老师：</div>
+                                  <div class="textarea_box">
+                                    <div class="controls nomargin">  
+                                          <textarea class="textareaInput" rows="5" cols="30" name="content" placeholder="请输入追问内容"></textarea>
+                                          <input type="hidden" name="pid" value="{{$value.id}}">
+                                          <div class="tooltip yellow_tip t_arrow tooltip-valid"><div class="tooltip-in">请输入追问内容</div><span class="t_arrow"><i class="arrow"></i><i class="arrow arrow_inner"></i></span></div>
+                                       </div>
+                                  </div>
+                                  <div class="margin_t10">
+                                    <button type="button" class="btn btn-normal btn-gray nomargin" data-role="upload-btn">
+                                        上传图片
+                                    </button>
+                                    <span class="gray font12 margin_l10">* 支持jpg/png/gif类型图片，每张不超过5mb大小</span>
+                                    <ul class="img-preview clearfix"></ul>
+                                  </div>
+                                  <button type="button" class="margin_r15 btn btn-md btn-orange" data-role="submit-ask-again">发表追问</button>
+                                  <button type="button" class="btn btn-md btn-gray" data-role="cancel-ask-again">取消</button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        {{/if}}
+                    </div>
+                  </div>
+                </div>
+              {{else}}
+                <div class="answer" style="display:block">
+                  <label class="no-margin-top">答</label>
+                  <div class="qa_txt">
+
+                      {{if $value.gjtFeedbackVoList[0].content}}
+                        <p>{{$value.gjtFeedbackVoList[0].content}}</p>
+                      {{/if}}
+
+                      {{if $value.gjtFeedbackVoList[0].imgUrls && $value.gjtFeedbackVoList[0].imgUrls.length>0}}
+                        <div class="qa_img">
+                          {{each $value.imgUrls as item index}}
+                            <img src="{{item | imgUrlFormat:[80,80]}}" data-orient-url="{{item | imgUrlFormat}}" class="as-link" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/temp/qa.jpg'">
+                          {{/each}}
+                        </div>
+                      {{/if}}
+
+                  </div>
+                </div>
+              {{/if}}
+          {{/if}}
+
+
+        </li>
+      {{/each}}
+    </ul>    
+  {{/if}}
+</script>
+
+<!--常见问题类型列表 模板-->
+<script type="text/template" id="common-faq-type-temp">
+  <select class="form-control margin_r5"  style="width:140px;" data-id="common-faq-type-sel">
+    <option value=''>请选择问题类型</option>
+    <option value='0'>全部问题</option>
+    {{each oftenTypeList}}
+      <option value='{{$value.code}}'>{{$value.name}}</option>
+    {{/each}}
+  </select>
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','overTexts','common','pagination'], function ($,template) {
+    //template.config('cache', false)
+    var $box=$('[data-role="list-wrapper"]');
+    var $container=$('[data-role="type-content"]');
+
+    var faqUrl='/pcenter/headTeacherService/feedback/list';
+    var commonFAQUrl='/pcenter/headTeacherService/feedback/comlist';
+
+	   //新建疑问
+    $box.on('click','[data-role="create-question"]',function(event) {
+        //如果没有分配班主任就不能进行下一步
+        if(!$.cookie('BZR_ID')){
+          $.resultDialog(0,'未分配班主任，不能操作',2000)
+          return;
+        }
+        
+        event.preventDefault();
+        $.mydialog({
+          id:'dating-pop',
+          width:640,
+          height:500,
+          content: 'pop-create-faq.html'
+        });
+    });
+
+    //分页ajax
+    function pageAjax(searchData){
+      var $listContainer=$('[data-role="item-list-container"]',$container);
+      $listContainer.append('<div class="overlay bg-center"></div>');
+
+      var filter=searchData?(searchData.dealResult||'N'):'N';
+      var params={
+            title:searchData?(searchData.title||''):'',
+            pageSize:searchData?(searchData.pageSize||2):2,
+            pageNumber:searchData?(searchData.pageNumber||1):1
+        };
+
+      //非常见问题
+      if(filter!='C'){
+        params.dealResult=filter;
+      }
+      else{
+        if(searchData.commonFAQType && searchData.commonFAQType>0){
+          params.oftenType=searchData.commonFAQType;
+        }
+      }
+
+      //searchData json对象      
+      var xhr=ajaxProcess({
+        url:searchData.apiUrl,
+        type:'GET',
+        data:params,
+        success:function(renderData){
+          if(renderData.msgCode==200){
+              var rData=renderData.data;
+              if(!rData&&!rData.pageInfo){
+                $box.html(window['noDataTips']);
+              }
+              else{
+                //常见问题
+                if(rData.oftenTypeList && rData.oftenTypeList.length>0){
+                  $('[data-role="common-faq"]',$box).html(
+                    template(
+                      'common-faq-type-temp',
+                      {oftenTypeList:rData.oftenTypeList}
+                    )
+                  );
+                  $('[data-id="common-faq-type-sel"]',$box).val(searchData.commonFAQType);
+
+                  $('[data-role="tab-3"]',$box).text(rData.pageInfo.totalElements);
+
+                  //获取答疑的统计
+                  if(rData.noSolve===undefined || rData.noSolve===null){
+                    ajaxProcess({
+                      url:faqUrl,
+                      type:'GET',
+                      data:params,
+                      success:function(renderData){
+                        var json=renderData.data;
+                        if(renderData.msgCode==200 && json){
+                          $('[data-role="tab-1"]',$box).text(json.noSolve);
+                          $('[data-role="tab-2"]',$box).text(json.yesSolve);
+                        }
+                      }
+                    });
+                  }
+                }
+                //其它答疑
+                else{
+                  $('[data-role="tab-1"]',$box).text(rData.noSolve);
+                  $('[data-role="tab-2"]',$box).text(rData.yesSolve);
+
+                  params.oftenType=searchData.commonFAQType;
+
+                  //常见问题的统计
+                  ajaxProcess({
+                    url:commonFAQUrl,
+                    type:'GET',
+                    data:params,
+                    success:function(renderData){
+                      var json=renderData.data;
+                      if(renderData.msgCode==200 && json && json.pageInfo){
+                        $('[data-role="tab-3"]',$box).text(json.pageInfo.totalElements);
+                      }
+                    }
+                  });
+
+                  $('[data-role="common-faq"]',$box).empty();
+                }
+
+                if(rData.pageInfo.totalElements>0){
+                  var renderHtml = template('list-render-temp',
+                    $.extend({}, rData,{filterType:filter})
+                  );
+                  $listContainer.html(renderHtml);
+
+                  //文字收缩
+                  collapseText();
+                }
+                else{
+                  if(searchData.title!=''){
+                    $listContainer.html(window['noDataTips']);
+                  }
+                  else{
+                    var tipsMsg=filter=='N'?'待解答':(filter=='Y'?'已解答':'常见');
+                    var renderHtml = template('to-be-answer-no',{
+                                      message:'暂无'+tipsMsg+'问题',
+                                      type:filter
+                                    });
+                    $listContainer.html(renderHtml);
+                  }
+                }
+              }
+          }
+          else{
+              $listContainer.html( template('error-tips-temp',{message:renderData.message}) );
+          }
+        },
+        fail:function(textStatus){
+          $listContainer.html(textStatus);
+        }
+      });
+
+      return xhr;
+    }
+
+    //创建待解答html
+    function createHtml(options){
+      var keyJson=$('body').data('search');
+      var val=keyJson.answer.keywords;
+      var commonFAQType=keyJson.answer.commonFAQType;
+      options.filterType||(options.filterType='N');
+
+      
+      if(!options.apiUrl) return;
+
+      var flag=true;
+      var def=pageAjax({
+        title:val,
+        commonFAQType:commonFAQType,
+        dealResult:options.filterType,
+        apiUrl:options.apiUrl,
+        pageSize:5
+      })
+      .done(function(renderData){
+        if(renderData.data&&renderData.data.pageInfo){
+          var pageInfo=renderData.data.pageInfo;
+          flag=false;
+          if(pageInfo.totalElements>0){
+            var render=template.compile(window['paginationRenderTemp']);
+            var html=render(pageInfo);
+            if($('[data-role="page-box"]',$container).length<=0){
+              $container.append(html);
+            }
+            else{
+              $('[data-role="page-box"]',$container).replaceWith(html);
+            }
+
+            //生成分页
+            createPagination({
+              pageCount:pageInfo.totalElements,
+              pageSize:pageInfo.size,
+              currentPage:pageInfo.number-1
+            },function (new_page_index, pagination_container) {
+              if(flag){
+                pageAjax({
+                  title:val,
+                  commonFAQType:commonFAQType,
+                  dealResult:options.filterType,
+                  apiUrl:options.apiUrl,
+                  pageSize:pageInfo.size,
+                  pageNumber:new_page_index+1
+                });
+              }
+              flag=true;
+              return false;
+            });
+          }
+          else{
+            $('[data-role="page-box"]',$container).remove();
+            //$box=$('[data-role="item-list-container"]',$container);
+          }
+        }
+      });
+      return def;
+    }
+
+    //分页跳转
+    $container.on('click', '[data-role="jump-page-btn"]', function(event) {
+      var $pageContainer=$("#page-render");
+      var jumpPageNum=$('[data-role="jump-page-input"]',$pageContainer.parent()).val()-1;
+      var pageCount=$pageContainer.data('pageCount');
+      var curPage=$pageContainer.data('current_page');
+      if( $.isNumeric(jumpPageNum) && pageCount && pageCount>1 && curPage!=jumpPageNum && jumpPageNum<pageCount){
+        $pageContainer.trigger('setPage', [jumpPageNum]);
+      }
+    });
+
+    //回车搜索
+    $(".input-search",$box).on('keydown', function(event) {
+        var self=this;
+        if(event.which==13){//回车搜索
+          $('body').data('search',{
+            answer:{
+              keywords:self.value,
+              commonFAQType:(
+                $('[data-id="common-faq-type-sel"]',$box).length>0 ? $('[data-id="common-faq-type-sel"]',$box).val() : null
+              )
+            }
+          });
+
+          switchType(tabID);
+        }
+    });
+
+    //下拉筛选
+    $box.on('change','[data-id="common-faq-type-sel"]',function(){
+      var self=this;
+      if(!this.value) return;
+
+      $('body').data('search',{
+        answer:{
+          keywords:$(".input-search",$box).val(),
+          commonFAQType:self.value
+        }
+      });
+      switchType(tabID);
+    });
+
+    //查看大图
+    require(['jquery.fancybox'],function(){
+      $container.on('click', '.qa_img img', function(event) {
+        event.preventDefault();
+        var $img=$(this).parent().children('img');
+        var index=$img.index(this);
+        var imgUrls=$.map($img, function(item, index) {
+          return $(item).attr('data-orient-url');
+        });
+
+        $.fancybox(imgUrls, {
+          'transitionIn'    : 'none',
+          'transitionOut'   : 'none',
+          'type'            : 'image',
+          'index'           : index,
+          'changeFade'      : 0
+        });
+      });
+      
+    });
+
+    //展开/收缩 回答的内容
+    $container.on('click','.down_btn',function(){
+        $(this).closest('.ask').next(".answer").stop(true,true).slideToggle('fast',function(){
+            window.JPlaceHolder.init();
+        });                        
+
+        var $span=$(this).children("span");
+        var $i=$(this).children("i");
+
+        if($i.hasClass('active')){
+            $i.removeClass('active');
+            $span.html("展开");
+        }
+        else{
+            $i.addClass('active');
+            $span.html("收起");
+        }
+    });
+
+    //取消追问
+    $container
+    .on('click', '[data-role="cancel-ask-again"]', function(event) {
+      var $form=$(this).closest('[data-role="faq-form-in"]');
+      $form.siblings('[data-id="btn-group"]').slideDown('fast');
+      $form.slideUp('fast');
+
+      $('.tooltip',$form).hide();
+      $('textarea',$form).removeClass('Validform_error').val('');
+    })
+    //追问
+    .on('click', '[data-role="ask-again"]', function(event) {
+      var $p=$(this).parent();
+      $p.slideUp('fast');
+      $p.next().slideDown('fast');
+    })
+    //确认问题已解决
+    .on('click', '[data-role="confirm-solve"]', function(event) {
+      event.preventDefault();
+      var id=$(this).data('faq-id');
+      var $loading=$('[data-role="page-loading"]');
+      $loading.show()
+      ajaxProcess({
+        url:'/pcenter/headTeacherService/feedback/affirmSolve',
+        type:'POST',
+        data:{id:id},
+        success:function(data){
+          $.when($.resultDialog( (data.msgCode==200?1:0),data.message))
+          .done(function(){
+            if(data.msgCode==200){
+              curRoute.app.refresh();
+            }
+          });
+        },
+        always:function(){
+          $loading.hide();
+        }
+      });
+    })
+    //发表追问
+    .on('click', '[data-role="submit-ask-again"]', function(event) {
+      event.preventDefault();
+      //如果没有分配班主任就不能进行下一步
+      if(!$.cookie('BZR_ID')){
+        $.resultDialog(0,'未分配班主任，不能操作',2000)
+        return;
+      }
+      
+      var self=this;
+      var $formBox=$(this).closest('[data-role="faq-form-in"]');
+      var $textarea=$('textarea',$formBox);
+      var $form=$('[data-id="form"]',$formBox)
+      if( $textarea.val()=='' ){
+        $textarea.addClass('Validform_error');
+        $('.tooltip',$formBox).show();
+      }
+      else{
+        $(self).addClass('disabled').prop('disabled',true).text('数据提交中...');
+
+        ajaxProcess({
+          url:'/pcenter/headTeacherService/feedback/askAgain',
+          type:'POST',
+          data:$form.serialize(),
+          success:function(data){
+            $.when($.resultDialog( (data.msgCode==200?1:0),data.message))
+            .done(function(){
+                curRoute.app.refresh();
+            });
+          },
+          always:function(){
+            $(self).removeClass('disabled').prop('disabled',false).text('发表追问');
+          }
+        });
+      }
+    })
+
+    //上传图片
+    .on('click','[data-role="upload-btn"]',function(event) {
+      event.preventDefault();
+      var $imgBox=$(this).siblings('.img-preview');
+      if( $('li',$imgBox).length>9 ){
+        $.resultDialog(0,'添加的图片不能超过9张');
+        return;
+      }
+
+      uploadFile({
+        ok:function(filelist){
+          if(filelist){
+            if(filelist.length>0){
+              var src=filelist[0].SFileName;
+              var html=[
+                '<li>',
+                  '<img src="{0}?x-oss-process=image/resize,h_80,w_80/auto-orient,1">',
+                  '<input type="hidden" value="{0}" name="imgUrls">',
+                  '<i class="icon icon-71x0" data-role="remove-img" title="删除"></i>',
+                '</li>'
+              ].join('').format(src);
+              $imgBox.append(html);
+            }
+          }
+          $.closeDialog(this);
+        }
+      });
+    })
+
+    //删除图片
+    .on('click', '[data-role="remove-img"]', function(event) {
+      event.preventDefault();
+      $(this).parent().remove();
+    });
+
+    //文字多时收缩
+    function collapseText(){   
+      $(".xo",$container).each(function(index, el) {
+          var self=this;
+          $(self).overTexts({
+              texts: $(self).attr('data-text'),
+              textLength: "80",
+              overText: "展开",
+              openText: "收起",
+              ooType: "2"                     
+          });
+      });
+    }
+
+    //选项卡效果(待解答/已解答)
+    var tabID=curRoute.params['id'];
+    tabID||(tabID='0');
+    
+    $('[data-role="type-tab"] a').eq(tabID).addClass('active').siblings().removeClass('active');
+
+    var keyJson=$('body').data('search');
+    if( !keyJson || !keyJson.answer ){
+      $('body').data('search',{
+          answer:{
+            keywords:'',
+            commonFAQType:null
+          }
+      });
+    }
+    else{
+      $(".input-search",$box).val(keyJson.answer.keywords);
+      $('[data-id="common-faq-type-sel"]',$box).val(keyJson.answer.commonFAQType)
+    }
+
+    switchType(tabID);
+
+    //选择渲染数据的类型
+    function switchType(tabID){
+      switch(tabID){
+        case '0'://待解答
+          createHtml({
+            apiUrl:faqUrl,
+            filterType:'N'
+          });
+          break;
+        case '1'://已解答
+          createHtml({
+            apiUrl:faqUrl,
+            filterType:'Y'
+          });
+          break;
+        case '2'://常见问题
+          createHtml({
+            apiUrl:commonFAQUrl,
+            filterType:'C'
+          });
+          break;
+        default:
+          break;
+
+      }
+    }
+});
+</script>

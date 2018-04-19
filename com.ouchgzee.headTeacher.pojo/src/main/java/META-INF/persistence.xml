@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+
+    <persistence-unit name="NewPersistenceUnit">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtStudentInfo</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtUserAccount</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtClassInfo</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtFeeInvoice</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtSignup</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtSignupData</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtSignupFee</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtBillApplyRecord</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtSpecialty</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtMessageBox</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtMessageInfo</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtServiceInfo</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtServiceRecord</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtServiceStudent</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtClassStudent</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtGrade</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrPriModelInfo</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrPriOperateInfo</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrPriUserInfo</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrPriRoleInfo</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrPriRoleOperate</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrPriModelOperate</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrPriRoleModel</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrTblSysData</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtEmployeeInfo</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtTeachPlan</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtEnrollBatch</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtStudentProperty</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtGraduationStu</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtFeedback</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrTblPriLoginLog</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtDistrict</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtStudyCenter</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtSchoolInfo</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtOrg</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtExamPoint</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtExamRecord</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtRecResult</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtStudentExamPoint</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtTermInfo</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtStudentTerm</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtActivity</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtActivityJoin</class>
+        <class>com.ouchgzee.headTeacher.id.BzrGjtActivityJoinPK</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtActivityComment</class>
+        <class>com.ouchgzee.headTeacher.pojo.BzrGjtReport</class>
+        <properties>
+            <!-- 使用MySQL方言 -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
+            <!-- 数据库连接的URL地址 -->
+            <property name="hibernate.connection.url" value="jdbc:oracle:thin:@//172.16.146.66:1521/gzdec"/>
+            <!-- 数据库连接的驱动 -->
+            <property name="hibernate.connection.driver_class" value="oracle.jdbc.OracleDriver"/>
+            <!-- 数据库连接的用户名 -->
+            <property name="hibernate.connection.username" value="gzlll_gjt_gxlclms2"/>
+            <!-- 数据库连接的密码 -->
+            <property name="hibernate.connection.password" value="password"/>
+
+            <property name="hibernate.connection.useUnicode" value="true"/>
+            <property name="hibernate.connection.characterEncoding" value="UTF-8"/>
+
+            <!-- 显示SQL语句 -->
+            <property name="hibernate.show_sql" value="true"/>
+            <!-- 在显示SQL语句时格式化语句 -->
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.use_sql_comments" value="false"/>
+            <!-- 自动输出schema创建DDL语句 -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+
+            <!-- 数据库连接超时后自动重连 -->
+            <property name="hibernate.connection.autoReconnect" value="true"/>
+            <property name="connection.autoReconnectForPools" value="true"/>
+            <property name="connection.is-connection-validation-required" value="true"/>
+        </properties>
+    </persistence-unit>
+
+</persistence>

@@ -1,0 +1,49 @@
+[
+   {
+      "collegeNmae" : "guokai",
+      "domains" : [ "http://lms.oucnet.com/", "http://bzr.oucnet.com/" ],
+      "mapping" : {
+         "http://xllms.gzedu.com/" : "http://lms.oucnet.cn/",
+         "http://xzlms.gzedu.com/" : "http://bzr.oucnet.cn/"
+      }
+   },
+   {
+      "collegeName" : "guangzhou",
+      "domains" : [
+         "http://study.ouchgzee.com/",
+         "http://lms.ouchgzee.com/",
+         "http://bzr.ouchgzee.com/"
+      ],
+      "mapping" : {
+         "http://study.oucnet.cn/" : "http://study.ouchgzee.com/",
+         "http://xllms.gzedu.com/" : "http://lms.ouchgzee.com/",
+         "http://xzlms.gzedu.com/" : "http://bzr.ouchgzee.com/"
+      }
+   },
+   {
+      "collegeName" : "guangzhouPre",
+      "domains" : [
+         "http://ty.pre.study.eenet.com/",
+         "http://ty.lms.pre.eenet.com/",
+         "http://ty.bzr.pre.eenet.com/"
+      ],
+      "mapping" : {
+         "http://tstudy.gzedu.com/" : "http://ty.pre.study.eenet.com/",
+         "http://txllms.gzedu.com/" : "http://ty.bzr.pre.eenet.com/",
+         "http://txzlms.gzedu.com/" : "http://bzr.ouchgzee.com/"
+      }
+   },
+   {
+      "collegeName" : "guangzhouTest",
+      "domains" : [
+         "http://ty.tt.study.eenet.com/",
+         "http://ty.lms.tt.eenet.com/",
+         "http://ty.bzr.tt.eenet.com/"
+      ],
+      "mapping" : {
+         "http://test.study.tt.gzedu.com/" : "http://ty.tt.study.eenet.com/",
+         "http://test.xllms.tt.gzedu.com/" : "http://ty.lms.tt.eenet.com/",
+         "http://test.xzlms.tt.gzedu.com/" : "http://ty.bzr.tt.eenet.com/"
+      }
+   }
+]

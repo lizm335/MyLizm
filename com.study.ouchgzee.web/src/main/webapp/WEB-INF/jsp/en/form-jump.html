@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>进入学习</title>
+  </head>
+  <body>
+  	<form id="theform" name="theform" method="post">
+  		<input name="formMap.USER_INFO" type="hidden">
+  	</form>
+    <script>
+    	//url参数解析
+		function GetQueryString(name)
+		{
+		     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+		     var r = window.location.search.substr(1).match(reg);
+		     if(r!=null) return  unescape(r[2]);
+		     return null;
+		}
+
+		var action=GetQueryString('action');
+		var param=GetQueryString('formMap.USER_INFO');
+
+		if( action && param ){
+			var form=document.forms['theform']
+			form.action=action;
+			form['formMap.USER_INFO'].value=param;
+			form.submit();
+		}
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,54 @@
+<div class="padding10" data-id="bzr-info">
+	<div class="text-center"><i class="loading"></i></div>
+</div>
+
+<script type="text/template" id="bzr-info-temp">
+	<table class="table-gray-th">
+		<tr>
+			<th width="210">
+				<div class="teacher-middle-box has-pic">
+					<div class="bzr_head_box center-block">
+						<span>
+							{{if dutyTeacherUrl}}
+					          <img src="{{dutyTeacherUrl | imgUrlFormat:[150,150]}}" alt="">
+					        {{else}}
+					          <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png" alt="">
+					        {{/if}}
+						</span>
+					</div>
+					<h2>{{dutyTeacherName}}</h2>
+					<p>专业责任教师</p>
+				</div>
+			</th>
+			<td style="line-height:1.75">
+				<h3 class="text-no-bold sub-title f18 margin_b20">个人简介</h3>
+				<section>
+					{{dutyTeacherDetails}}
+				</section>
+			</td>
+		</tr>
+	</table>
+</script>
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+	
+  	//班主任信息
+  	;(function(){ 
+      	ajaxProcess({
+      		url:'/pcenter/headTeacherService/teacherMessege/dutyTeacherInfo',
+      		type:'GET',
+      		success:function(renderData){
+      			var $box=$('[data-id="bzr-info"]');
+				if(renderData.msgCode==200 && renderData.data && renderData.data.dutyTeacherName){
+				  var renderHtml = template('bzr-info-temp',renderData.data);
+				  $box.html(renderHtml);
+				}
+				else{
+				  $box.html( template('no-data-tips-temp',{message:'暂无专业责任教师'}) );
+				  
+				}
+      		}
+      	});
+  	})();
+});
+</script>

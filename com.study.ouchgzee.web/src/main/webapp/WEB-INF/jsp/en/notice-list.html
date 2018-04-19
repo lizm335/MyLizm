@@ -1,0 +1,188 @@
+<div class="main-box">
+	<div class="wrap-box clearfix">
+		<div class="main">
+			<div class="bg-white border-e0e0e0">
+				<div class="teacher_title">
+					<a class="btn btn-normal btn-gray fr" href="#/xuexi">
+						<i class="icon icon-175x0 margin_r5"></i>返回首页
+					</a>
+					<h2><i class="icon icon-0x32"></i>通知公告</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="main-box">
+	<div class="wrap-box clearfix">
+		<div class="main">
+			<div class="bg-white border-e0e0e0">
+				<div class="teacher_head">
+					<div class="tabs-content padding20" id="tabs-content-box">
+						<div class="margin-offset-lr20" data-role="list-wrapper">
+							<div class="bzr_subnav padding_t10">
+								<div class="subnav_btn fl" data-role="type-tab">
+									<a href="#/tzgonggao?id=0" class="active">未读（<span data-role="tab-1">0</span>）</a>
+									<a href="#/tzgonggao?id=1">已读（<span data-role="tab-2">0</span>）</a>
+								</div>
+
+								<div class="bzr_searchInput fr margin_l10">
+									<input class="form-control input-search" placeholder="请输入关键词搜索，回车搜索" style="width:250px;">
+								</div>
+								<div class="fr">
+									<select class="form-control" style="width:200px;" data-role="sel-filter-note">
+									</select>
+								</div>
+							</div>
+							<div class="qa_box" data-role="type-content">
+								<div data-role="item-list-container" class="overlay-wrapper">
+									<div class="text-center"><i class="loading"></i></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>		
+</div>
+
+<!--通知列表 模板-->
+<script type="text/template" id="list-render-temp">
+  {{if pageInfo.totalElements>0}}
+    <ul class="notice_ul" dat-role="item-list">
+      	{{each pageInfo.content}}
+			<li class="notice_box02 clearfix">
+				<div class="qa_txt">
+					<h2>{{$value.infoType?('【'+$value.infoType+'】'):''}}<a href="#/tzgonggao/article/{{$value.messageId}}?muid={{$value.messageUserId}}">{{$value.infoTheme}}</a>
+            {{if $value.isStick==1}}
+              <span class="label label-warning label-sm" style="vertical-align:middle;">置顶</span>
+            {{/if}}
+          </h2>
+					<div class="txt">{{$value.infoContent | filterHtmlTags}}</div>
+				</div>
+				<div class="summary_01">
+					<span>发布人：{{$value.putUserName}}</span><span>发布时间：{{$value.createdDt}}</span>
+				</div>
+			</li>
+		{{/each}}
+    </ul>    
+  {{/if}}
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+	//template.config('cache', false);
+	template.helper('filterHtmlTags', function (orientVal) {
+		return orientVal.filterHtmlTags();
+    });
+
+	var $container=$('[data-role="type-content"]');
+
+	//回车搜索
+  $(".input-search").on('keydown', function(event) {
+      var self=this;
+      if(event.which==13){
+        event.preventDefault();
+        $('body').data('search',{
+          notes:{
+            keywords:self.value,
+            type:$('[data-role="sel-filter-note"]').val()
+          }
+        });
+        genarateHtml(tabID==0?'0':'1').createHtml();
+      }
+  });
+
+  //下拉筛选
+  $('[data-role="sel-filter-note"]').change(function(){
+    var self=this;
+    $('body').data('search',{
+      notes:{
+        keywords:$(".input-search").val(),
+        type:self.value
+      }
+    });
+  	genarateHtml(tabID==0?'0':'1').createHtml();
+  });
+
+  //选项卡效果(待解答/已解答)
+  var tabID=curRoute.params['id'];
+    tabID||(tabID=0);
+    
+  $('[data-role="type-tab"] a').eq(tabID).addClass('active').siblings().removeClass('active');
+
+  //生成分页
+  function genarateHtml(filterType){
+    var keyJson=$('body').data('search');
+    var infoType=keyJson.notes.type;
+    var val=keyJson.notes.keywords;
+
+    return new myPagination({
+      //form:$('[data-id="post-form"]'),
+      ajaxUrl:'/pcenter/home/message/list',
+      $Container:$('[data-role="type-content"]'),
+      pageSize:5,
+      otherJson:{
+        infoTheme:val,
+        infoType:infoType,
+        isEnabled:(filterType?filterType:'0')
+      },
+      callback:function(renderData){
+        var $box=$('[data-role="item-list-container"]');
+        $box.append('<div class="overlay bg-center"></div>');
+        if(renderData.msgCode==200){
+          if(renderData.data && renderData.data.pageInfo){
+            $('[data-role="tab-1"]').text(renderData.data.unreadCount);
+            $('[data-role="tab-2"]').text(renderData.data.readCount);
+            //下拉菜单渲染
+
+            if($('[data-role="sel-filter-note"]').children().length<=0){
+              var render=template.compile('{{each infoTypeMap}}<option value="{{$index}}">{{$value}}</option>{{/each}}');
+              $('[data-role="sel-filter-note"]').html('<option value="">全部通知</option>'+render(renderData.data)).val(infoType);
+            }
+
+            if(renderData.data.pageInfo.totalElements>0){
+              var renderHtml = template('list-render-temp',renderData.data);
+              $box.html(renderHtml);
+            }
+            else{
+              if(val!=''){
+                $box.html(window['noDataTips']);
+              }
+              else{
+                var renderHtml = template('no-data-tips-temp',{
+                                message:(filterType=='0'?'暂无未读通知公告':'暂无已读通知公告')
+                              });
+                $box.html(renderHtml);
+              }
+            }
+          }
+          else{
+            $box.html(window['noDataTips']);
+          }
+        }
+        else{
+          $box.html( renderData.message )
+        }
+      }
+    })
+  }
+
+  var keyJson=$('body').data('search');
+  if( !keyJson || !keyJson.notes ){
+    $('body').data('search',{
+          notes:{
+            keywords:'',
+            type:''
+          }
+      });
+  }
+  else{
+    $(".input-search").val(keyJson.notes.keywords);
+    $('[data-role="sel-filter-note"]').val(keyJson.notes.type)
+  }
+
+  //初使化页面
+  genarateHtml(tabID==0?'0':'1').createHtml();
+});
+</script>

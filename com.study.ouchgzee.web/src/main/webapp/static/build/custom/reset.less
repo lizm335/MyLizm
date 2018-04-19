@@ -1,0 +1,810 @@
+@import "normalize.less";
+@import "icon.less";
+@import "components.less";
+
+/*
+ *reset css
+*/
+body,h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6,.popover{
+	font-family:"Microsoft YaHei",'STHeiti';
+}
+body.inner-page-body{background-color: #ecf0f5;padding-top: 45px;}
+@media (max-width: 767px){
+	body.fixed{overflow-y:hidden;}
+}
+
+.fixed .main-sidebar .slimScrollDiv .slimScrollBar{background: #000 !important;}
+.navbar{height:50px;}
+.content-header{min-height:41px;background: #fff;padding: 7px 15px;position: fixed;width: 100%;left: 0;top: 0;z-index: 10;border-bottom: #ecf0f5 1px solid;    box-shadow: 0 1px 1px rgba(0,0,0,0.1);}
+.main-header{max-height:none;height:50px;}
+.main-header .logo{padding:0 5px;}
+@media (max-width: 767px){
+	.main-header{height:100px;}
+}
+.logo-lg .fa{font-size: 40px;vertical-align: middle;margin-right: 5px;width: 1em;}
+
+.bootstrap-select.form-control .btn-default{background-color:transparent}
+.content-header>.breadcrumb{color:#454545;font-size:14px;float: none;position: static;padding: 0;background: none;margin:5px 0 0;}
+.content-header>.breadcrumb a:hover{color:#3c8dbc;}
+.table-container thead th,.table-container tbody td{padding-right:10px !important;padding-left:10px !important;}
+.table-container tbody tr:hover,.table-container tbody tr.selected{background-color:#ebf7ff;}
+
+.sidebar-menu li.header{font-size:14px;overflow: hidden;height: 0;padding: 0;margin-top: 15px;}
+.sidebar-menu>li>a>.fa{font-size: 18px;}
+
+.info-box-number{word-wrap: break-word;}
+.page > iframe{height:100%;width:100%;border:0;}
+/* footer */
+.site-footer{background-color: #d3d8df;bottom: 0;left: 0;width: 100%;}
+.site-footer .pull-right{color: #434343;}
+.site-footer .pull-right span{font-size: 24px;}
+.site-footer li{padding:15px 20px;}
+.site-footer .li-1{border-right: #b8b8b8 2px solid;padding-left: 0;}
+.site-footer .sp-1,.site-footer .sp-2{position: relative;top: 5px;}
+.site-footer .list-inline{margin: 5px 0 0;padding: 0;}
+//侧边宽度调整
+@sideWidth:200px;
+@media (min-width:768px){
+	.content-wrapper,
+	.main-header>.navbar{
+		margin-left:@sideWidth;
+	}
+	.main-header .logo,
+	.main-sidebar{
+		width:@sideWidth;
+	}
+}
+/* content */
+.first-level-wrap .cur > a{
+	background-color: #e1e3e9;
+    color: #333;
+}
+@media (max-width:767px){
+	.operion-more-menu .dropdown-menu{position:absolute !important;background-color: #fff !important;border: 1px solid #ccc !important;border: 1px solid rgba(0,0,0,.15) !important;box-shadow: 0 6px 12px rgba(0,0,0,.175) !important;margin-top:2px !important;}
+	.operion-more-menu .dropdown-menu a{color: #333 !important;}
+	.operion-more-menu .dropdown-menu a:hover{color: #fff !important;}
+
+}
+@media (min-width:992px){
+	.first-level-wrap{margin-right: 70px;}
+}
+.first-level-menu{height:50px;margin:0;list-style:none;padding:0;overflow:hidden;text-align:right;}
+.first-level-menu > li{color:#fff !important;display:inline-block;line-height:50px;padding:0 1em;cursor:pointer;white-space:nowrap;}
+.first-level-menu > li:hover,.first-level-menu > li.cur{background: rgba(0,0,0,0.1);}
+.operion-more-menu.open .fa:before{content: "\f0d8";}
+.operion-more-menu a.dropdown-toggle{color:#fff;line-height:50px;background:none;display:inline-block;padding:0 .5em 0 1em;}
+.operion-more-menu a.dropdown-toggle:hover{background: rgba(0,0,0,0.1);}
+.operion-more-menu .dropdown-menu{margin-top: 0 !important;}
+
+.btn-wrap{padding-left:15px;padding-right: 0;float:right;}
+
+.search-more{padding-right:0;min-width:100px;}
+.search-more-in,.more-tabs{color:#3c8dbc;text-align: center;cursor: pointer;padding-top: 5px;padding-left:15px;text-align: right;float:right;}
+.reset-form-horizontal{padding:10px 0;}
+@media (min-width:769px) and (max-width:991px){
+	.reset-form-horizontal{padding:0;}
+	.reset-form-horizontal > div[class*='col-md']{margin:10px 0;}
+	.reset-form-horizontal > div[class*='col-md']:after{
+		    clear: both;content: " ";display:block;
+	}
+}
+.reset-form-horizontal .control-label{white-space: nowrap;}
+.reset-form-horizontal .select2-container .select2-selection--single{height:34px;border-color:#d2d6de;}
+.reset-form-horizontal .select2-container--default .select2-selection--single .select2-selection__arrow b{color:#666666;}
+.reset-form-horizontal .select2-container--default .select2-selection--single .select2-selection__arrow{height: 100%;}
+@media (max-width: 767px){
+	.search-more{padding-right:10px;}
+}
+
+@media (max-width: 992px){
+	.search-more{margin-bottom: 15px;padding-right:10px;}
+}
+.fiter-tabs{padding:3px 30px;margin:0;}
+.fiter-tabs dt{font-weight: normal;float: left;margin:7px 0 0;}
+.fiter-tabs dd{overflow: hidden;}
+.tabs-box-wrap{padding:0 25px 0 0;overflow: hidden;}
+.tabs-box{list-style: none;margin: 0;padding:0;}
+.tabs-box li{float: left;line-height:24px;white-space: nowrap;padding:0px 15px;cursor: pointer;margin: 5px 15px;}
+.tabs-box li.cur{background-color: #3c8dbc;border-radius: 3px;color: #fff;}
+.reset-table.top-border{border-top: 1px solid #f4f4f4;    margin-top: 10px;}
+.reset-table tr:last-child td{border-bottom: 1px solid #f4f4f4;}
+.reset-table th,.reset-table td{text-align:center;vertical-align: middle !important;}
+.reset-table th:last-child,.reset-table td:last-child{text-align: left;}
+.reset-table th{font-size: 16px;}
+.reset-table td{color: #666;}
+.reset-table tr:hover td{background-color: #ebf7ff !important;}
+
+.operion-item{cursor:pointer;margin:3px;display: inline-block;}
+.operion-item .fa{font-size:18px;}
+.operion-edit{color: #3c8dbc;}
+.operion-view{cursor: pointer;margin-right: 5px;}
+.operion-del{color:#dd4b39 !important;}
+.operion-more{font-size:12px;}
+.operion-more .fa{width:auto;}
+.operion-more .dropdown-toggle{color: #666666;display: inline-block;white-space:nowrap;}
+.dropdown-menu{border-color: #d9d9d9;box-shadow: 0 0 5px #ccc;}
+.operion-more .dropdown-menu{left:auto;right: 0;min-width: 100px;text-align: center;font-size: 12px;}
+.operion-more .dropdown-menu>li>a{}
+.operion-more .dropdown-menu>li>a:hover{background-color: #357ebd;color: #fff;}
+
+.inner-tabs{overflow: hidden;position: relative;border-bottom: #ebebeb 1px solid;}
+.inner-tabs ul{position: relative;width: 10000px;list-style: none;padding: 0}
+.inner-tabs li{float: left;font-size: 20px;color: #999999;padding:10px 20px;border-bottom: #fff 3px solid;cursor: pointer;}
+.inner-tabs li.cur{border-color: #357ebd;color: #357ebd;}
+
+.search-btn-group{padding:0;}
+.search-btn-group > div{padding:0;float:right;margin:0;}
+
+@media (max-width: 991px){
+	.search-btn-group{padding-right:10px;}
+	.search-btn-group > div{padding:0 5px;}
+	.search-btn-group .btn{font-size:18px;min-width: 90px;}
+}
+
+/* news list */
+.news-item{border-bottom:#ebebeb 1px dashed;padding:20px 0;}
+.news-item:first-child{border-top:#ebebeb 1px dashed;}
+.news-tit .label{padding: 0 5px;font-weight: normal;}
+.news-tit a{font-size:16px;font-weight:bold;display:block;}
+.news-summary{color:#666;}
+.news-other{color:#999;font-size:12px;}
+.news-other cite{font-style:normal;margin-right:2em;}
+
+/* --首页-- */
+.ion-total-person:before{content: "\f4f8";}
+.ion-open-book:before{content: "\f4f9";}
+.ion-user-group:before{content: "\e100";}
+/*代办事项*/
+.agency-list li{background-color:#f4f4f4;padding: 5px 10px;position:relative;border-radius:3px;margin:2px 0;}
+.agency-list-width-pad10 li{padding: 10px;}
+.agency-list li .label{margin-right:10px;font-weight:normal;font-size:12px;}
+.agency-list li span{overflow:hidden;white-space:nowrap;margin-right:4em;text-overflow:ellipsis;display:block}
+.agency-list-width-pad10 li span{line-height:1.4;}
+.agency-link{display:none;position:absolute;right:10px;top:5px;background-color:#f4f4f4;}
+.agency-list-width-pad10 li .agency-link{top:9px;}
+.agency-list li:hover .agency-link{display:block;}
+/*通知公告*/
+.note-list li{margin-bottom:15px;}
+.note-list li:last-child{margin-bottom:0;}
+.note-list li a{display:block;clear:both;color:#333;}
+.note-list li a:hover > *{color:#3c8dbc;}
+.note-list span.pull-left{color:#666;}
+.note-list .note-tit{display:block;overflow:hidden;height:20px;white-space:nowrap;text-overflow:ellipsis}
+/*学员情况*/
+.chat-dot{font-size:12px;}
+.chat-dot li{white-space:nowrap;}
+.chat-dot li:before{display:inline-block;width:10px;height:10px;content:' ';margin-right:5px;}
+.chat-dot1:before{background-color:#ff7f50;}
+.chat-dot2:before{background-color:#87cefa;}
+.chat-dot3:before{background-color:#da70d6;}
+.chat-dot4:before{background-color:#32cd32;}
+.chat-dot5:before{background-color:#6696ed;}
+/* --教学计划-- */
+.score-list{margin-bottom:0;margin-top:10px;}
+@media (max-width:991px){
+	.score-list{margin-bottom:10px;margin-top:0;}
+}
+.score-list li:after{content:'|';display:inline-block;vertical-align: top;margin-top: -1px;margin-left:10px;}
+.score-list li:last-child:after{display:none;}
+.plan-table{min-width:960px;counter-reset:ordernum;}
+.plan-table tbody td:nth-child(1){vertical-align:middle;text-align:center;}
+.plan-table .list-inline .text{margin:0px !important;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.plan-table .list-inline > li{min-width:76px;width: 9.9%;float: left;}
+.plan-table .list-inline > li:nth-child(1){min-width:140px;width: 21%;}
+.plan-table .list-inline > li:nth-child(5),
+.plan-table .list-inline > li:nth-child(6){min-width:40px;width:6%;width: 6.2%;}
+.plan-table .list-inline > li:last-child{min-width:40px;width:1%}
+.ul-label-list{margin:0 10px 0 25px;}
+.reset-todo-list{overflow: visible;}
+.reset-todo-list > li{counter-increment:ordernum;position:relative;padding:0;}
+.reset-todo-list > li .handle{padding: 10px 5px;background-color: #e6e7e8;margin: 0;position: absolute;height: 100%;width:20px;}
+.reset-todo-list > li .handle div{position: absolute;top: 50%;margin-top: -10px;}
+.ul-text-list .text{font-weight:normal !important;}
+.reset-todo-list > li .handle .fa{color: #a2a2a3;}
+.reset-todo-list > li:before{content: counter(ordernum);position:absolute;left:-60px;width: 50px;text-align: center;padding: 10px 0;}
+.reset-todo-list > li .pad{overflow:hidden;padding-left: 30px;}
+.reset-todo-list > li .tools{display:inline-block;float:none;width: 40px;}
+.plan-table .form-control{padding: 3px 6px;}
+.plan-table .btn{padding: 5px 6px;}
+.plan-table .form-group{display:none;margin-bottom:0;}
+.plan-table .fa-edit{color:#3c8dbc;}
+.add-data .text,.add-data .tools{display:none !important;}
+.add-data .form-group{display:block !important;}
+.btn-pad-horizontal{padding-left:2em;padding-right:2em;}
+.tips-box{z-index: 1111;top: 50%;left: 50%;position:fixed;box-shadow: 0px 2px 10px #ccc;}
+.tips-box .close{display:none;}
+
+/* --新增学员-- */
+.upload-image-box{width:160px;}
+.upload-image-container{height:140px;border:#eff1f3 1px solid;border-bottom:0 none;background-color:#fbfdff;text-align:center;display:table;width:100%;}
+.upload-image-container .table-cell-block{vertical-align:middle;text-align:center !important;}
+.upload-image-btn{position:relative;}
+.btn-file{position:absolute;width:100%;height:100%;top:0;left:0;opacity:0;}
+.upfile-tips{vertical-align: top;padding-top: 20px;padding-left: 20px;color:#999999;font-size:12px;}
+
+/* --查看/编辑学员信息-- */
+
+.content-group{margin:30px 0;}
+.cnt-box-header{padding: 0 0 10px 0;}
+.cnt-box-title{display: inline-block;font-size: 18px;margin: 0;line-height: 1;padding-top: 5px;}
+.cnt-box-title:before{content:' ';display:inline-block;vertical-align:middle;width:4px;height:18px;background-color:#3c8dbc;margin: -5px 10px 0 0;}
+.cnt-box-header.with-border{border-bottom: 1px solid #f4f4f4;}
+.cnt-box-body{padding:0 10px;}
+.info-edit{display:none;}
+.content-group.editing .cnt-box-body .info-text{display:none;}
+.content-group.editing .cnt-box-body .info-edit{display:block;}
+.content-group.editing .cnt-box-body span.info-edit{display:inline-block;}
+
+.cnt-box-body .table-block{width:100%;border-collapse: collapse;}
+.cnt-box-body .table-row{border-bottom:1px #ebebeb dashed;}
+.cnt-box-body .table-cell-block{vertical-align:middle;float:none;padding:10px 15px;}
+.cnt-box-body .table-row > .table-cell-block:nth-child(1){font-size:16px;width:25%;}
+.cnt-box-body .table-row > .table-cell-block:nth-child(2){width:75%;padding-left: 0;}
+
+/* --版权设置-- */
+
+.copyright-tbl .table-row  > .table-cell-block{padding:20px 15px;}
+.copyright-tbl .table-row  > .table-cell-block:nth-child(1){vertical-align:middle;text-align:right;width:20%;}
+
+/* --院校设定-- */
+.width-border-dashed{border:#ebebeb 1px dashed;}
+.school-set-list input{border:0 none;background:none;padding:0;outline:none !important;width:7em;font-weight:bold;line-height: 1;border-bottom:1px dashed #fff;display:none;}
+.school-set-list input::-webkit-input-placeholder{color: #fff;font-weight:normal;}
+.school-set-list input:-ms-input-placeholder{color: #fff;font-weight:normal;}
+.school-set-list input:-moz-placeholder{
+color: #fff;font-weight:normal;}
+.school-set-list input::-moz-placeholder{color: #fff;font-weight:normal;}
+.school-set-list > li:last-child{border:#3c8dbc 1px dashed;width:56px;text-align:center;height:34px;line-height:34px;vertical-align: middle;color:#3c8dbc;font-size: 30px;cursor:pointer;border-radius:3px;margin-left:5px;}
+.school-set-list > li:last-child:before{content:'+';}
+
+/* --分配教师-- */
+.distribut-teacher{margin:30px 0px;padding:0 10px;}
+.distribut-teacher .table-cell-block:nth-child(1),
+.distribut-teacher .table-cell-block:nth-child(3){
+	width:40%;
+}
+.distribut-teacher .table-cell-block:nth-child(2){padding:0 20px;}
+.distribut-teacher .panel{margin-bottom:0;}
+.distribut-teacher .panel-body{padding:0;}
+.panel-search-group input{border-right:0 none;border-color: #d2d6de !important;}
+.panel-search-group .input-group-addon{color:#b3b3b3;}
+
+.scroll-sim{
+	height:270px;
+	overflow:hidden;
+}
+.distribut-teacher-list{
+	margin-bottom:10px;
+	height:270px;
+	overflow-y:auto;
+	overflow-x:hidden;
+	li{
+		padding:5px 15px;
+		cursor:pointer;
+		label{
+			display:block;
+		}
+		.checkbox,.radio{
+			margin:0;
+		}
+		&:hover{
+			background-color:#ebf7ff;
+		}
+	}
+}
+/* --开课流程-- */
+
+/*第一流程*/
+.open-course-progression-tabs{font-size:16px;color:#999999;counter-reset:process;border-bottom:#f5f5f5 1px solid;}
+.open-course-progression-tabs li{counter-increment:process;position:relative;float:left;padding-right:80px;white-space:nowrap;width: 30%;}
+.open-course-progression-tabs li:nth-child(4){padding-right:0;width: 10%;}
+.open-course-progression-tabs li:before{width:100%;height:1px;background-color:#b2b2b2;position:absolute;top:50%;right:0px;content:' ';}
+.open-course-progression-tabs li.active:before{background-color:#3c8dbc;}
+.open-course-progression-tabs li.active.cur:before{background-color:#b2b2b2;}
+.open-course-progression-tabs li:nth-child(4):before{display:none;}
+.open-course-progression-tabs span{position:relative;background-color:#fff;padding:0 10px;font-weight:bold;cursor:pointer;}
+.open-course-progression-tabs li.active.cur span{color:#333333;}
+.open-course-progression-tabs li:nth-child(1) span{padding-left:0 !important;}
+.open-course-progression-tabs li:nth-child(2) span{left:-2.2em;}
+.open-course-progression-tabs li:nth-child(3) span{left:-1.9em;}
+.open-course-progression-tabs li:nth-child(4) span{padding-right:0 !important;}
+.open-course-progression-tabs span:before{content:counter(process);display:inline-block;width:36px;height:36px;text-align:center;line-height:36px;border-radius:50%;border:#b2b2b2 1px solid;color:#b2b2b2;margin-right:10px;font-weight:normal;}
+.open-course-progression-tabs li.active span:before{border-color:#3c8dbc;color:#3c8dbc;}
+.open-course-progression-tabs li.active.cur span:before{background-color:#3c8dbc;color:#fff;}
+@media (max-width:880px){
+	.open-course-progression-tabs span{font-weight:normal;}
+	.open-course-progression-tabs span:before{width:20px;height:20px;line-height:20px;font-size:12px;}
+}
+.select-class-list li{border-radius:3px;border:1px solid #dbdbdb;padding:0 10px;line-height:32px;min-width:134px;text-align:center;cursor:pointer;margin: 10px 2%;}
+.select-class-list li:hover{color:#3c8dbc;border-color:#3c8dbc;}
+.select-class-list li.active{color:#fff;background-color:#3c8dbc;border-color:#3c8dbc;}
+.select-major-box{}
+.select-major-box .table-cell-block{padding:12px 20px;}
+.select-major-box .table-row:first-child{background-color:#f2f5fa;}
+.select-major-box .table-row:nth-child(2) .table-cell-block{border-bottom: 1px #ebebeb dashed;}
+.select-major-box .table-row  > .table-cell-block:first-child{width:100px;padding-right:0;}
+.select-major-box .table-row:last-child .table-cell-block{padding-bottom:0;}
+.has-select-major li{margin:5px 0}
+/*第二流程*/
+.semester-list > div{margin-top:10px;margin-bottom:10px;}
+.semester-list > div > div{text-align:center;padding:5px 5px;}
+.semester-list .fa{margin-left:10px;}
+.reset-box{box-shadow:none;border-left:#f0f0f0 1px solid;border-right:#f0f0f0 1px solid;border-bottom:#f0f0f0 1px solid;}
+.reset-box .box-header{border-bottom:#eaeaea 2px solid;}
+.reset-box .box-title{display:block;overflow:hidden;font-size:14px;font-weight:bold;line-height:20px;min-height:40px;}
+.reset-box .box-tools{position:static;}
+.reset-box .btn-box-tool{padding-top:0;}
+.plan-proce-tbl .table-cell-block{padding:3px 5px;color:#666666;}
+.plan-proce-tbl .table-row > .table-cell-block:nth-child(1){font-size:12px;}
+.plan-proce-tbl .table-row > .table-cell-block:nth-child(2){text-align:right;width:70px;}
+.plan-proce-tbl .table-row > .table-cell-block:nth-child(3){width:20px;text-align:right;}
+.plan-proce-tbl .table-row.cur{background-color: #e98a7e;}
+.plan-proce-tbl .table-row.cur .table-cell-block{color:#fff !important}
+.plan-proce-tbl .table-row.cur .fa{display:none;}
+
+.no-data-box{min-height: 240px;}
+.no-data-box .fa-exclamation-circle-o{color:#ebebeb;font-size: 130px;}
+.fa-exclamation-circle-o:before{content:'\f285'}
+
+.dtable-container .dataTable{margin-bottom: 0 !important;margin-top: 0 !important;}
+
+/* --添加学籍异动-- */
+.min-height-240{min-height:240px;}
+.stu-info-change-tbl .table-cell-block{padding:7px 0;}
+.stu-info-change-tbl .table-cell-block:first-child{text-align:right;padding-right:10px;white-space:nowrap;width:80px;}
+.stu-info-change-arrow{font-size:50px;margin-top: 130px;margin-bottom:20px;}
+@media (max-width:768px){
+	.stu-info-change-arrow{margin-top:0;}
+}
+
+/* --文章详情-- */
+.article-title{font-size:22px;color:#3c8dbc;text-align:center;font-weight:bold;margin-bottom:20px;}
+.table-cnt-center th,.table-cnt-center td{text-align:center !important;vertical-align:middle !important;}
+
+/* --制定学年度任务-- */
+.btn-add-task{outline:none !important;box-shadow:none !important;}
+.btn-add-task-label{display:inline-block;margin-left:10px;}
+.btn-add-task-label:before{content:'添加任务'}
+
+/* --库存管理-- */
+.nav>li.width-tips a:after{
+	width: 8px;
+	height: 8px;
+	background-color: #dd4b39;
+	content: '';
+	position: absolute;
+	right: 15px;
+	top: 10px;
+	border-radius: 100%;
+}
+/*库存详情*/
+.inline-data{border-bottom: #ebebeb 1px solid;margin-right: -10px;margin-left: -10px;padding: 10px 0;}
+.inline-data > li{padding: 0 10px;border-right:1px solid #cccccc;line-height: 1.2em;}
+.inline-data > li:last-child{border-right:0;padding-right: 0;}
+
+
+/* --教材发放-- */
+
+/*订单明细*/
+.per-tbl{
+	td{
+		padding: 7px 10px;
+		vertical-align: top;
+	}
+	th{
+		padding: 7px 0;
+		text-align: right;
+		vertical-align: top;
+	}
+}
+
+/*选择教材*/
+.select-modal button.close{position: absolute;top: 25px;right: 40px;z-index: 51;}
+.select-modal > .modal-dialog{
+	width: 90%;
+	height: 100%;
+	margin: 0 auto !important;
+	padding: 15px 30px;
+}
+.select-modal .import-modal-content{
+	height: 100%;
+}
+
+/* 我的指导 */
+.guide-list{
+	dl{
+		border-top: #ebebeb 1px solid;
+		border-bottom: #ebebeb 1px solid;
+		padding:15px 20px 20px;
+		margin-bottom: 0;
+	}
+	dt{
+
+	}
+	.info{
+		background: #f7f7f7;
+		border: #e6e6e6 1px solid;
+		padding: 10px;
+		border-radius: 5px;
+		margin-top: 5px;
+	}
+	.btn-box{
+
+	}
+	.time{
+		color: #999;
+		font-size: 12px;
+	}
+}
+
+/* 报读信息 */
+.per-icon-box{
+	.fa-fw{
+		font-size: 34px;
+		width: .8em;
+		color: #d2d6de;
+	}
+}
+.spe-list{
+	padding-right: 60px;
+	dt{
+		color: #666;
+	}
+	.progress{
+		overflow: visible;
+		margin-bottom: 10px;
+		&,.progress-bar{
+			border-top-right-radius: 10px;
+			border-bottom-right-radius: 10px;
+			position: relative;
+		}
+		.progress-bar{
+			span{
+				position: absolute;
+				left: 100%;
+				margin-left: 5px;
+				white-space: nowrap;
+			}
+		}
+		.progress-bar-green{
+			span{
+				color: #00a65a;
+			}
+		}
+		.progress-bar-aqua{
+			span{
+				color: #00c0ef;
+			}
+		}
+		.progress-bar-yellow{
+			span{
+				color: #f39c12;
+			}
+		}
+		.progress-bar-primary{
+			span{
+				color: #3c8dbc;
+			}
+		}
+		.progress-bar-red{
+			span{
+				color: #dd4b39;
+			}
+		}
+	}
+}
+
+/* 缴费详情 */
+.reset-fa-chevron-circle {
+  font-size: 22px;
+  line-height: 1;
+  color: #c2c5cc;
+}
+
+.collapsed .reset-fa-chevron-circle:before {
+  content: "\f138";
+}
+
+/* 学籍资料明细 */
+.offset-margin_t4 {
+    margin-top: -4px;
+}
+.reset-label {
+    font-weight: normal;
+    padding: .3em .6em;
+    font-size: 12px;
+    display: inline-block;
+}
+.content-group{
+	margin:10px 0;
+}
+
+
+.stu-info-status{
+	& > div{
+		border-right: 1px solid #eee;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		min-height: 64px;
+		margin-top: 5px;
+		&:last-child{
+			border-right: 0 none;
+		}
+	}
+}
+.cert-wrap{
+	max-width: 340px;
+	width: 100%;
+	margin: 0 auto;
+	.cert-box{
+		position: relative;
+		width: 100%;
+		height: 210px;
+		border: #e0e0e0 3px dashed;
+		border-radius: 5px;
+		background-color: #f5f5f5;
+		background-repeat: no-repeat;
+		background-position: center 38px;
+		overflow: hidden;
+		&.cert-box-1{
+			background-image: url(images/icon-1.png);
+		}
+		&.cert-box-2{
+			background-image: url(images/icon-2.png);
+		}
+		&.cert-box-3{
+			background-image: url(images/icon-3.png);
+		}
+		&.cert-box-4{
+			background-image: url(images/icon-4.png);
+		}
+		&.cert-box-5{
+			background-image: url(images/icon-5.png);
+		}
+		&.cert-box-6{
+			background-image: url(images/icon-6.png);
+		}
+		&.cert-box-7{
+			background-image: url(images/icon-7.png);
+		}
+		&.cert-box-8{
+			background-image: url(images/icon-8.png);
+		}
+		&.has-upload{
+			border-width: 1px;
+			border-style: solid;
+			background: #fff;
+			.table-cell-block{
+				height: 208px;
+			}
+			&:hover{
+				.cert-re-upload{
+					display: block;
+				}
+			}
+		}
+
+		.progress{
+			position: absolute;
+			margin-bottom: 0;
+			width: 86%;
+			left: 7%;
+			border-radius: 10px;
+			bottom: 40px;
+			overflow: visible;
+			.progress-bar{
+				border-radius: 5px;
+			}
+			.txt{
+				width: 100%;
+				text-align: center;
+				color: @color-blue;
+				position: absolute;
+				font-size: 12px;
+				margin-top: -18px;
+			}
+		}
+
+		.cert-img-box{
+			width: 100%;
+			height: 100%;
+			img{
+				max-width: 100%;
+				max-height: 100%;
+			}
+		}
+		.cert-upload-btn{
+			position: absolute;
+			height:40px;
+			line-height: 40px;
+			padding: 0;
+			color: #fff;
+			width: 136px;
+			left: 50%;
+		    bottom: 30px;
+		    margin-left: -68px;
+		    font-size: 14px;
+		}
+		.cert-re-upload{
+			background: rgba(0, 0, 0, 0.7);
+			border: 0 none;
+			outline: none;
+			bottom: 50%;
+			margin-bottom: -20px;
+			display: none;
+			&:hover{
+				opacity: .9;
+			}
+		}
+		
+	}
+}
+
+/* 选择课程 */
+.batch-teacher{
+	.fa{
+		color: #999;
+		font-size: 17px;
+	}
+	tr{
+		cursor: default;
+	}
+	.on{
+		.fa{
+			color: #3c8dbc !important;
+		}
+		.fa-circle-o:before{
+			content: "\f192";
+		}
+		.fa-square-o:before{
+			content: "\f046";
+		}
+	}
+}
+
+/* 毕业学员详情 */
+.r-item.on{
+	&:extend(.batch-teacher .on all);
+}
+.tea-item-dl{
+	width:120px;
+	margin-bottom: 0;
+	.name{
+		background-color: rgba(0, 0, 0, 0.6);
+		color: #fff;
+		height: 24px;
+		line-height: 24px;
+		padding: 0 10px;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		span{
+			display: block;
+		}
+	}
+	img{
+		width: 100%;
+		height: 120px;
+	}
+}
+
+/* 导出排考明细表 */
+.custom-alert{
+	background-color: #fff3e0 !important;
+	border-color: #ffdca3;
+	color: #666;
+	.fa{
+		color: #ff851b;
+	}
+}
+
+/* 新增专业 */
+.width-80-per{
+	width: 80%;
+}
+
+/* 设置基础教学计划 */
+.tea-plan-box{
+	margin-top: 20px;
+	&:nth-of-type(1){
+		margin-top: 0;
+	}
+}
+.tea-plan-tbl{
+	counter-reset: plan;
+	
+	.order{
+		counter-increment: plan;
+		&:before{
+			content: counter(plan);
+		}
+	}
+}
+.select2-name{
+	display: inline-block;
+	max-width: 200px;
+	text-overflow:ellipsis;
+	overflow: hidden;
+	vertical-align: middle;
+}
+
+/* 开课设置 */
+.table-panel{
+	width: 100%;
+	border-collapse: collapse;
+	border-radius: 3px;
+	border: 1px solid #ddd;
+	thead{
+		th{
+			background-color: #f7f7f7;
+			border-bottom: 1px solid #ddd;
+			padding: 15px 10px 15px 15px;
+		}
+		
+	}
+	tbody{
+		td{
+			border-bottom: 1px solid #ddd;
+			padding: 10px;
+			color: #666;
+		}
+		label{
+			padding-left: 23px;
+			position: relative;
+			font-weight: normal;
+			input{
+				left: 5px;
+				top:1px;
+				position: absolute;
+			}
+		}
+		&:last-child{
+			tr:last-child{
+				td{
+					border-bottom: 0 none;
+				}
+			}
+		}
+	}
+	tr{
+		td,th{
+			&:first-child{
+				padding-left:15px;
+				text-align: left !important;
+			}
+			padding-left:10px;
+			padding-right: 10px;
+		}
+	}
+}
+
+/* 学员考勤明细 */
+.reset-timeline{
+	>li{
+		&:last-child{
+			>.fa{
+				margin-top: 0;
+			}
+		}
+		>.fa{
+			color: #fff;
+			font-size: 18px;
+			margin-top: 10px;
+		}
+		>.timeline-item{
+			background-color: #f2f2f2;
+			padding: 15px;
+			.time{
+				float: left;
+				font-size: 14px;
+				margin-right: 30px;
+				>.fa{
+					margin-right: 5px;
+				}
+			}
+		}
+	}
+}
+
+/* 毕业管理-学员详情 */

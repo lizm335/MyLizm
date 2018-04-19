@@ -1,0 +1,147 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+</head>
+<body class="body-pop">
+<div class="u-panel">
+	  <div class="u-panel-head">
+	    提示
+	    <span class="pop-close" data-role="pop-close"></span>
+  	</div>
+  	
+</div>
+
+<script type="text/template" id="temp">
+  <div class="u-panel-body scroll-box">
+    <div style="width:85%;" class="center-block">
+      <div class="text-center" style="padding:30px 0;">
+        {{if operationType==0}}
+            <i class="alert-icon alert-icon-0x0 margin_r10"></i>
+            <span class="font24 text-orange vertical-middle inline-block">未预约</span>
+        {{else if operationType===1}}
+            <i class="alert-icon alert-icon-56x0 margin_r10"></i>
+            <span class="font24 text-green vertical-middle inline-block">已预约</span>
+        {{/if}}
+      </div>
+
+      <table class="table-gray-th">
+        <tr>
+          <th width="25%" class="text-right">学期</th>
+          <td>{{TERM_NAME}}{{TERM_CODE}}</td>
+        </tr>
+        <tr>
+          <th class="text-right">考点名称</th>
+          <td>{{POINT_NAME}}</td>
+        </tr>
+        <tr>
+          <th class="text-right">考点区域</th>
+          <td>{{AREA_NAME}}</td>
+        </tr>
+        <tr>
+          <th class="text-right">考点地址</th>
+          <td>{{ADDRESS}}</td>
+        </tr>
+        <tr>
+          <th class="text-right">可预约时段</th>
+          <td>{{SDATE}}至{{EDATE}}</td>
+        </tr>
+      </table>
+      <div class="alert-panel padding10 margin_t10 font12 gray">
+        <ol class="ol-decimal">
+          <li>请在预约考试时间内进行考点预约，过期将不能进行自主预约考点操作</li>
+          <li>错过了预约时间段没有预约考点的学员，若仍想预约考点，请联系你的班主任</li>
+          <li>若考点预约暂未开放，请留意考点开放预约通知或短信</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <div class="u-panel-footer">
+    <div class="in" align="right">
+      <!--预约考点-->
+      {{if operationType===0}}
+          <button class="btn btn-md btn-orange" data-role="sure">预约考点</button>
+
+      <!--修改考点-->
+      {{else if operationType===1}}
+          <button class="btn btn-md btn-gray" data-role="pop-close" style="width:100px;">关闭</button>
+          <button class="btn btn-md btn-orange margin_l15" data-role="sure" style="width:100px;">修改考点</button>
+      {{/if}}
+    </div>
+  </div>
+</script>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+  //关闭窗口
+  $('body').on('click','[data-role="pop-close"]', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  var data=frameElement.data;
+  if(!data) return;
+
+  var html=template('temp',data);
+  $('.u-panel').append(html);
+
+  //考点操作
+  $('[data-role="sure"]').on('click', function(event) {
+    event.preventDefault();
+
+    function selectPlace(){
+      parent.$.mydialog({
+        id:'select-place',
+        width:640,
+        height:570,
+        urlData:data,
+        content: 'pop-dating-exam-place-select-place.html'
+      });
+      parent.$.closeDialog(frameElement.api);
+    }
+    //未预约考点
+    if( data.operationType==0 ){
+      selectPlace();
+    }
+    //查看考点
+    else{
+      $.alertDialog({
+        width:340,
+          height:270,
+          content:[
+            '<i class="alert-icon alert-icon-0x0 margin_r10"></i>',
+              '<span class="font18 text-orange vertical-middle inline-block">确定修改预约考点？</span>'
+          ].join(''),
+          ok:function(){
+            selectPlace();
+          }
+      });
+    }
+  });
+
+  if($(frameElement).height()>0){
+    $('.scroll-box').height($(frameElement).height()-90);
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<div class="margin-offset-lr20" data-role="list-wrapper">
+  <div class="bzr_subnav padding_t10">
+    <div class="subnav_btn fl" data-role="type-tab">
+      <a href="#/bjtongxunlu?id=0" class="active">我的老师（<span data-role="tab-1">0</span>）</a>
+      <a href="#/bjtongxunlu?id=1">我的同学（<span data-role="tab-2">0</span>）</a>
+    </div>
+    <div class="bzr_searchInput fr">
+      <form data-id="post-form">
+        <input class="form-control input-search" placeholder="请输入关键词搜索，回车搜索" style="width:250px;" name="userName">
+      </form>
+    </div>
+  </div>
+  <div class="qa_box overlay-wrapper" data-role="type-content">
+    <div data-role="item-list-container" class="overlay-wrapper">
+        <div class="text-center"><i class="loading"></i></div>
+      </div>
+  </div>
+</div>
+
+<!--列表 模板-->
+<script type="text/template" id="list-render-temp">
+  {{if pageInfo.totalElements>0}}
+    <div class="pad30 margin-l30 margin-r30">
+      <div class="comment-list clearfix">
+        <ul>
+          {{each pageInfo.content}}
+            <li class="comment-item padding_l20 padding_r20">
+
+              <img src="{{$value.headImg | imgUrlFormat:[68,68]}}" alt="" class="aq_head_user" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png'">
+
+              <a href="{{$value.eeUrl}}" target="_blank" class="btn btn-normal btn-green border-radius min-width-100 fr margin_t15" data-eeno='{{$value.eeno}}'>ee交流</a>
+              <div class="qa_txt {{dataType!='student'?'margin_t20':''}}">
+                <h2 class="padding_t5">{{$value.name}}</h2>
+                <div class="font_gray">{{$value.majorName}}</div>
+              </div>
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  {{/if}}
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+  //template.config('cache', false)
+
+    var $container=$('[data-role="type-content"]');
+
+
+   //回车搜索
+    $(".input-search").on('keydown', function(event) {
+        var self=this;
+        if(event.which==13){
+          event.preventDefault();
+          $('body').data('search',{
+            address:{
+              keywords:self.value
+            }
+          });
+          
+          genarateHtml(tabID==0?null:'student').createHtml();
+        }
+    });
+
+    //选项卡效果(待解答/已解答)
+    var tabID=curRoute.params['id'];
+    tabID||(tabID=0);
+    
+    $('[data-role="type-tab"] a').eq(tabID).addClass('active').siblings().removeClass('active');
+
+    //生成分页
+    function genarateHtml(filterType){
+      var keyJson=$('body').data('search');
+      var val=keyJson.address.keywords;
+
+      return new myPagination({
+        //form:$('[data-id="post-form"]'),
+        ajaxUrl:'/pcenter/headTeacherService/addressBook/list',
+        $Container:$('[data-role="type-content"]'),
+        pageSize:5,
+        otherJson:{
+          type:filterType,
+          userName:val
+        },
+        callback:function(renderData){
+          $box=$('[data-role="item-list-container"]');
+          if(renderData.msgCode==200){
+            if(!renderData.data&&!renderData.data.pageInfo){
+                $box.html(window['noDataTips']);
+            }
+            else{
+              
+              $('[data-role="tab-1"]').text(renderData.data.teacherCount);
+              $('[data-role="tab-2"]').text(renderData.data.studentCount);
+              if(renderData.data.pageInfo && renderData.data.pageInfo.totalElements>0){
+                var renderHtml = template('list-render-temp',$.extend(true, renderData.data, {dataType:filterType})
+                );
+                $box.html(renderHtml);
+              }
+              else{
+                if(val!=''){
+                    $box.html(window['noDataTips']);
+                }
+                else{
+                    var renderHtml = template('no-data-tips-temp',{
+                                      message:(filterType=='student'?'暂无我的同学':'暂无我的老师')
+                                    });
+                    $box.html(renderHtml);
+                }
+              }
+            }
+          }
+          else{
+              $box.html( renderData.message )
+          }
+        }
+      })
+    }
+
+    var keyJson=$('body').data('search');
+    if( !keyJson || !keyJson.address ){
+      $('body').data('search',{
+            address:{
+              keywords:''
+            }
+        });
+    }
+    else{
+      $(".input-search").val(keyJson.address.keywords);
+    }
+
+    if(tabID==0){
+      genarateHtml().createHtml();
+    }
+    else if(tabID==1){
+      genarateHtml('student').createHtml();
+    }
+});
+</script>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0" />
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <link rel=stylesheet href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/weui.min.css">
+    <script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/zepto.min.js"></script>
+    <script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/weui.min.js"></script>
+  </head>
+  <body>
+
+<script>
+
+
+	function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]); return null; //返回参数值
+  }
+
+  //微信昵称
+  var nickname=getUrlParam('nickname');
+  if(nickname){
+    sessionStorage.setItem( 'nickname', decodeURIComponent(nickname) );
+  }
+
+  //微信用户标识openId
+  var openid=getUrlParam('openid');
+  if(openid){
+    sessionStorage.setItem('openid',openid);
+  }
+
+  //院校代码
+  var orgCode=getUrlParam('orgCode');
+  if(orgCode){
+    sessionStorage.setItem('orgCode',orgCode);
+  }
+
+  //常见问题类型
+  var oftenType=getUrlParam('oftenType');
+  if(oftenType){
+    sessionStorage.setItem('oftenType',oftenType);
+  }
+
+  //是否有权限访问 常见问题的下方的“我要提问”和“我的问题”
+  var hasPermissionOperation=getUrlParam('hasPermissionOperation');
+  if(hasPermissionOperation){
+    sessionStorage.setItem('hasPermissionOperation',hasPermissionOperation);
+  }
+
+  //最终跳转地址
+  var path=getUrlParam('path');
+  //学生端
+  if(path.indexOf('student')!=-1){
+    sessionStorage.setItem('student-isBindUser',true);
+
+    //如果无访问权限 并且 点击的选项卡又不是“在线服务”
+    if(hasPermissionOperation==0 && !getUrlParam('onlineTab')){
+      weui.alert('非常抱歉，该功能只提供给正式学员使用！',function(){
+        location.href='/wx/weixin/faq/student/faq_list.html?orgCode='+orgCode;
+      });
+    }
+    else{
+      location.href=path;
+    }
+  }
+  else if(path.indexOf('teacher')!=-1){
+    sessionStorage.setItem('teacher-isBindUser',true);
+
+    location.href=path;
+  }
+
+	
+</script>
+
+  </body>
+</html>

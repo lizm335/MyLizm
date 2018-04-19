@@ -1,0 +1,379 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+<style type="text/css">
+html,body{
+  height: 100%;
+}
+</style>
+</head>
+<body class="body-pop">
+<div class="u-panel overlay-wrapper">
+      <div class="u-panel-head">
+        教材收货地址确认
+    </div>
+    <div class="u-panel-body scroll-box">
+      <div style="width:95%;" class="center-block padding_t15" data-role="address-box">
+        <table width="100%" height="300">
+          <tr>
+            <td valign="middle" class="text-center">
+                <i class="loading"></i>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="u-panel-footer">
+        <div class="in clearfix">
+            <div class="fl">
+              <button type="button" class="btn btn-md btn-green min-width-100 margin_l10" data-role="oper-address" data-oper="add" data-view="oper" style="display:none;">新增地址</button>
+            </div>
+            <div class="fr">
+              <button type="button" class="btn btn-md btn-orange min-width-100" data-role="sure" data-view="oper" style="display:none;">确认当前收货地址</button>
+            </div>
+        </div>
+    </div>
+    <div class="overlay bg-center" style="display:none;"></div>
+</div>
+
+<!--地址列表 模板-->
+<script type="text/template" id="address-temp">
+  <h1 class="text-center font22 text-no-bold">{{planName}}</h1>
+  <div class="text-bold font16 text-center margin_t10">
+    收货地址确认时间：{{addressConfirmSdate}}   ~   {{addressConfirmEdate}}
+  </div>
+  <div class="margin_t10">
+    <div>亲爱的同学你好！</div>
+    <div style="text-indent:2em">
+      为了你顺利收到{{gradeName}}教材，请确认你的教材收货地址；如需修改地址，请点击“修改按钮”；如需添加地址，点击左下角“新增地址”，再将当前收件地址“设为默认”。
+    </div>
+  </div>
+  <h3 class="text-no-bold sub-title f16 margin_b10 margin_t20">收货地址管理</h3>
+  <table class="table-gray-th address-tbl text-center">
+      <thead>
+          <tr>
+              <th width="15%">收货人</th>
+              <th>收货地址</th>
+              <th width="20%">手机号码</th>
+              <th width="150">操作</th>
+          </tr>
+      </thead>
+      <tbody>
+        {{if addressList && addressList.length>0}}
+          {{each addressList}}
+            {{include 'data-item-temp' $value}}
+          {{/each}}
+        {{/if}}
+      </tbody>
+  </table>
+</script>
+
+<!--地址数据 模板-->
+<script type="text/template" id="data-item-temp">
+    <tr class="{{isDefualt==1?'address-default':''}}">
+        <td>
+          <span data-item="name">
+            {{receiver}}
+          </span>
+        </td>
+        <td>
+          <span data-item="address">
+            {{province}}{{city}}{{area}}{{address}}
+          </span>
+        </td>
+        <td>
+          <span data-item="mobile">
+            {{mobile}}
+          </span>
+        </td>
+        <td>
+          <div class="text-left" data-view="del">
+            
+            <a href="#" class="btn btn-sm btn-orange btn-default-address border-radius fr" data-address-id="{{addressId}}" data-json='{
+                  "receiver":"{{receiver}}",
+                  "mobile":"{{mobile}}",
+                  "province":"{{province}}",
+                  "city":"{{city}}",
+                  "area":"{{area}}",
+                  "address":"{{address}}"
+                }
+            '>设为默认</a>
+            <a href="#" class="text-blue" data-role="oper-address" data-oper="edit" data-json='{
+              "addressId":"{{addressId}}",
+              "receiver":"{{receiver}}",
+              "provinceCode":"{{provinceCode}}",
+              "cityCode":"{{cityCode}}",
+              "areaCode":"{{areaCode}}",
+              "address":"{{address}}",
+              "mobile":"{{mobile}}"
+            }'><u>修改</u></a>
+            |
+            <a href="#" class="text-blue" data-role="del" data-address-id="{{addressId}}"><u>删除</u></a>
+          </div> 
+        </td>
+    </tr>
+</script>
+
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+  //“x”关闭窗口
+  $(document).on('click','[data-role="pop-close"]', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  //确定
+  $('[data-role="sure"]').on('click', function(event) {
+    event.preventDefault();
+    //top.curRoute.app.refresh();
+    if($('.address-tbl tbody tr.address-default').length<=0){
+      $.resultDialog(0,'请添加收货地址');
+      return false;
+    }
+    
+    $('.overlay').show();
+    ajaxProcess({
+      url:'/pcenter/tbaConfirm',//1.3.14 教材地址确认
+      type:'GET',
+      success:function(renderData){
+        if(renderData.msgCode==200){
+          $.when($.resultDialog(1,'操作成功'))
+          .done(function(){
+              top.location.href='/pcenter/main#/peisong';
+          });
+        }
+        else{
+          $.resultDialog(0,'操作失败：'+renderData.message)
+        }
+      }
+      ,fail:function(errorMsg){
+        $.resultDialog(2,'操作失败：'+errorMsg)
+      }
+      ,always:function(){
+        $('.overlay').hide();
+      }
+    });
+    
+  });
+
+  //表格效果
+  $('[data-role="address-box"]').on('mouseenter', '.address-tbl > tbody tr', function(event) {
+      event.preventDefault();
+      $(this).addClass('address-hover');
+  }).on('mouseleave', '.address-tbl > tbody tr', function(event) {
+      event.preventDefault();
+      $(this).removeClass('address-hover');
+  });
+
+  
+  $(document)
+  //删除收货地址
+  .on('click','[data-role="del"]',function(event) {
+      event.preventDefault();
+      var self=this;
+      var $tr=$('.address-tbl tbody tr');
+
+      if( $tr.length<2 ){
+        var alertPop=$.alertDialog({
+          width:300,
+          height:220,
+          content:[
+              '<i class="alert-icon alert-icon-0x0 margin_r10"></i>',
+              '<span class="font18 text-orange vertical-middle inline-block">不能删除，收货地址至少保留一个</span>'
+          ].join(''),
+          cancelLabel:'关闭',
+          ok:false
+        });
+      }
+      else{
+        var alertPop=$.alertDialog({
+          width:300,
+          height:220,
+          content:[
+              '<i class="alert-icon alert-icon-0x0 margin_r10"></i>',
+              '<span class="font18 text-orange vertical-middle inline-block">确定要删除该地址？</span>'
+          ].join(''),
+          ok:function(){
+            $('.overlay').show();
+            ajaxProcess({
+              url:'/pcenter/textbook/deleteDeliveryAddress',
+              type:'GET',
+              data:{addressId:$(self).data('address-id')},
+              success:function(data){
+                if(data.msgCode==200){
+                  $('.overlay').hide();
+                  $.closeDialog(alertPop);
+                  $.when($.resultDialog(1,'删除成功'))
+                  .done(function(){
+                      
+                      location.href=location.href;
+                      
+                  });
+                }
+                else{
+                  $.resultDialog(0,data.message);
+                }
+              }
+            });
+            
+          }
+        });
+      }
+  })
+  //增加/编辑 收货地址
+  .on('click','[data-role="oper-address"]',function(event) {
+      var operType=$(this).attr('data-oper');
+
+      var postData={};
+      postData.operType=operType;
+
+      if( operType=='edit' ){
+        var $tr=$(this).closest('tr');
+        $tr.addClass('active').siblings().removeClass('active');
+        postData.content=$(this).data('json');
+      }
+
+      top.$.mydialog({
+          id:'oper-address',
+          width:540,
+          zIndex:1000,
+          height:420,
+          urlData:postData,
+          content: 'pop-add-delivery-address.html'
+      });
+  })
+  //设置为默认地址
+  .on('click', '.btn-default-address', function(event) {
+    event.preventDefault();
+    var self=this;
+
+    $('.overlay').show();
+
+    ajaxProcess({
+      url:'/pcenter/textbook/setDefualtAddress',
+      type:'GET',
+      data:{addressId:$(self).data('address-id')},
+      success:function(data){
+        if(data.msgCode==200){
+          $('.overlay').hide();
+
+          $('.address-tbl tbody tr').removeClass('address-default');
+          $(self).closest('tr').addClass('address-default');
+
+          /*
+          //渲染父级页面
+          var $box=parent.$('[data-id="default-address"]');
+          var $temp=parent.$('#default-address-temp');
+          if( $box.length>0 && $temp.length>0 ){
+            var json=$.parseJSON( $(self).data('json') );
+            var render = template.compile( $temp.html() );
+
+            $box.html( render(json) );
+          }
+          */
+
+          $.resultDialog(1,'设置成功');
+        }
+        else{
+          $.resultDialog(0,data.message);
+        }
+      }
+    });
+  });
+
+  //初始化数据
+  ;(function(){
+    $box=$('[data-role="address-box"]');
+
+    var sTip=[
+        '<div class="text-center">',
+            '<i class="alert-icon alert-icon-123x63 margin_r10"></i>',
+            '<span class="f14">{0}</span>',
+        '</div>'].join('');
+
+    var returnBackStr='\
+          <div class="text-center margin_t20">\
+            <button type="button" class="btn btn-normal min-width-100 btn-orange" data-role="pop-close">关闭</button>\
+          </div>\
+        ';
+
+    ajaxProcess({
+      url:'/pcenter/textbook/queryTextbookPlan',//1.3.13 教材管理-查询教材计划
+      type:'GET',
+      success:function(jsonData){
+        if(jsonData.msgCode==200){
+            if( jsonData.data && jsonData.data.length>0 ){
+              ajaxProcess({
+                url:'/pcenter/textbook/queryDeliveryAddressPC',//1.3.2 教材管理-查询学员收货地址
+                type:'GET',
+                success:function(renderData){
+                  if(renderData.msgCode==200){
+                      var rData=renderData.data;
+                      if( rData ){
+                          var renderHtml=template(
+                                'address-temp',
+                                $.extend(true, rData, jsonData.data[0])
+                              );
+
+                          $box.html(renderHtml);
+
+                          $('[data-oper="add"],[data-role="sure"]').show();
+                      }
+                      else{
+                          $box.html(top['noDataTips']+returnBackStr);
+                      }
+                  }
+                  else{
+                      $box.html(sTip.format(renderData.message)+returnBackStr );
+                  }
+                }
+                ,fail:function(errorMsg){
+                  $box.html(sTip.format(errorMsg)+returnBackStr );
+                }
+              });   
+            }
+            else{
+                $box.html(sTip.format('暂无发放计划')+returnBackStr );
+            }
+        }
+        else{
+            $box.html( sTip.format(jsonData.message)+returnBackStr );
+        }
+      }
+      ,fail:function(errorMsg){
+        $box.html(sTip.format(errorMsg)+returnBackStr );
+      }
+    });
+
+    
+  })();
+
+
+  if($(frameElement).height()>0){
+    $('.scroll-box').height($(frameElement).height()-90);
+  }
+});
+</script>
+</body>
+</html>

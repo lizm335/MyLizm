@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0" />
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<meta content="telephone=no" name="format-detection">
+	<title>绑定</title>
+	<link rel="stylesheet" type="text/css" href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/reset.css"/>
+	<link rel="stylesheet" type="text/css" href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/base.css"/>
+	<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/conversion.750.js"></script>
+
+	<link rel=stylesheet href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/weui.min.css">
+	<link rel=stylesheet href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/wx.css">
+	
+
+</head>
+<body>
+<div class="faq_details">
+	<div><img class="w100" src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/images/bound_banner.jpg" alt=""></div>
+
+	<section class="user-login" style="height:auto;">
+		<div class="user-login-wrap">
+			<div class="weui-loadmore">
+	            <i class="weui-loading" style="width:30px;height:30px;"></i>
+	            <span class="weui-loadmore__tips">正在加载</span>
+	        </div>
+		</div>
+
+	</section>
+</div>
+<!--登记成功弹窗-->
+<div class="mask_bg" style="display: none;" id="successPop">
+	<div class="mask_bg_ctn">
+		<div class="cj_pop">
+			<div class="zj_mdl">
+				<img src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/images/success_ico.png" alt="">
+				<h3 style="margin-top:0;"> 绑定成功！</h3>
+				<a class="white_btn" href="draw.html">立即提问</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/template" id="temp">
+	<form data-id="form">
+		<div class="login_user_img">
+			{{if headimgurl}}
+				<img src="{{headimgurl}}" alt="">
+			{{else}}
+				<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png" alt="">
+			{{/if}}
+			<p>昵称：{{nickname}}</p>
+		</div>
+		<div class="login-ff-account">
+			<p class="user-login-input userName-input">
+				<input type="text" name="realName" placeholder="姓名" data-check="1" data-rule=".+" data-msg-empty="请填写问姓名" data-msg-error="请填写问姓名">
+			</p>
+			<p class="user-login-input userName-input">
+				<select name="studyCenterId" data-check="1" data-rule=".+" data-msg-empty="请填选择学习中心" data-msg-error="请填选择学习中心">
+					<option value="">选择学习中心</option>
+				</select>
+			</p>
+			<p class="user-login-input phone-input">
+				<input type="number" name="sjh" placeholder="请输入手机号码" data-check="1" data-rule="^(((13[0-9]{1})|(14[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$" data-msg-empty="请输入手机号码" data-msg-error="手机号码格式错误">
+			</p>
+			<div class="user-login-input">
+				<div class="weui-cell" style="margin:0;padding:0;">
+				    <div class="weui-cell__bd">
+				        <input type="number" name="code" placeholder="请输入验证码" data-check="1" data-rule=".+" data-msg-empty="请输入验证码" data-msg-error="请输入验证码">
+				    </div>
+				    <div class="weui-cell__hd">
+				        <span data-id="get-code" onclick="getCode(this)">发送验证码</span>
+				    </div>
+				</div>
+			</div>
+			<div>
+				<input type="hidden" name="openid" value="{{openid}}">
+				<input type="hidden" name="headimgurl" value="{{headimgurl}}">
+				<input type="hidden" name="nickname" value="{{nickname}}">
+			</div>
+		</div>
+		<a id="goLogin" href="javascript:;" class="weui-btn weui-btn_warn">确 定</a>
+	</form>
+</script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/zepto.min.js"></script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/zepto.cookie.min.js"></script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/common.js"></script>
+
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/weui.min.js"></script>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/sammyjs/plugins/template.js"></script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/wx.js"></script>
+<script type="text/javascript">
+var openid=GetQueryStringFn('openid'),
+	headimgurl=GetQueryStringFn('headimgurl'),
+	nickname=decodeURIComponent(GetQueryStringFn('nickname')), // 中文乱码问题需要在decode一次
+	orgCode=sessionStorage.getItem('orgCode');
+
+$('.user-login-wrap').html(
+	template('temp',{
+		openid:openid,
+		headimgurl:headimgurl,
+		nickname:nickname
+	})
+);
+
+$.ajax({
+	url: '/wx/teachOauth/getStudyCenters',
+	type: 'GET',
+	dataType: 'json',
+	data: {
+		orgCode:orgCode
+	},
+	success: function(json){
+		if(json.msgCode==200 && json.data && json.data.infos){
+			var temp='\
+				{{each infos}}\
+					<option value="{{$value.studyCenterId}}">\
+						{{$value.studyCenterName}}\
+					</option>\
+				{{/each}}\
+			';
+			var render=template.compile(temp);
+			$('[name="studyCenterId"]').append(
+				render(json.data)
+			)
+		}
+	}
+});
+
+$(document).on('click', '#goLogin', function(event) {
+	event.preventDefault();
+
+	var $form=$('[data-id="form"]');
+	var check=checkform( 
+		$form,
+		{className:'custom-weui-toptips',duration:2000},
+		function(){
+			$(this).focus();
+		} 
+	)
+	if( !check ) return;
+
+	var loading=weui.loading('提交中...')
+	$.ajax({
+		url: '/wx/teachOauth/register',
+		type: 'POST',
+		dataType: 'json',
+		data: $form.serialize(),
+		success: function(json){
+			if(json.msgCode==200){
+				loading.hide(function(){
+					weui.alert('绑定成功！！',function(){
+						location.href="/wx/teachOauth/to?orgCode="+
+									orgCode+
+									'&url='+
+									encodeURIComponent('/wx/weixin/faq/teacher/faq_list.html?orgCode='+orgCode+'&tid=0&oftenType='+sessionStorage.getItem('oftenType')+'&roleType='+sessionStorage.getItem('roleType')
+									)
+					})
+				});
+			}
+			else{
+				loading.hide(function(){
+					weui.alert(json.message)
+				});
+				
+			}
+		},
+		error:function(){
+			loading.hide();
+		}
+	});
+});
+//发送验证码
+function getCode(el) {
+	var _this=el;
+	if(!$(_this).hasClass('disable')){
+		var $tel=$('[name="sjh"]');
+		var phone=$.trim($tel.val());
+		var errormsg='';
+
+		if(phone==''){
+            errormsg='请输入手机号码';
+            
+		}
+		else if(!phoneregFn(phone)){
+			errormsg='手机号码格式错误';
+		}
+
+		if(errormsg!=''){
+			weui.topTips(errormsg, {
+                className: 'custom-weui-toptips',
+                callback: function() {
+                    $tel.focus();
+                }
+            });
+            return;
+		}
+
+		countGetCode( $(_this) );
+
+		$.ajax({
+			url: '/wx/teachOauth/sendSmsCode',
+			type: 'POST',
+			dataType: 'json',
+			data: {
+				sjh:phone
+			},
+			success: function(json){
+				
+			}
+		});
+	}
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<div class="main-box">
+	<div class="wrap-box clearfix">
+		<div class="main">
+			<div class="bg-white border-e0e0e0 main-content" data-role="owe-box">
+				<table width="100%" height="400" class="text-center">
+					<tr>
+						<td valign="middle">
+							<p>
+								<i class="loading"></i>
+						    </p>
+						    <p class="font18 gray margin_t10">数据加载中...</p>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/template" id="owe-temp">
+	<!--是欠费状态-->
+	{{if type && type==1 && content && content.isOverdue==1}}
+		{{if content.paymentWayCode=='XFY'}}
+			<div class="center-block pad30" style="width:50%;">
+				<div class="margin_b25 text-center">
+					<i class="alert-icon alert-icon-0x0"></i>
+					<span class="inline-block text-orange font24 vertical-middle padding_l10">
+						学习账号已被暂停使用
+					</span>
+				</div>
+				<p class="border-bottom padding_b10 font18 gray6" style="line-height:150%;">您的学习账号已被暂停使用，原因是:<u class="text-blue">{{content.overdueReason}}</u>。 为了不影响您的正常学习及毕业，请使用学付易或联系班主任缴清欠款，重新开通学习。</p>
+
+				<div class="margin_t20 clearfix">
+			        <div class="teac-info-panel">
+			          <h3 class="font18 text-no-bold margin_b10">您的班主任</h3>
+			          <dl>
+			            <dt class="margin_b5">
+			              <span class="font16 margin_r10">{{content.headTeacherRealName}}</span>
+			              <small class="font_gray">班主任</small>
+			            </dt>
+			            <dd class="text f12">
+			              手机：{{content.headTeacherMobliePhone}} <br>
+			              邮箱：{{content.headTeacherEmail}}
+			            </dd>
+			            <dd class="img">
+			            	{{if content.headTeacherPhoto}}
+			              		<img class="photo" src="{{content.headTeacherPhoto | imgUrlFormat:[80,80]}}">
+			              	{{else}}
+			              		<img class="photo" src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png">
+			              	{{/if}}
+			            </dd>
+			          </dl>
+			        </div>
+			        <div class="teac-info-qrcode">
+			          <h3 class="font18 text-no-bold margin_b10">学付易APP下载</h3>
+			          <img class="photo" src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/xfy-qrcode.png" width="122">
+			        </div>
+			    </div>
+			</div>
+		{{else}}
+			<!--
+				<table width="100%" height="400">
+					<tr>
+						<td valign="middle">
+						    <div class="center-block pad30" style="width:50%;">
+								<div class="margin_b25 text-center">
+									<i class="alert-icon alert-icon-0x0"></i>
+									<span class="inline-block text-orange font24 vertical-middle padding_l10">
+										学习账号已被暂停使用
+									</span>
+								</div>
+								<p class="border-bottom padding_b10 font18 gray6" style="line-height:150%;">您的学习账号已被暂停使用，原因是:<u class="text-blue">{{content.overdueReason}}</u>。 为了不影响您的正常学习及毕业，请立即缴清欠款，重新开通学习。如有疑问请联系客服老师：{{content.customerServicesPhone}}</p>
+
+								<div class="margin_t20 text-center">
+									<a target="_blank" href="{{content.payLink}}" class="btn btn-lg btn-orange min-width-120 border-radius">立即缴费</a>
+							    </div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			-->
+			<div class="center-block pad30" style="width:82%;">
+				<div class="margin_b25 text-center">
+					<i class="alert-icon alert-icon-0x0"></i>
+					<span class="inline-block text-orange font24 vertical-middle padding_l10">
+						学习账号已被暂停使用
+					</span>
+				</div>
+				<div class="font18 gray6">
+					亲爱的 <u>{{studentBaseInfo.userName}}</u> 同学（学号:{{studentBaseInfo.studentNo}}）: <br>
+					通过上一学年的努力学习，现在您迎来下一学年学习最后的冲刺阶段；目前您已通过 <b class="text-orange">{{studyStatus.PASS_COURSE}}</b> 门课程的学习，获 <b class="text-orange">{{studyStatus.GETED_XF}}</b> 学分。<br>
+					展望新一学年的学习安排，学校对您做出以下三点承诺：<br>
+					<ol class="margin_t25">
+						<li><b class="text-orange">1.提供更快速的咨询响应：</b>你可以通过<b>“国开在线”学习平台与APP，“国开在线”微信公众号的“找老师”功能，获得老师的悉心帮助与指导，</b>同时可拨打服务电话400-009-9662转1，直接与老师沟通；</li>
+
+						<li class="margin_t15"><b class="text-orange">2 .给予更有效的学习保障：</b>新一学年，我们将您提供<b>学习指导、考试指导；</b>并提供<b>详细有效的考试复习资料，</b>让您高效学习与考试<b>（往期考试通过率达97%以上）；</b></li>
+
+						<li class="margin_t15"><b class="text-orange">3.给予毕业一对一指导：</b>学校将为各位同学论文与毕业报告的撰写<b>提供一对一指导</b>和批改建议；</li>
+					</ol>
+					<div class="margin_t25">
+						目前学校还未收到您缴纳的下一学年的学费。完成缴费的学员，我们将在24小时内为您开通学习账号并为您注册新一年的学籍信息，<b>这将对您能顺利2.5年获得教育部直属高校，全球认可的国家开放大学颁发的毕业证书有直接影响；</b>
+					</div>
+
+					<div class="margin_t20 text-center padding_b25">
+						<button type="button" class="btn btn-lg btn-gray border-radius margin_r15" data-role="ee-contact" style="width:200px;">寻求帮助</button>
+
+						<a target="_blank" href="{{content.payLink}}" class="btn btn-lg btn-orange min-width-120 border-radius" style="width:200px;">马上续费</a>
+				    </div>
+				</div>
+			</div>
+		{{/if}}
+	{{else}}
+		<table width="100%" height="400">
+			<tr>
+				<td valign="middle" align="center">
+				    <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/apply-to-pas.png" alt="">
+					<p class="font24 margin_t10" style="color:#b2b2b2;">您无欠费情况</p>
+				</td>
+			</tr>
+		</table>
+	{{/if}}
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+
+	var $box=$('[data-role="owe-box"]');
+	//数据在index.jsp页面缓存的
+	var tempdata=$('body').data('owe-data');
+	if(tempdata){
+		//学付易 欠费
+		if(tempdata.content && tempdata.content.paymentWayCode=='XFY'){
+			$box.html( template('owe-temp',tempdata) );
+		}
+		else{
+			var studentBaseInfo=$('body').data('studentBaseInfo');
+			var def=$.Deferred(), def2=$.Deferred();
+
+			if(studentBaseInfo){
+				def.resolve(studentBaseInfo);
+			}
+			else{
+				ajaxProcess({
+				    url:'/pcenter/gjtUser/edit',
+				    type:'GET',
+				    success:function(renderData){
+				      def.resolve(renderData.data);
+				    },
+				    fail:function(errorMessage){
+				      def.reject();
+				    }
+				});
+			}
+
+			ajaxProcess({
+			    url:'/pcenter/course/getResultsOverview',
+			    type:'POST',
+			    success:function(renderData){
+			      def2.resolve(renderData);
+			    },
+			    fail:function(errorMessage){
+			      def2.reject();
+			    }
+			});
+
+			$.when(def,def2)
+			.done(function(studentBaseInfo,studyStatus){
+				$box.html( template('owe-temp',
+					$.extend(tempdata, {studentBaseInfo:studentBaseInfo}, {studyStatus:studyStatus.data})
+				) );
+			})
+			.fail(function(){
+				$box.html( template('error-tips-temp',{message:'数据异常'}) );
+			});
+		}
+	}
+	else{
+		$box.html( template('no-data-tips-temp') );
+		/*
+		$('[data-role="page-loading"]').show();
+		ajaxProcess({
+      		url:'/pcenter/getStatusByPC',
+      		type:'GET',
+      		success:function(renderData){
+      			if(renderData.msgCode==200){
+					var data=renderData.data;
+					if(data){
+						$box.html( template('owe-temp',data) );
+					}
+					else{
+						$box.html( template('no-data-tips-temp') );
+					}
+				}
+				else{
+					$box.html( template('error-tips-temp',{message:renderData.message}) );
+				}
+      		},
+      		fail:function(textStatus){
+      			$box.html( template('error-tips-temp',{message:textStatus}) );
+      		},
+      		always:function(){
+      			$('[data-role="page-loading"]').hide();
+      		}
+      	});
+      	*/
+	}
+});
+</script>

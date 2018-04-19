@@ -1,0 +1,89 @@
+<div class="main-box">
+	<div class="wrap-box clearfix">
+		<div class="main">
+			<div class="bg-white border-e0e0e0">
+				<div class="teacher_title">
+					<a class="btn btn-normal btn-gray fr" href="#/xuexi">
+						<i class="icon icon-175x0 margin_r5"></i>返回首页
+					</a>
+					<!--<h2><i class="icon icon-35x32"></i>学籍管理</h2>-->
+					<h2><i class="icon {{topMenuIcon}}"></i>{{name}}</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="main-box">
+	<div class="wrap-box clearfix">
+		<div class="main">
+			<div class="bg-white border-e0e0e0">
+				<div class="teacher_head">
+					<div class="hd">
+						<ul class="tabs-list">
+			            	{{each childPage}}
+			            		{{if $value.isVisible}}
+			            			{{if schoolModel==='0' || schoolModel==5}}
+						              <li data-hash="{{$value.hashPath}}" data-role="single-tab"
+						              	{{if $value.label=='sqmianxiu'}}
+						              		style="display:none;"
+						              	{{/if}}
+						              >
+						                <a href="{{$value.hashPath}}" >
+						                  {{$value.name}}
+						                </a>
+						              </li>
+						            {{else}}
+						            	{{if $value.label!='bjhuodong' && $value.label!='zyzrjiaoshi'}}
+						            		<li data-hash="{{$value.hashPath}}" data-role="single-tab">
+								              <a href="{{$value.hashPath}}" >
+								                {{$value.name}}
+								              </a>
+								            </li>
+						            	{{/if}}
+					              	{{/if}}
+					            {{/if}}
+				            {{/each}}
+			            </ul>
+					</div>
+					<div class="tabs-content padding20" id="tabs-content-box"></div>
+				</div>
+			</div>
+		</div>
+	</div>		
+</div>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+	var studentBaseInfo=$('body').data('studentBaseInfo');
+	var def=$.Deferred();
+
+	if(studentBaseInfo){
+	  def.resolve(studentBaseInfo);
+	}
+	else{
+	  ajaxProcess({
+	      url:'/pcenter/gjtUser/edit',
+	      type:'GET',
+	      success:function(renderData){
+	        def.resolve(renderData.data);
+	      },
+	      fail:function(errorMessage){
+	        def.reject();
+	      }
+	  });
+	}
+
+	def
+    .done(function(studentBaseInfo){
+    	//本科才显示“免修免考”
+    	if(studentBaseInfo.pycc==2){
+    		$('[data-hash="#/sqmianxiu"]').show();
+    	}
+    	else{
+    		$('[data-hash="#/sqmianxiu"]').remove();
+    	}
+
+    	$('body').data('studentBaseInfo',studentBaseInfo);
+    });
+});
+</script>

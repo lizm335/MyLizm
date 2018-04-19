@@ -1,0 +1,1117 @@
+<div class="padding10 overlay-wrapper" data-id="my-application-record">
+  <table width="100%" height="400" class="text-center">
+    <tr>
+      <td valign="middle">
+        <p>
+          <i class="loading"></i>
+          </p>
+          <p class="font18 gray margin_t10">数据加载中...</p>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<!--我的申请记录 模板-->
+<script type="text/template" id="record-list-tpl">
+  <div class="margin_b10 clearfix">
+    <a href="#/xjyidong" class="btn btn-sm btn-gray fr min-width-100">返回</a>
+    <div class="text-no-bold sub-title f16">
+      我的申请记录
+    </div>
+  </div>
+
+
+  <table class="table-gray-th text-center">
+    <thead>
+      <tr>
+        <th>申请时间</th>
+        <th>异动类型</th>
+        <th>异动状态</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{each applicationRecordMap}}
+        {{if $value}}
+          <tr>
+            <td>{{$value.createdDt}}</td>
+            <td>
+              {{$value.transactionType | ydjlType}}
+              {{if $value.transactionType==5}}
+                <div class="gray f12">({{$value.transactionPartStatus | ydjlPartStatus}})</div>
+              {{/if}}
+            </td>
+            <td>
+              <div class="
+                {{if $value.transactionStatus==1}}
+                  text-green
+                {{else if $value.transactionStatus==2}}
+                  text-red
+                {{/if}}
+              ">
+                {{$value.transactionStatus | ydjlStatus}}
+              </div>
+              <small class="gray">（{{$value.auditOperatorRole | ydjlOperatorRole}}）</small>
+            </td>
+            <td>
+              <a href="#" data-itemid="{{$value.transactionId}}" data-transactionType="{{$value.transactionType}}" data-role="view-change" class="text-blue">查看详情</a>
+            </td>
+          </tr>
+        {{/if}}
+      {{/each}}
+    </tbody>
+  </table>
+</script>
+
+
+<!--申请退学 结果-->
+<script type="text/template" id="leave-agreement-details-tpl">
+    <div class="border-bottom margin_b25 padding_b5 clearfix">
+      <button type="button" class="btn btn-sm btn-gray fr" data-role="back-to-list">返回记录列表</button>
+      <h2 class="f16">
+       ● 退学-申请详情
+      </h2>
+    </div>
+
+        
+    {{include 'person-info-temp' baseInfo}}
+
+    <div class="margin-t30">
+      <div class="text-no-bold sub-title f16 margin_b10">
+        银行卡信息
+      </div>
+      <table class="table-gray-th">
+          <colgroup>
+            <col width="10%">
+            <col width="22%">
+
+            <col width="10%">
+            <col width="22%">
+
+            <col width="10%">
+            <col width="22%">
+          </colgroup>
+          <tbody>
+              <tr>
+                <th class="text-right">退费方式</th>
+                <td colspan="5">转账</td>
+              </tr>
+              <tr>
+                <th class="text-right">银行卡号</th>
+                <td>
+                  {{otherInfo.dropOutStudyInfo.bankCardNumber}}
+                </td>
+
+                <th class="text-right">帐户名</th>
+                <td>{{baseInfo.data.info.xm}}</td>
+
+                <th class="text-right">开户银行</th>
+                <td>
+                  {{otherInfo.dropOutStudyInfo.openBank}}
+                </td>
+              </tr>
+          </tbody>
+      </table>
+    </div>
+    <div class="margin-t30">
+      <div class="text-no-bold sub-title f16 margin_b10">退学原因</div>
+      <div class="border-e0e0e0 padding20">
+        {{otherInfo.dropOutStudyInfo.cause}}
+      </div>
+    </div>
+
+    <div class="margin-t30">
+      <div class="text-no-bold sub-title f16">签名确认</div>
+      <table class="table-gray-th text-center margin_t10" height="350">
+          <tr>
+            <td valign="middle">
+              <div data-id="qrcode-pic-box">
+                <img src="{{(otherInfo.dropOutStudyInfo && otherInfo.dropOutStudyInfo.sign)?otherInfo.dropOutStudyInfo.sign:''}}" style="max-width:100%">
+              </div>
+            </td>
+          </tr>
+        </table>
+    </div>
+
+    <div class="margin-t30">
+      <div class="text-no-bold sub-title f16 margin_b10">审核流程</div>
+      <div class="border-e0e0e0 padding20">
+        {{if otherInfo.outStudyAuditList && otherInfo.outStudyAuditList.length>0}}
+          <div class="logistics-box logistics-box-2">
+            {{each otherInfo.outStudyAuditList}}
+              <dl class="{{($index==otherInfo.outStudyAuditList.length-1)?'last':''}}">
+                {{if $value.auditOperatoRole==-1}}
+                  <dt>{{baseInfo.data.info.xm}}（学员） <small>{{$value.auditDt}}</small></dt>
+                  <dd class="static gray">学员申请</dd>
+                  <dd class="icon-order"></dd>
+                {{else if ($value.auditOperatoRole==2 || $value.auditOperatoRole==4 || $value.auditOperatoRole==5) && $value.auditState==0}}
+                  <dt>退学申请等待受理</dt>
+                  <dd class="static gray">待受理</dd>
+                  <dd class="icon-order"></dd>
+                {{else if $value.auditOperatoRole==5 && $value.auditState==1}}
+                  <dt>退学申请已受理 <small>{{$value.auditDt}}</small></dt>
+                  <dd class="static text-green">已受理</dd>
+                  <dd class="icon-order icon-order-green"></dd>
+                {{else if $value.auditOperatoRole==6 && $value.auditState==6}}
+                  <dt>财务服务部待核算实收、应扣、应退费用</dt>
+                  <dd class="static gray">待核算</dd>
+                  <dd class="icon-order"></dd>
+                {{else if $value.auditOperatoRole==6 && $value.auditState==7}}
+                  <dt>财务服务部已核算实收、应扣、应退费用 <small>{{$value.auditDt}}</small></dt>
+                  <dd class="static text-green">已核算</dd>
+                  <dd class="icon-order icon-order-green"></dd>
+                {{else if $value.auditOperatoRole==1 && $value.auditState==8}}
+                  <dt>学员待确认应扣、应退金额</dt>
+                  <dd class="static text-orange">待确认</dd>
+                  <dd class="icon-order icon-order-orange"></dd>
+                  <dd class="message">
+                    <div class="border-e0e0e0 padding10 margin_t5">
+                        <div>
+                          请确认应扣、应退费用，如有疑问可点击“我有疑问”按钮提问题！
+                        </div>
+                        <table class="table-gray-th text-center f12 margin_t10">
+                          <thead>
+                            <tr>
+                              <th>专业</th>
+                              <th>学费</th>
+                              <th>实收费用</th>
+                              <th>应扣费用</th>
+                              <th>应退费用</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>
+                                <ul class="list-unstyled text-left">
+                                  <li>专业名称：{{baseInfo.data.info.specialtyName}}</li>
+                                  <li>专业层次：{{baseInfo.data.info.pyccName}}</li>
+                                  <li>报读学期：{{baseInfo.data.info.gradeName}}</li>
+                                </ul>
+                              </td>
+                              <td>
+                                <ul class="list-unstyled text-left">
+                                  <li>原价：{{otherInfo.transCostMap.originalPrice}}元</li>
+                                  <li>优惠：{{otherInfo.transCostMap.reducedPrice}}元</li>
+                                  <li>应缴：{{otherInfo.transCostMap.payablePrice}}元</li>
+                                  <li>已缴：{{otherInfo.transCostMap.paidinPrice}}</li>
+                                </ul>
+                              </td>
+                              <td>{{otherInfo.transCostMap.receivedPrice}}元</td>
+                              <td>
+                                <ul class="list-unstyled text-left text-orange">
+                                  <li>学籍注册费：{{otherInfo.transCostMap.rollRegisterPrice}}元</li>
+                                  <li>网络通讯费：{{otherInfo.transCostMap.networkMessagePrice}}元</li>
+                                  <li>学习费：{{otherInfo.transCostMap.studyPrice}}元</li>
+                                  <li>教材费：{{otherInfo.transCostMap.shouldTextbookPrice}}元</li>
+                                  <li>合计：{{otherInfo.transCostMap.totalPrice}}元</li>
+                                </ul>
+                              </td>
+                              <td>{{otherInfo.transCostMap.shouldBackPrice}}元</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <div class="margin_t5 text-orange f12">
+                          退学应扣、应退费用将严格按照国家规定执行，具体请查看
+                          <a href="#" class="text-orange" data-download="file">
+                            <u>《国家开放大学退学退费规定》</u>
+                          </a>
+                        </div>
+                    </div>
+                  </dd>
+                {{else if $value.auditOperatoRole==1 && $value.auditState==9}}
+                  <dt>学员已确认应扣、应退金额 <small>{{$value.auditDt}}</small></dt>
+                  <dd class="static text-green">已确认</dd>
+                  <dd class="icon-order icon-order-green"></dd>
+                  <dd class="message">
+                    <div class="border-e0e0e0 padding10 margin_t5">
+                        <table class="table-gray-th text-center f12">
+                          <thead>
+                            <tr>
+                              <th>专业</th>
+                              <th>学费</th>
+                              <th>实收费用</th>
+                              <th>应扣费用</th>
+                              <th>应退费用</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>
+                                <ul class="list-unstyled text-left">
+                                  <li>专业名称：{{baseInfo.data.info.specialtyName}}</li>
+                                  <li>专业层次：{{baseInfo.data.info.pyccName}}</li>
+                                  <li>报读学期：{{baseInfo.data.info.gradeName}}</li>
+                                </ul>
+                              </td>
+                              <td>
+                                <ul class="list-unstyled text-left">
+                                  <li>原价：{{otherInfo.transCostMap.originalPrice}}元</li>
+                                  <li>优惠：{{otherInfo.transCostMap.reducedPrice}}元</li>
+                                  <li>应缴：{{otherInfo.transCostMap.payablePrice}}元</li>
+                                  <li>已缴：{{otherInfo.transCostMap.paidinPrice}}</li>
+                                </ul>
+                              </td>
+                              <td>{{otherInfo.transCostMap.receivedPrice}}元</td>
+                              <td>
+                                <ul class="list-unstyled text-left text-orange">
+                                  <li>学籍注册费：{{otherInfo.transCostMap.rollRegisterPrice}}元</li>
+                                  <li>网络通讯费：{{otherInfo.transCostMap.networkMessagePrice}}元</li>
+                                  <li>学习费：{{otherInfo.transCostMap.studyPrice}}元</li>
+                                  <li>教材费：{{otherInfo.transCostMap.shouldTextbookPrice}}元</li>
+                                  <li>合计：{{otherInfo.transCostMap.totalPrice}}元</li>
+                                </ul>
+                              </td>
+                              <td>{{otherInfo.transCostMap.shouldBackPrice}}元</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <div class="margin_t5 text-orange f12">
+                          退学应扣、应退费用将严格按照国家规定执行，具体请查看
+                          <a href="#" class="text-orange" data-download="file">
+                            <u>《国家开放大学退学退费规定》</u>
+                          </a>
+                        </div>
+                    </div>
+                  </dd>
+                {{else if $value.auditOperatoRole==0 && $value.auditState==8}}
+                  <dt>院长确认退学</dt>
+                  <dd class="static gray">待处理</dd>
+                  <dd class="icon-order"></dd>
+                {{else if $value.auditOperatoRole==0 && $value.auditState==9}}
+                  <dt>院长已确认退学</dt>
+                  <dd class="static text-green">已确认</dd>
+                  <dd class="icon-order icon-order-green"></dd>
+                  <dd class="message">
+                    <div class="border-e0e0e0 padding10 margin_t5">
+                      <div>
+                        确认意见：
+                        <div class="margin_t5">
+                          {{$value.auditContent}}
+                        </div>
+                      </div>
+                      <div class="margin_t10 text-right gray">
+                        院长：{{$value.auditOperator}}<br>
+                        {{$value.auditDt}}
+                      </div>
+                    </div>
+                  </dd>
+                {{else if $value.auditOperatoRole==7 && $value.auditState==10}}
+                  <dt>待退款</dt>
+                  <dd class="static gray">待退款</dd>
+                  <dd class="icon-order"></dd>
+                {{else if $value.auditOperatoRole==7 && $value.auditState==11}}
+                  <dt>已退款 <small>{{$value.auditDt}}</small></dt>
+                  <dd class="static text-green">已退款</dd>
+                  <dd class="icon-order icon-order-green"></dd>
+                  <dd class="message">
+                    <div class="border-e0e0e0 padding10 margin_t5">
+                      <div>
+                        {{$value.auditContent}}<br>
+                        点击查看
+                        <a href="{{otherInfo.transCostMap.backPriceVoucher}}" class="text-blue" data-role="view-cert"><u>退费凭证</u></a>
+                      </div>
+                      <div class="text-right margin_t10">
+                        <button type="button" class="btn btn-md btn-orange min-width-120 f14" data-role="ee-contact">我有疑问</button>
+                      </div>
+                    </div>
+                  </dd>
+                {{else if $value.auditOperatoRole==5 && $value.auditState==8}}
+                  <dt>学籍科确认退学</dt>
+                  <dd class="static gray">待处理</dd>
+                  <dd class="icon-order"></dd>
+                {{else if $value.auditOperatoRole==5 && $value.auditState==9}}
+                  <dt>学籍科已确认退学</dt>
+                  <dd class="static text-green">已确认退学</dd>
+                  <dd class="icon-order icon-order-green"></dd>
+                  <dd class="message">
+                    <div class="border-e0e0e0 padding10 margin_t5">
+                      <div>
+                        确认意见：
+                        <div class="margin_t5">
+                          {{$value.auditContent}}
+                        </div>
+                        {{if otherInfo.dropOutStudyInfo.dropSchoolPhoto}}
+                          <div class="margin_t10">
+                            <span class="p-win-cert">
+                              <img class="vertical-middle" src="{{otherInfo.dropOutStudyInfo.dropSchoolPhoto | imgUrlFormat:[160,100]}}" width="160" height="100">
+                              <a href="{{otherInfo.dropOutStudyInfo.dropSchoolPhoto}}" class="light-box" data-role="fancybox">点击放大</a>
+                            </span>
+                          </div>
+                        {{/if}}
+                      </div>
+                      <div class="margin_t10 text-right gray">
+                        学籍科：{{$value.auditOperator}}<br>
+                        {{$value.auditDt}}
+                      </div>
+                    </div>
+                  </dd>
+                {{else if $value.auditState==12}}
+                  <dt>{{baseInfo.data.info.xm}}（学员）已退学 <small>{{$value.auditDt}}</small></dt>
+                  <dd class="static gray">完成退学</dd>
+                  <dd class="icon-order"></dd>
+                {{else if $value.auditState==13}}
+                  <dt>{{baseInfo.data.info.xm}}（学员） <small>{{$value.auditDt}}</small></dt>
+                  <dd class="static gray">撤销退学</dd>
+                  <dd class="icon-order"></dd>
+                {{/if}}
+              </dl>
+            {{/each}}
+          </div>
+        {{/if}}
+      </div>
+    </div>
+        
+    <div class="margin-t30 text-center">
+      <button type="button" class="btn btn-md btn-orange" style="width:200px;" data-role="back-to-list">返回记录列表</button>
+    </div>
+</script>
+
+<!--信息更正 模板-->
+<script type="text/template" id="gender-change-temp">
+  <div class="border-bottom margin_b25 padding_b5 clearfix">
+    <button type="button" class="btn btn-sm btn-gray fr" data-role="back-to-list">返回记录列表</button>
+    <h2 class="f16">
+     ● 信息更正({{otherInfo.data.newStudentInfo.messageType | ydjlPartStatus}})-申请详情
+    </h2>
+  </div>
+
+  {{include 'person-info-temp' baseInfo}}
+
+  {{if baseInfo.msgCode==200 && baseInfo.data && baseInfo.data.info}}
+
+    {{if otherInfo.msgCode==200 && otherInfo.data}}
+        <div class="margin-t30">
+          <div class="text-no-bold sub-title f16 margin_b10">信息更正</div>
+          {{if otherInfo.data.newStudentInfo.messageType==0}}
+            <table width="100%">
+              <tbody>
+                <tr>
+                  <td width="45%">
+                    <table class="table-gray-th">
+                        <thead>
+                          <tr>
+                            <th>登记信息</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>性别：{{baseInfo.data.info.xbmName}}</td>
+                            </tr>
+                            <tr>
+                              <td>民族：{{baseInfo.data.info.mzm | DictionaryConvert:baseInfo.data.dicNationList}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </td>
+                  <td width="10%" class="text-nowrap padding20 font24 text-bold font_gray text-center">
+                    --&gt;
+                  </td>
+                  <td width="45%">
+                    <table class="table-gray-th">
+                        <thead>
+                          <tr>
+                            <th>更正信息</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>性别：{{otherInfo.data.newStudentInfo.sex}}</td>
+                            </tr>
+                            <tr>
+                              <td>民族：{{otherInfo.data.newStudentInfo.nation}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          {{else if otherInfo.data.newStudentInfo.messageType==1}}
+            <table width="100%">
+              <tbody>
+                <tr>
+                  <td width="45%">
+                    <table class="table-gray-th">
+                        <thead>
+                          <tr>
+                            <th>登记信息</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>原学历层次：{{baseInfo.data.info.exedulevel}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </td>
+                  <td width="10%" class="text-nowrap padding20 font24 text-bold font_gray text-center">
+                    --&gt;
+                  </td>
+                  <td width="45%">
+                    <table class="table-gray-th">
+                        <thead>
+                          <tr>
+                            <th>更正信息</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>原学历层次：{{otherInfo.data.newStudentInfo.exedulevel}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          {{else if otherInfo.data.newStudentInfo.messageType==2}}
+            <table width="100%">
+              <tbody>
+                <tr>
+                  <td width="45%">
+                    <table class="table-gray-th">
+                        <thead>
+                          <tr>
+                            <th>登记信息</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>姓名：{{baseInfo.data.info.xm}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </td>
+                  <td width="10%" class="text-nowrap padding20 font24 text-bold font_gray text-center">
+                    --&gt;
+                  </td>
+                  <td width="45%">
+                    <table class="table-gray-th">
+                        <thead>
+                          <tr>
+                            <th>更正信息</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>姓名：{{otherInfo.data.newStudentInfo.xm}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          {{else if otherInfo.data.newStudentInfo.messageType==3}}
+            <table width="100%">
+              <tbody>
+                <tr>
+                  <td width="45%">
+                    <table class="table-gray-th">
+                        <thead>
+                          <tr>
+                            <th>登记信息</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>身份证号：{{baseInfo.data.info.sfzh}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </td>
+                  <td width="10%" class="text-nowrap padding20 font24 text-bold font_gray text-center">
+                    --&gt;
+                  </td>
+                  <td width="45%">
+                    <table class="table-gray-th">
+                        <thead>
+                          <tr>
+                            <th>更正信息</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>身份证号：{{otherInfo.data.newStudentInfo.sfzh}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          {{/if}}
+        </div>
+
+        {{if otherInfo.data.newStudentInfo.messageType!=1}}
+          <div class="margin-t30">
+            <div class="text-no-bold sub-title f16 margin_b10">
+              {{if otherInfo.data.newStudentInfo.proveFileType==1}}
+                身份证证明
+              {{else}}
+                其他证明（户籍证明、更正事项告知函）
+              {{/if}}
+            </div>
+            <div class="section-body border-e0e0e0 padding_t20 padding_b20">
+              <div class="clearfix">
+                {{if otherInfo.data.newStudentInfo.proveFileType==1}}
+                  <div class="col-6">
+                    <div class="cert-wrap">
+                      <h4 class="cert-title">身份证照片正面</h4>
+                      <div class="cert-box cert-box-4 has-upload">
+                        <a href="javascript:void(0);" class="info-img-box">
+                          <img class="info-img" src="{{otherInfo.data.newStudentInfo.sfzz | imgUrlFormat:[338,208]}}">
+                        </a>
+                        <a href="{{otherInfo.data.newStudentInfo.sfzz}}" class="light-box" data-role="fancybox">点击放大</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="cert-wrap">
+                      <h4 class="cert-title">身份证照片背面</h4>
+                      <div class="cert-box cert-box-5 has-upload">
+                        <a href="javascript:void(0);" class="info-img-box">
+                          <img class="info-img" src="{{otherInfo.data.newStudentInfo.sfzf | imgUrlFormat:[338,208]}}">
+                        </a>
+                        <a href="{{otherInfo.data.newStudentInfo.sfzf}}" class="light-box" data-role="fancybox">点击放大</a>
+                      </div>
+                    </div>
+                  </div>
+                {{else}}
+                  <div class="col-6">
+                    <div class="cert-wrap">
+                      <div class="cert-box cert-box-4 has-upload">
+                        <a href="javascript:void(0);" class="info-img-box">
+                          <img class="info-img" src="{{otherInfo.data.newStudentInfo.otherProve | imgUrlFormat:[338,208]}}">
+                        </a>
+                        <a href="{{otherInfo.data.newStudentInfo.otherProve}}" class="light-box" data-role="fancybox">点击放大</a>
+                      </div>
+                    </div>
+                  </div>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+        {{else}}
+          <div class="margin-t30">
+            <div class="text-no-bold sub-title f16 margin_b10">
+              更正证明
+            </div>
+            <div class="section-body border-e0e0e0 padding_t20 padding_b20">
+              <div class="clearfix">
+
+                  <div class="col-6">
+                    <div class="cert-wrap">
+                      <div class="cert-box cert-box-4 has-upload">
+                        <a href="javascript:void(0);" class="info-img-box">
+                          <img class="info-img" src="{{otherInfo.data.newStudentInfo.byzz | imgUrlFormat:[338,208]}}">
+                        </a>
+                        <a href="{{otherInfo.data.newStudentInfo.byzz}}" class="light-box" data-role="fancybox">点击放大</a>
+                      </div>
+                    </div>
+                  </div>
+
+              </div>
+            </div>
+          </div>
+        {{/if}}
+
+        <div class="margin-t30">
+          <div class="text-no-bold sub-title f16">签名确认</div>
+          <table class="table-gray-th text-center margin_t10" height="250">
+            <tbody>
+              <tr>
+                <td>
+                  <img src="{{otherInfo.data.newStudentInfo.sign}}">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {{include 'approval-process-temp' otherInfo}}
+
+    {{/if}}
+
+  {{/if}}
+
+  <div class="margin-t30 text-center">
+    <button type="button" class="btn btn-md btn-orange" style="width:200px;" data-role="back-to-list">返回记录列表</button>
+  </div>
+</script>
+
+  <!--审批流程 模板-->
+  <script type="text/template" id="approval-process-temp">
+    {{if data.schoolRollRransAuditList && data.schoolRollRransAuditList.length>0}}
+      <div class="margin-t30">
+        <div class="text-no-bold sub-title f16 margin_b10">审核流程</div>
+        <div class="padding10 border-e0e0e0">
+          <div class="logistics-box logistics-box-2">
+            {{each data.schoolRollRransAuditList}}
+              <!--学员-->
+              <dl class="{{($index==data.schoolRollRransAuditList.length-1)?'last':''}}">
+                {{if $value.auditOperatoRole==1}}
+                    <dt>{{studentName}}（{{$value.auditOperatoRole | roleConvert}}） <small class="font_gray">{{$value.auditDt}}</small></dt>
+                    <dd class="static gray">{{$value.auditOperatoRole | roleConvert}}申请</dd>
+                    <dd class="icon-order"></dd>
+                {{else}}
+                  {{if $value.auditState==0}}
+                      <dt>{{$value.auditOperatoRole | roleConvert}}审批</dt>
+                      <dd class="static gray">待审核</dd>
+                      <dd class="icon-order"></dd>
+                  {{else if $value.auditState==1 || $value.auditState==2}}
+                      <dt>{{$value.auditOperatoRole | roleConvert}}审批</dt>
+                      <dd class="static">
+                        {{if $value.auditState==1}}
+                          <span class="text-green">审核通过</span>
+                        {{else if $value.auditState==2}}
+                          <span class="text-red">审核不通过</span>
+                        {{/if}}
+                      </dd>
+                      {{if $value.auditState==1}}
+                        <dd class="icon-order icon-order-green"></dd>
+                      {{else if $value.auditState==2}}
+                        <dd class="icon-order icon-order-red"></dd>
+                      {{/if}}
+                      <dd class="message">
+                        <div class="txt margin_t5 margin_b10">
+                          <div>{{$value.auditContent}}</div>
+                          <div class="margin_t10 text-right gray">
+                            审核人：{{$value.auditOperatoRole | roleConvert}}<br>
+                            {{$value.auditDt}}
+                          </div>
+                        </div>
+                      </dd>
+                  {{/if}}
+                {{/if}}
+              </dl>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    {{/if}}
+  </script>
+
+<!--个人信息 模板-->
+<script type="text/template" id="person-info-temp">
+  <div>
+    <div class="text-no-bold sub-title f16 margin_b10">个人信息</div>
+    <table class="table-gray-th">
+        <tbody>
+          {{if msgCode==200}}
+            {{if data && data.info}}
+              <tr>
+                <th width="10%" class="text-right">姓名</th>
+                <td width="22%">{{data.info.xm}}</td>
+
+                <th width="10%" class="text-right">专业</th>
+                <td>{{data.info.specialtyName}}（{{data.info.ruleCode}}）</td>
+
+                <th width="10%" class="text-right">层次</th>
+                <td width="20%">{{data.info.pyccName}}</td>
+              </tr>
+              <tr>
+                <th class="text-right">身份证</th>
+                <td>{{data.info.sfzh}}</td>
+
+                <th class="text-right">年级</th>
+                <td>{{data.info.yearName}}</td>
+
+                <th class="text-right">学期</th>
+                <td>{{data.info.gradeName}}</td>
+              </tr>
+            {{else}}
+              <tr>
+                <td>
+                  <div class="text-center padding20">
+                      <i class="alert-icon alert-icon-123x63"></i>
+                      <span class="f14">无数据</span>
+                  </div>
+                </td>
+              </tr>
+            {{/if}}
+          {{else}}
+            <tr>
+              <td>
+                <div class="text-center padding20">
+                    <i class="alert-icon alert-icon-123x63"></i>
+                    <span class="f14">{{message}}</span>
+                </div>
+              </td>
+            </tr>
+          {{/if}}
+        </tbody>
+    </table>
+  </div>
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+  var $container=$('[data-id="my-application-record"]');
+
+  //异动类型 转化
+  template.helper('ydjlType', function (native) {
+      switch(native){
+        case 1:
+          return '转专业';
+          break;
+        case 2:
+          return '休学';
+          break;
+        case 3:
+          return '复学';
+          break;
+        case 4:
+          return '退学';
+          break;
+        case 5:
+          return '信息更正';
+          break;
+        case 6:
+          return '转学';
+          break;
+        default:
+          return '';
+          break;
+      }
+  });
+
+  //异动状态 转化
+  template.helper('ydjlStatus', function (native) {
+      switch(native){
+        case 0:
+          return '待审核';
+          break;
+        case 1:
+          return '通过';
+          break;
+        case 2:
+          return '不通过';
+          break;
+        case 3:
+          return '劝学中';
+          break;
+        case 4:
+          return '劝学失败';
+          break;
+        case 5:
+          return '劝学成功';
+          break;
+        case 6:
+          return '待核算';
+          break;
+        case 7:
+          return '已核算';
+          break;
+        case 8:
+          return '待确认';
+          break;
+        case 9:
+          return '已确认';
+          break;
+        case 10:
+          return '待登记';
+          break;
+        case 11:
+          return '已登记';
+          break;
+        case 12:
+          return '退学成功';
+          break;
+        case 13:
+          return '撤销退学';
+          break;
+        case 14:
+          return '待缴费';
+          break;
+        case 15:
+          return '已缴费';
+          break;
+        case 16:
+          return '待上传';
+          break;
+        case 17:
+          return '已上传';
+          break;
+        default:
+          return '';
+          break;
+      }
+  });
+
+  //信息更正子类型 转化
+  template.helper('ydjlPartStatus', function (native) {
+      native=native-0;
+      switch(native){
+        case 0:
+          return '性别民族变更';
+          break;
+        case 1:
+          return '入学文化程度更变';
+          break;
+        case 2:
+          return '姓名变更';
+          break;
+        case 3:
+          return '身份证变更';
+          break;
+        default:
+          return '';
+          break;
+      }
+  });
+
+  //审核人的角色 转化
+  template.helper('ydjlOperatorRole', function (native) {
+      switch(native){
+        case 0:
+          return '院长';
+          break;
+        case 1:
+          return '学员';
+          break;
+        case 2:
+          return '班主任(学生服务部)';
+          break;
+        case 3:
+          return '学习中心管理员';
+          break;
+        case 4:
+          return '招生办';
+          break;
+        case 5:
+          return '学籍科';
+          break;
+        case 6:
+          return '财务服务部';
+          break;
+        case 7:
+          return '公司财务部';
+          break;
+        default:
+          return '';
+          break;
+      }
+  });
+
+  template.helper('roleConvert', function (role) {
+    var roleName='学员';
+    role || (role=1);
+    role=parseInt(role);
+    switch(role){
+      case 1:
+        roleName='学员';
+        break;
+      case 2:
+        roleName='班主任';
+        break;
+      case 3:
+        roleName='学习中心管理员';
+        break;
+      case 4:
+        roleName='招生办';
+        break;
+      case 5:
+        roleName='学籍科';
+        break;
+      default:
+        break;
+    }
+    return roleName;
+  });
+
+  $container
+  .on('click', '[data-role="view-change"]', function(event) {
+    event.preventDefault();
+    var transactionId=$(this).data('itemid'),
+        transactionType=$(this).data('transactiontype');
+
+    switch(transactionType){
+      case 4://退学
+        getDropStudyApplicationRecord(transactionId);
+        break;
+      case 5://信息更正
+        getMessageApplicationRecord(transactionId);
+        break;
+
+      default:
+
+        break;
+    }
+
+    
+  })
+  //返回记录列表
+  .on('click', '[data-role="back-to-list"]', function(event) {
+    event.preventDefault();
+    $container.append('<div class="overlay bg-center"></div>');
+    getApplicationRecordList();
+  })
+  //查看/下载退学退费规定文件
+  .on('click', '[data-download="file"]:not([disabled])', function(event) {
+    event.preventDefault();
+    var _this=this;
+
+    $(this).attr('disabled', '').append('<span class="gray">文件获取中...</span>');
+
+    var winOpen=window.open('about:blank','download');
+
+    winOpen.document.write('\
+        <div>文件加载中...<\/div>\
+        <script>\
+          setTimeout("window.close()",800);\
+        <\/script>\
+    ');
+
+    ajaxProcess({
+        url:'/pcenter/roll/transaction/getOutStudyTemplate',
+        type:'GET',
+        success:function(json){
+            if(json.msgCode==200 && json.data && json.data.link){
+              window.open(json.data.link,'download');
+            }
+            else{
+              $.resultDialog(2,'文件获取失败:'+json.message);
+            }
+        },
+        fail:function(errorMessage){
+            $.resultDialog(2,'文件获取失败:'+errorMessage);
+        },
+        always:function(){
+          $(_this).removeAttr('disabled').children('span').remove();
+        }
+    });
+  });
+  
+  //记录列表
+  function getApplicationRecordList() {
+    var listData=$container.data('list');
+    if(listData){
+      $container.html(template('record-list-tpl',listData))
+    }
+    else{
+      $container.append('<div class="overlay bg-center"></div>');
+      ajaxProcess({
+          url: '/pcenter/roll/applicationRecord/getApplicationRecordList',
+          type: 'GET',
+          success: function(json) {
+              if (json.msgCode == 200) {
+                  var rData=json.data;
+                  if(rData && rData.applicationRecordMap && rData.applicationRecordMap.length>0){
+                    $container.html(template('record-list-tpl',rData))
+                    .data('list',rData);
+                  }
+                  else{
+                    $container.html(template('no-data-tips-temp',{message:'暂无申请记录'}));
+                  }
+                  
+              } else {
+                  $container.html(template('error-tips-temp',{message:json.message}));
+              }
+          },
+          fail: function(errorMessage) {
+              $container.html(template('error-tips-temp',{message:errorMessage}));
+              
+          }
+      });
+    }
+  }
+
+  getApplicationRecordList();
+
+  //学籍资料
+  function getBaseInfo(){
+    return ajaxProcess({
+      //接口 1.1 学籍基本资料
+      url:'/pcenter/roll/getBaseInfo',
+      type:'GET',
+      success:function(renderData){
+        //缓存学生学籍信息
+        appJSON.studentRecordInfo=renderData;
+      }
+    });
+  }
+
+  //退学记录详情
+  function getDropStudyApplicationRecord(transactionId){
+    $container.append('<div class="overlay bg-center"></div>');
+    ajaxProcess({
+      url:'/pcenter/roll/applicationRecord/getDropStudyApplicationRecord',
+      type:'GET',
+      data:{transactionId:transactionId},
+      success:function(json){
+        var jsonData=json.data;
+        if(json.msgCode==200 && jsonData){
+
+          function renderHtml(baseInfo){
+            var render=template.compile($('#leave-agreement-details-tpl').html(),{escape:false})
+            $container.html(render(
+              {
+                baseInfo:baseInfo,
+                otherInfo:jsonData,
+              }
+            ));
+          }
+
+          getBaseInfo()
+          .done(function(renderData){
+            renderHtml(renderData);
+          })
+          .fail(function(XMLHttpRequest, textStatus){
+              $container.html(template('error-tips-temp',{message:textStatus}));
+          });
+
+        }
+        else{
+          $container.html(template('error-tips-temp',{message:json.message}));
+        }
+      },
+      fail:function(errorMsg){
+        $container.html(template('error-tips-temp',{message:errorMsg}));
+      }
+    });
+  };
+
+  //信息更正 记录详情
+  function getMessageApplicationRecord(transactionId){
+    $container.append('<div class="overlay bg-center"></div>');
+    ajaxProcess({
+      url:'/pcenter/roll/applicationRecord/getMessageApplicationRecord',
+      type:'GET',
+      data:{transactionId:transactionId},
+      success:function(json){
+        var jsonData=json.data;
+        if(json.msgCode==200 && jsonData){
+
+          function renderHtml(baseInfo){
+            var render=template.compile($('#gender-change-temp').html(),{escape:false})
+            $container.html(render(
+              {
+                baseInfo:baseInfo,
+                otherInfo:json,
+              }
+            ));
+          }
+
+          getBaseInfo()
+          .done(function(renderData){
+            renderHtml(renderData);
+          })
+          .fail(function(XMLHttpRequest, textStatus){
+              $container.html(template('error-tips-temp',{message:textStatus}));
+          });
+
+        }
+        else{
+          $container.html(template('error-tips-temp',{message:json.message}));
+        }
+      },
+      fail:function(errorMsg){
+        $container.html(template('error-tips-temp',{message:errorMsg}));
+      }
+    });
+  };
+  
+});
+</script>
+

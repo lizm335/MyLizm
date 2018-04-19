@@ -1,0 +1,220 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+</head>
+<body class="body-pop">
+<div class="u-panel overlay-wrapper">
+  <form class="theform">
+    <div class="u-panel-head">
+      提问题
+      <span class="pop-close" data-role="pop-close"></span>
+    </div>
+    <div class="u-panel-body scroll-box">
+      <div style="width:85%;" class="center-block padding_t25">
+          <table class="general_tb0 custom-tbl" width="100%">
+            <tbody>
+              <tr>
+                <td width="70" class="font16" valign="top">
+                  <div class="pad-t3">
+                  问题标题
+                  </div>
+                </td>
+                <td>
+                  <div class="valid-control">
+                    <input class="form-control full-width" type="text" placeholder="问题标题" datatype="*" nullmsg="请填写标题" name="title">
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="font16" valign="top">
+                  <div class="pad-t3">
+                  问题详情
+                  </div>
+                </td>
+                <td>
+                  <div class="valid-control">
+                    <textarea class="form-control full-width" rows="7" placeholder="问题详情" datatype="*" nullmsg="请填写详情" name="content"></textarea>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="font16" valign="top">
+                  <div class="pad-t3">
+                  添加图片
+                  </div>
+                </td>
+                <td>
+                  <span class="upload-image-btn" data-role="upload-btn">
+                    <a href="#" class="btn btn-md btn-gray">
+                      上传图片
+                    </a>
+                  </span>
+                  <span class="gray font12 margin_l10">* 支持jpg/png/gif类型图片，每张不超过5mb大小</span>
+                  <ul class="img-preview clearfix">
+                    <!--
+                      <li>
+                        <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/temp/qa.jpg" alt="">
+                        <i class="icon icon-71x0" data-role="remove-img" title="删除"></i>
+                      </li>
+                    -->
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+      </div>
+    </div>
+    <div class="u-panel-footer">
+      <div class="in" align="right">
+        <button class="btn btn-md btn-gray margin_r10" data-role="close" style="width:100px;">取消</button>
+        <button type="submit" class="btn btn-md btn-orange" data-role="sure" style="width:100px;">确定</button>
+      </div>
+    </div>
+    <div class="overlay bg-center" style="display:none;"></div>
+  </form>
+</div>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+<script type="text/javascript">
+require(['jquery','common'], function ($) {
+  //“x”关闭窗口
+  $('[data-role="pop-close"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  //关闭
+  $('[data-role="close"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  //表单验证
+  require(['Validform'],function(){
+    JPlaceHolder.init();
+    $('.valid-control').append([
+      '<div class="tooltip yellow_tip t_arrow tooltip-valid">',
+        '<div class="tooltip-in"></div>',
+        '<span class="t_arrow"><i class="arrow"></i><i class="arrow arrow_inner"></i></span>',
+      '</div>'
+    ].join(''));
+
+    $.Tipmsg.r='';
+    
+    $(".theform").Validform({
+      //showAllError:true,
+      ajaxPost:true,
+      tiptype:function(msg,o,cssctl){
+        //msg：提示信息;
+          //o:{obj:*,type:*,curform:*},
+          //obj指向的是当前验证的表单元素（或表单对象，验证全部验证通过，提交表单时o.obj为该表单对象），
+          //type指示提示的状态，值为1、2、3、4， 1：正在检测/提交数据，2：通过验证，3：验证失败，4：提示ignore状态, 
+          //curform为当前form对象;
+        if(!o.obj.is("form")){
+          var objtip=o.obj.closest('.valid-control').find(".tooltip");
+          switch(o.type){
+              case 3:
+                objtip.children('.tooltip-in').text(msg).parent().show();
+                break;
+              default:
+                objtip.children('.tooltip-in').text('').parent().hide();
+                break;
+            }
+        }
+      },
+      beforeSubmit:function(curform){
+        $('.overlay').show();
+        
+        var url='/pcenter/headTeacherService/feedback/add';
+
+        ajaxProcess({
+          url:url,
+          type:'POST',
+          data:$(".theform").serialize(),
+          success:function(data){
+            $.when($.resultDialog( (data.msgCode==200?1:0),data.message))
+            .done(function(){
+                var hash=top.location.hash;
+                //如果是班级答疑栏目页面，就刷新页面
+                if(hash.indexOf('#/bjdayi')!=-1){
+                  top.curRoute.app.refresh();
+                }
+                parent.$.closeDialog(frameElement.api);
+            });
+          },
+          always:function(){
+            $('.overlay').hide();
+          }
+        });
+
+        return false;
+        
+      },
+      callback:function(data){
+        
+      }
+    });
+  });
+
+  //删除图片
+  $('body').on('click', '[data-role="remove-img"]', function(event) {
+    event.preventDefault();
+    $(this).parent().remove();
+  });
+
+  //上传图片
+  $('[data-role="upload-btn"]').click(function(event) {
+    event.preventDefault();
+    if( $('.img-preview li').length>9 ){
+      $.resultDialog(0,'添加的图片不能超过9张');
+      return;
+    }
+
+    uploadFile({
+      ok:function(filelist){
+        if(filelist){
+          if(filelist.length>0){
+            var src=filelist[0].SFileName;
+            var html=[
+              '<li>',
+                '<img src="{0}?x-oss-process=image/resize,h_80,w_80/auto-orient,1">',
+                '<input type="hidden" value="{0}" name="imgUrls">',
+                '<i class="icon icon-71x0" data-role="remove-img" title="删除"></i>',
+              '</li>'
+            ].join('').format(src);
+            $('.img-preview').append(html);
+          }
+        }
+        $.closeDialog(this);
+      }
+    });
+  });
+
+  if($(frameElement).height()>0){
+    $('.scroll-box').height($(frameElement).height()-90);
+  }
+
+  $('html,body').height('100%');
+});
+</script>
+</body>
+</html>

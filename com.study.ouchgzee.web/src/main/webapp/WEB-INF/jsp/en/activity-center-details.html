@@ -1,0 +1,592 @@
+<div class="main-box">
+	<div class="wrap-box clearfix">
+		<div class="main">
+			<div class="bg-white border-e0e0e0">
+				<div class="teacher_title border-bottom">
+					<h2>
+						<i class="icon icon-185x68"></i>
+						<ul class="breadcrumbs"><li>当前位置：</li><li><a href="">活动中心</a></li><li class="last"><a href="">详情</a></li>
+						</ul>
+					</h2>
+					<a href="#/hdzhongxin" class="btn btn-sm btn-gray"><i class="icon icon-175x0"></i>返回列表</a>
+				</div>
+				<div data-id="activity-details">
+					<table width="100%" height="400">
+						<tr>
+							<td valign="middle" align="center">
+								
+								<p>
+									<i class="loading"></i>
+							    </p>
+							    <p class="font18 gray margin_t10">数据加载中...</p>
+							</td>
+						</tr>
+					</table>
+				
+					
+				</div>
+			</div>
+		</div>
+	</div>		
+</div>
+
+<!--模板-->
+<script type="text/html" id="article-tpl">
+	<div class="article-wrap border-bottom">
+		<div class="article-head text-center">
+			<h1 class="article-title">
+				{{if data.isStick==1}}
+					<span class="label label-warning f14 vertical-middle">置顶</span>
+				{{/if}}
+				{{data.infoTheme}}
+			</h1>
+			<div class="article-other">
+				<span class="padding_r20">类型：{{data.infoType}}</span>
+				<span class="padding_l20">分类：{{data.typeClassify}}</span>
+				<span class="padding_l20">发布：{{data.putUserName}}</span>
+				<span class="padding_l20">时间：{{data.createdDt}}</span>
+			</div>
+		</div>
+		<div class="article-content">
+			{{data.infoContent}}
+		</div>
+		{{if data.fileUrl}}
+			<div class="article-addon">
+				附件：<a href="{{data.fileUrl}}" target="_blank">{{data.fileName?data.fileName:'点击下载'}}</a>
+			</div>
+		{{/if}}
+	</div>
+
+	{{if data.isLike==1}}
+		<!--点赞-->
+		<div class="border-bottom text-center pad30">
+			<span class="thumbs-up {{data.ifLikeCheck?'disabled':'as-link'}}">
+				<i class="icon {{data.ifLikeCheck?'icon-89x144':'icon-50x144'}}"></i>
+				<div class="txt" data-cache="{{data.likeCount}}">{{data.likeCount}}</div>
+			</span>
+		</div>
+	{{/if}}
+
+	{{if data.isFeedback==1 && data.feedbackList.length>0}}
+		<!--反馈功能-->
+		{{if data.ifFeedbackCheck}}
+			<div class="border-bottom pad30" data-id="vote-sel">
+				{{include 'feeback-tpl' data}}
+			</div>
+		{{else}}
+			<div class="border-bottom pad30" data-id="vote-sel">
+				<h4 class="text-no-bold font18">请对本活动反馈意见</h4>
+				<ul class="vote-sel-item">
+					{{each data.feedbackList}}
+						<li>
+							<label>
+								<input type="radio" name="code" value="{{$value.code}}">
+								<span class="txt">{{$value.name}}</span>
+								<span class="progress-sum-bg"></span>
+								<span class="progress-count-bg"
+									style="width:{{($value.num && data.feebackTotal)?($value.num/data.feebackTotal*100):0}}%"
+								></span>
+								<span class="count-label" style="z-index:2;">{{$value.num}}人</span>
+							</label>
+						</li>
+					{{/each}}
+				</ul>
+				<div class="font_gray_per60 text-right margin_t5 margin-r30" data-id="total-fb" style="visibility: hidden;">已有 {{data.feebackTotal}} 人反馈</div>
+			</div>
+		{{/if}}
+	{{/if}}
+
+	{{if data.isComment==1}}
+		<div class="border-bottom pad30">
+			<form class="theform overlay-wrapper">
+				{{include 'form-tpl' data}}
+			</form>
+		</div>
+		{{if data.commentList.length>0}}
+			<div class="comment-list clearfix margin-l30 margin-r30">
+				
+				{{include 'comment-list-tpl' data}}
+				
+			</div>
+		{{/if}}
+	{{/if}}
+</script>
+
+<!--反馈意见 模板-->
+<script type="text/html" id="feeback-tpl">
+	<h4 class="text-no-bold font18">请对本活动反馈意见</h4>
+	<ul class="vote-sel-item actived">
+		{{each feedbackList}}
+			<li class="{{$value.check?'cur':''}}">
+				<label>
+					<input type="radio" name="code" value="{{$value.code}}" disabled {{$value.check?'checked':''}}>
+					<span class="txt">{{$value.name}}{{$value.check?' +1':''}}</span>
+					<span class="progress-sum-bg"></span>
+					<span class="progress-count-bg"
+						style="width:{{($value.num && feebackTotal)?($value.num/feebackTotal*100):0}}%"
+					></span>
+					<span class="count-label" style="z-index:2;">{{$value.num}}人</span>
+				</label>
+			</li>
+		{{/each}}
+	</ul>
+	<div class="font_gray_per60 text-right margin_t5 margin-r30">已有 {{feebackTotal}} 人反馈</div>
+</script>
+
+<!--表单模板-->
+<script type="text/html" id="form-tpl">
+	<h4 class="text-no-bold font18 margin_b10">发表讨论</h4>
+	<div class="valid-control">
+		<textarea class="form-control form-control-block" rows="8" placeholder="发表一下你的想法..." style="resize:none;" datatype="*" nullmsg="请填写内容" errormsg="请填写内容" name="content" ></textarea>
+	</div>
+	<div class="clearfix">
+		<input type="hidden" name="platform" value="0">
+		<input type="hidden" name="messageUserId" value="{{messageUserId}}">
+		<input type="hidden" name="imgUrls" value="">
+		<div class="fr padding_t15 padding_l20">
+			<button type="submit" class="btn btn-md btn-green min-width-120">发表</button>
+		</div>
+		<div class="oh">
+			<ul class="img-preview">
+
+            </ul>
+            <div class="upload-add-helper as-link"></div>
+        </div>
+	</div>
+</script>
+
+<!--评论列表 模板-->
+<script type="text/html" id="comment-list-tpl">
+	<ul>
+		{{each commentList as v1 i}}
+			<li class="comment-item no-pad-left no-pad-right">
+				{{if v1.avatar}}
+					<img src="{{v1.avatar | imgUrlFormat:[68,68]}}" alt="{{v1.userName}}" class="aq_head_user" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png'">
+				{{else}}
+					<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png" alt="{{v1.userName}}" class="aq_head_user">
+				{{/if}}
+
+				<div class="oh">
+					<h2 class="padding_t5 text-no-bold f16">{{v1.userName}}</h2>
+					<div class="font_gray f12">
+						{{v1.createdDt}} {{v1.platform}}
+					</div>
+					<div class="txt line-height-1_4 margin_t10">
+						{{v1.content}}
+					</div>
+					<div class="qa_img">
+						{{each v1.imgUrls as imgUrl j}}
+			          		<a href="#"><img src="{{imgUrl | imgUrlFormat:[80,80]}}" data-orient-url="{{imgUrl}}" data-id="fancybox-img" alt=""></a>
+			          	{{/each}}
+			        </div>
+			        <div class="margin_t10 text-right f12 position-relative">
+	                  	<u class="as-link text-blue" data-role="reply" data-id="{{v1.id}}">回复</u>
+	                  	|
+	                  	{{if v1.isLike==0}}
+		                  	<u class="as-link text-blue" data-role="support" 
+		                  	data-cache="{{v1.likecount?v1.likecount:'0'}}" 
+		                  	data-id="{{v1.id}}">
+		                  		点赞({{v1.likecount?v1.likecount:'0'}})
+		                  	</u>
+	                  	{{else if v1.isLike==1}}
+	                  		<u class="gray">
+		                  		点赞({{v1.likecount?v1.likecount:'0'}})
+		                  	</u>
+	                  	{{/if}}
+	                </div>
+
+	                {{if v1.commentDetailList && v1.commentDetailList.length>0}}
+		                <div class="feedback-box margin_t15">
+		                	{{each v1.commentDetailList as item n}}
+			                	<div class="border-e0e0e0 feedback-item">
+			                		<div class="clearfix">
+			                			<span class="font_gray fr">
+			                				{{item.createdDt}} 
+			                				{{item.platform}}
+			                			</span>
+			                			<span class="f16">{{item.userName}}</span>
+			                		</div>
+			                		<div class="txt">
+			                			{{item.content}}
+			                		</div>
+			                		<div class="margin_t10 text-right f12 position-relative">
+			                			{{if item.isLike==0}}
+					                      	<u class="as-link text-blue" data-role="support"
+					                      		data-cache="{{item.likecount?item.likecount:'0'}}"
+					                      		data-id="{{item.id}}">
+					                      		点赞({{item.likecount?item.likecount:'0'}})
+					                      	</u>
+				                      	{{else if item.isLike==1}}
+				                      		<u class="gray">
+					                      		点赞({{item.likecount?item.likecount:'0'}})
+					                      	</u>
+				                      	{{/if}}
+				                    </div>
+			                	</div>
+		                	{{/each}}
+		                </div>
+	                {{/if}}
+				</div>
+			</li>
+		{{/each}}
+	</ul>
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common','jquery.fancybox'], function ($,template) {
+	var $container=$('[data-id="activity-details"]');
+	var articleId=curRoute.params['id'];
+	var $pageLoading=$('[data-role="page-loading"]');
+	var messageUserId='';
+
+	//发表 表单
+	function checkAndPostForm(){
+		var $form=$(".theform",$container);
+		initValidForm($form,
+        	function(){
+        		var curform=this;
+        		curform.append('<div class="overlay bg-center"></div>');
+
+		      	ajaxProcess({
+		      		url:'/pcenter/home/message/addComment',
+		      		type:'POST',
+		      		data:curform.serialize(),
+		      		success:function(data){
+				        if(data.msgCode==200){
+				        	$.when($.resultDialog(1,'发表成功'))
+				        	.done(function(){
+				        		curform.html(
+				        			template('form-tpl',{messageUserId:messageUserId})
+				        		)
+
+				        		getData().done(function(renderData){
+									var rData=renderData.data;
+						            if(renderData.msgCode==200 && rData){
+
+						            	$('.comment-list',$container).html(
+						            		template('comment-list-tpl',rData)
+						            	)
+						            }
+								});
+	                		});
+				        }
+				        else{
+				        	$.resultDialog(2,data.message);
+				        }
+		      		},
+		      		fail:function(errorMsg){
+		      			$.resultDialog(2,errorMsg,2000);
+		      		},
+		      		always:function(){
+		      			curform.children('.overlay').remove();
+		      		}
+		      	});
+        	}
+        );
+	}
+
+	//回复 表单
+	function replyPostForm(){
+		var $form=$('[data-id="reply-form"]',$container);
+		initValidForm($form,
+        	function(){
+        		var curform=this;
+        		curform.append('<div class="overlay bg-center"></div>');
+
+		      	ajaxProcess({
+		      		url:'/pcenter/home/message/addCommentDetail',
+		      		type:'POST',
+		      		data:curform.serialize(),
+		      		success:function(data){
+				        if(data.msgCode==200){
+				        	getData().done(function(renderData){
+								var rData=renderData.data;
+					            if(renderData.msgCode==200 && rData){
+
+					            	$('.comment-list',$container).html(
+					            		template('comment-list-tpl',rData)
+					            	)
+					            }
+
+					            curform.children('.overlay').remove();
+							});
+				        }
+				        else{
+				        	curform.children('.overlay').remove();
+				        	$.resultDialog(2,data.message);
+				        }
+		      		},
+		      		fail:function(errorMsg){
+		      			curform.children('.overlay').remove();
+		      			$.resultDialog(2,errorMsg,2000);
+		      		}
+		      	});
+        	}
+        );
+	}
+
+	//数据初始化
+	ajaxProcess({
+        url:'/pcenter/home/message/view',
+        type:'GET',
+        data:{id:articleId,platform:'0'},
+        success:function(renderData){
+        	var rData=renderData.data;
+            if(renderData.msgCode==200 && rData){
+            	var render = template.compile($("#article-tpl").html(),{escape:false});
+				var renderHtml = render(renderData);
+
+                $container.html(renderHtml);
+
+                messageUserId=rData.messageUserId;
+
+                checkAndPostForm();
+            }
+            else{
+            	$container.html( '<div class="padding_t25">'+template('error-tips-temp',{message:renderData.message})+'</div>' );
+            }
+        },
+        fail:function(errorMessage){
+            $container.html( '<div class="padding_t25">'+template('error-tips-temp',{message:errorMessage})+'</div>' );
+        }
+    });
+
+    //重新获取数据
+    function getData(){
+    	return ajaxProcess({
+	        url:'/pcenter/home/message/view',
+	        type:'GET',
+	        data:{id:articleId},
+        	always:function(){
+        		$pageLoading.hide();
+        	},
+        	fail:function(errmsg){
+        		curRoute.app.refresh();
+        	}
+	    });
+    }
+
+	$container
+	//投票
+	.on('click', '.vote-sel-item :radio', function(event) {
+		var _this=this;
+		var $voteSelBox=$('.vote-sel-item');
+		if($voteSelBox.hasClass('actived')){
+			event.preventDefault();
+			return;
+		}
+
+		$pageLoading.show();
+
+		ajaxProcess({
+	        url:'/pcenter/home/message/addFeedback',
+	        type:'POST',
+	        data:{
+	        	messageUserId:messageUserId,
+	        	code:$(_this).val()
+	        },
+	        success:function(json){
+	            if(json.msgCode==200){
+
+	            	getData().done(function(renderData){
+						var rData=renderData.data;
+			            if(renderData.msgCode==200 && rData){
+
+			            	$('[data-id="vote-sel"]',$container).html(
+			            		template('feeback-tpl',rData)
+			            	)
+
+			            	$.resultDialog(1,'意见成功提交');
+			            }
+					});
+
+	            }
+	            else{
+	            	$.resultDialog(0,'操作失败:'+json.message,2000);
+
+	            	$pageLoading.hide();
+	            }
+	        },
+	        fail:function(errorMessage){
+	            $pageLoading.hide();
+	        }
+	    });
+	})
+
+	//回复
+	.on('click', '[data-role="reply"]', function(event) {
+		var commentId=$(this).data('id'),
+			pos=$(this).position(),
+			replyHtml='\
+				<div class="position-relative padding_t10 overlay-wrapper" data-id="reply-box" style="display:none">\
+					<form data-id="reply-form">\
+						<div class="valid-control">\
+							<textarea class="form-control form-control-block" rows="8" placeholder="发表一下你的想法..." datatype="*" nullmsg="请填写内容" errormsg="请填写内容" name="content"></textarea>\
+						</div>\
+						<div class="margin_t15 text-right">\
+							<input type="hidden" name="commentId" value="'+commentId+'">\
+							<input type="hidden" name="platform" value="0">\
+							<button type="submit" class="margin_r15 min-width-100 btn btn-md btn-orange f14">回复</button>\
+							<button type="reset" class="min-width-100 btn btn-md btn-gray f14" onclick="$(this).parent().parent().slideUp()">取消</button>\
+						</div>\
+					</form>\
+					<div class="my-arrow" style="position:absolute;bottom: 100%;margin-bottom: -2px;left:'+(pos.left+$(this).width()/2-8)+'px;"><span></span><i></i></div>\
+				</div>\
+			',
+			$p=$(this).parent();
+
+		var $replyBox=$p.next('[data-id="reply-box"]');
+		if($replyBox.length<=0){
+			$replyBox=$(replyHtml);
+			$p.after($replyBox);
+
+			replyPostForm();
+		}
+
+		if( $replyBox.is(':hidden') ){
+			$('[data-id="reply-box"]:visible').slideUp();
+			$replyBox.slideDown();
+		}
+		else{
+			$replyBox.slideUp();
+		}
+	})
+
+	//文章点赞
+	.on('click', '.thumbs-up:not(.disabled)', function(event) {
+		var _this=this;
+		var $txt=$(_this).children('.txt'),
+			cache=$txt.data('cache');
+
+		$(_this).attr('class','thumbs-up disabled')
+		.children('.icon').attr('class','icon icon-89x144')
+		.next('.txt').text('loading');
+
+		ajaxProcess({
+	        url:'/pcenter/home/message/likeMessage',
+	        type:'POST',
+	        data:{messageUserId:messageUserId},
+	        success:function(json){
+	            if(json.msgCode==200){
+	            	$txt.text(cache+1);
+	            }
+	            else{
+	            	$.resultDialog(0,'操作失败:'+json.message,2000);
+
+	            	$(_this).removeClass('disabled')
+					.children('.icon').attr('class','icon icon-50x144');
+
+	            	$txt.text(cache);
+	            }
+	        },
+	        fail:function(errorMessage){
+	            $.resultDialog(0,'操作失败:'+errorMessage,2000);
+
+            	$(_this).removeClass('disabled')
+				.children('.icon').attr('class','icon icon-50x144');
+
+            	$txt.text(cache);
+	        }
+	    });
+	})
+
+	//发表评论-上传图片
+	.on('click', '.upload-add-helper', function(event) {
+
+		if( $('.img-preview li',$container).length>9 ){
+	      $.resultDialog(0,'添加的图片不能超过9张');
+	      return;
+	    }
+
+	    uploadFile({
+	    	filenum:5,
+	      	ok:function(filelist){
+		        if(filelist && filelist.length>0){
+		        	var imgUrls=[];
+		        	$.each(filelist, function(index, file) {
+			            var src=file.SFileName;
+			            var html=[
+			              '<li>',
+			                '<a href="#"><img src="{0}?x-oss-process=image/resize,h_80,w_80/auto-orient,1" data-orient-url="{0}" data-id="fancybox-img"></a>',
+			                '<i class="icon icon-71x0" data-role="remove-img" title="删除"></i>',
+			              '</li>'
+			            ].join('').format(src);
+			            $('.img-preview',$container).append(html);
+
+			            imgUrls.push(src);
+		            });
+
+		            $('[name="imgUrls"]',$container).val(imgUrls.join(','));
+		            
+		        }
+		        $.closeDialog(this);
+	      	}
+	    });
+	})
+
+	//删除图片
+	.on('click', '[data-role="remove-img"]', function(event) {
+	    $(this).parent().remove();
+
+	    var imgUrls=[];
+
+	    $('.img-preview img',$container).each(function(index, el) {
+	    	imgUrls.push($(this).data('orient'));
+	    });
+
+	    if(imgUrls.length>0){
+	    	$('[name="imgUrls"]',$container).val(imgUrls.join(','));
+	    }
+	})
+
+	//查看大图
+    .on('click', '[data-id="fancybox-img"]', function(event) {
+        event.preventDefault();
+        var $img=$(this).closest('.oh').find('img');
+        var index=$img.index(this);
+        var imgUrls=$img.map(function() {
+          return $(this).attr('data-orient-url');
+        }).get();
+
+        $.fancybox(imgUrls, {
+          'transitionIn'    : 'none',
+          'transitionOut'   : 'none',
+          'type'            : 'image',
+          'index'           : index,
+          'loop'			: false,
+          'changeFade'      : 0
+        });
+    })
+
+    //评论点赞
+    .on('click', '.as-link[data-role="support"]', function(event) {
+    	var _this=this,
+    		count=$(this).data('cache');
+
+    	this.className='gray';
+    	this.innerText='提交中...';
+
+    	ajaxProcess({
+      		url:'/pcenter/home/message/likeComment',
+      		type:'POST',
+      		data:{commentId:$(_this).data('id')},
+      		success:function(data){
+		        if(data.msgCode==200){
+    				_this.innerText='点赞('+(count-0+1)+')';
+		        }
+		        else{
+		        	_this.innerText='点赞('+count+')';
+		        	$.resultDialog(2,data.message);
+		        }
+      		},
+      		fail:function(errorMsg){
+      			_this.innerText='点赞('+count+')';
+      			$.resultDialog(2,errorMsg,2000);
+      		},
+      		always:function(){
+      			_this.className='as-link text-blue';
+      		}
+      	});
+    });
+});
+</script>

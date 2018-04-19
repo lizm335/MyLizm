@@ -1,0 +1,169 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<link rel="shortcut icon" type="image/x-icon" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/favicon.ico">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+</head>
+<body>
+<!--站点内容容器-->
+<div class="site-wrap hide">
+	
+</div>
+<!--站点加载 提示层-->
+<div class="overlay bg-black bg-center" data-role="page-loading"></div>
+
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+<script type="text/javascript" src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/app.js"></script>
+<!--站点内容容器 模板-->
+<script type="text/template" id="site-box-temp">
+	<div class="site-header">
+		<div class="header">
+			<div class="wrap-box clearfix">
+				<h1 class="site-title"><img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/logo.png" alt=""></h1>
+		        <div class="user-panel">
+		        	<div class="drowdown-tigger">
+		        		<!--无图状态
+		        		<img class="user-img circle" src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png" width="50" height="50">
+		        		-->
+			        	<img class="user-img circle" src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png" width="50" height="50">
+			        	<span class="user-name"></span>
+		        	</div>
+		        	<div class="pop">
+		            	<ul class="perInfo_nav">
+		                	<li><a href="#/grzlshezhi"><i class="ico01"></i>个人设置</a></li>
+		                    <li><a href="#"><i class="ico02"></i>退出平台</a></li>
+		                </ul>
+		            </div>
+		        </div>
+			</div>
+		</div>
+		<!--插入-->
+	</div>
+	<div class="position-relative main-content">
+		<div id="app-container">
+
+		</div>
+		<!--浮动工具条-->
+		
+	</div>
+
+	<div class="site-footer">
+		<div class="wrap-box">
+			<div class="bg-white border-e0e0e0">
+				<div class="center-block clearfix gray6 padding15" style="width:80%">
+					<div class="fl">
+						主办：国家开放大学
+					</div>
+					<div class="fr">
+						<div>教育服务热线：</div>
+						<div class="font24 line-height-1 margin_t5">400 096 9300</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<!--“完善资料 提醒条”与“网站菜单” 模板-->
+<script type="text/template" id="index-header-temp">
+	<!--<div class="alert-tips" data-role="log-status" data-id="alert-complete">
+	  <div class="wrap-box">
+	    你学籍信息或报名资料有误！请立即完善您的学籍信息和报名资料，便于注册学籍；<a href="{{siteMenu[1].columList[0].hashPath}}" class="font_blue"><u>去完善</u></a>！ 如有问题，请联系您的班主任。 
+	  </div>
+	</div>-->
+	<nav class="menu-box" data-role="log-status" data-id="site-menu">
+		<div class="wrap-box clearfix">
+			<ul class="menu">
+				{{each siteMenu}}
+					{{if $value.isVisible}}
+						<li><a href="{{$value.columList[0].hashPath}}">{{$value.topMenu}}</a></li>
+					{{/if}}
+				{{/each}}
+			</ul>
+		</div>
+	</nav>
+</script>
+<!--“右边浮动工具” 模板-->
+<script type="text/template" id="help-sidebar-temp">
+	<div class="suspend" data-role="log-status" data-id="suspend">
+		<ul>
+			<li><a class="suspend_icon01" href="#/xuexi"></a></li>
+			<li><a class="suspend_icon02" href="#"><span><img class="ewm" src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0/images/ewm_img.png"><i>◆</i></span></a></li>
+			<li><a class="suspend_icon03" href="javascript:;"><i class="dot"></i></a></li>
+			<li id="video_ico"><a class="suspend_icon04" href="pop-ask-teacher.html" data-role="ask-teacher"></a></li>
+			<li><a class="suspend_icon05" href="javascript:;" id="return_top"></a></li>
+		</ul>
+	</div>
+</script>
+
+<!--页面初始化-->
+<script type="text/javascript">
+
+var noDataTips=[
+'<div class="text-center margin-t30">',
+  '<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/qa_null.png" alt="">',
+  '<p class="font24 margin_b10" style="color:#b2b2b2;">无相关数据</p>',
+'</div>'
+].join('');
+
+require(['jquery','sammy','artTemplate','common'], function ($,sammy,template) {
+
+	//页面初始化
+    ;(function(){
+        $('.site-wrap').html(template('site-box-temp',{})).show();
+        $('[data-role="page-loading"]').hide();
+
+        if(!appJSON.isOwe && !appJSON.isCompleteInfo){
+        	$('.site-header').append(template('index-header-temp',appJSON));
+
+            $('.main-content').append($("#help-sidebar-temp").html());
+
+            window.pageApp.run('#/xuexi');
+        }
+        else{
+        	//是否欠费
+        	if(!appJSON.isOwe){
+        		window.pageApp.run('#/qianfei');
+        	}
+        	//是否完善资料
+        	else if(!appJSON.isCompleteInfo){
+        		window.pageApp.run('#/scdenglu');
+        	}
+        }
+
+        sideFloat();
+    })();
+
+	//初使化数据
+    var url=webSiteConfig['basePath']+'/pcenter/gjtUser/edit';
+    $.get(url)
+ 	.done(function(renderData){
+      if(renderData.msgCode==200){
+        if(renderData.data){
+        	var pic=renderData.data.pictureURL;
+        	if(pic!='' && pic!=null){
+          		$('.user-img').attr('src',pic);
+          	}
+
+          	var name=renderData.data.userName;
+          	if(name!='' && name!=null){
+          		$('.user-name').text(name);
+          	}
+        }
+      }
+  	});
+});
+</script>
+</body>
+</html>

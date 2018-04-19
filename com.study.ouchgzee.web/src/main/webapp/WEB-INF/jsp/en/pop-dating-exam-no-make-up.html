@@ -1,0 +1,92 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+</head>
+<body class="body-pop">
+<div class="u-panel">
+	<div class="u-panel-head">
+	    预约考试
+	    <span class="pop-close" data-role="pop-close"></span>
+  	</div>
+  	<div class="u-panel-body scroll-box">
+      <div style="width:85%;" class="center-block">
+        <table class="table-gray-th margin_t20">
+          <tr>
+            <th width="25%" class="text-right">学期</th>
+            <td>2016春第二学期</td>
+          </tr>
+          <tr>
+            <th class="text-right">考试科目</th>
+            <td>管理学基础</td>
+          </tr>
+          <tr>
+            <th class="text-right">考试方式</th>
+            <td>笔试</td>
+          </tr>
+          <tr>
+            <th class="text-right">考试时间</th>
+            <td>2016-06-25至2016-07-10</td>
+          </tr>
+          <tr>
+            <th class="text-right">预约时间</th>
+            <td>2016-05-01至2016-06-01</td>
+          </tr>
+        </table>
+        <div class="alert-panel padding10 margin_t10 margin_b20 font12 gray">
+          <ol class="ol-decimal">
+            <li>请在预约考试时间内进行考试预约，过期将不能进行自主预约考试操作</li>
+            <li>错过了预约时间段没有预约考试的学员，若仍想预约考试，请联系你的班主任</li>
+            <li>若考试预约暂未开放，请留意考试开放预约通知或短信</li>
+          </ol>
+        </div>
+      </div>
+  	</div>
+  	<div class="u-panel-footer">
+  		<div class="in" align="right">
+  			<button class="btn btn-md btn-orange" data-role="sure" style="width:100px;">确定预约</button>
+  		</div>
+  	</div>
+</div>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+<script type="text/javascript">
+require(['jquery','common'], function ($) {
+  //“x”关闭窗口
+  $('[data-role="pop-close"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+
+  //确定
+  $('[data-role="sure"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  if($(frameElement).height()>0){
+    $('.scroll-box').height($(frameElement).height()-90);
+  }
+});
+</script>
+</body>
+</html>

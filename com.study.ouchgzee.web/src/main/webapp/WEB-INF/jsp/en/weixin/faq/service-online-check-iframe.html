@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script type="text/javascript" src="http://css.gzedu.com/common/js/jquery-1.7.2.min.js"></script>
+    <!--<script type="text/javascript" src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/js.cookie/js.cookie.min.js"></script>-->
+    <script type="text/javascript" src="//webchat.7moor.com/javascripts/7moorSDKInit.js"></script>
+</head>
+<body>
+</body>
+<!--
+<script type="text/javascript">
+//删除客服系统生成的cookie
+var allCookies=document.cookie.split("; ");
+for(var i=0; i<allCookies.length;i++){
+    var arr=allCookies[i].split('=');
+    var key=arr[0];
+    var searchTxt='QIMO_CHAT_SID';
+    if(key.indexOf(searchTxt)!=-1){
+        //$.removeCookie(key,{ path: '/' });
+        document.cookie = name + "=;expires=" + (new Date(0)).toGMTString()+";path=/";
+        break;
+    }
+}
+</script>
+-->
+
+<!--主程序-->
+<script>
+    var qimoAccessId = frameElement.getAttribute('accessId'); //平台提供的接入号accessId
+
+    //先加载sdk的js
+    loadQimoSDK(qimoAccessId, function(){
+        // todo 加载sdk完毕,可以弹出点击咨询的按钮了
+        //console.info("加载sdk完毕,可以弹出点击咨询的按钮了");
+
+        QimoSDK.init(qimoAccessId, {fromUrl: window.location.href}, function(initData){
+            //todo 初始化后的业务处理
+            if(initData.errcode == 0){
+                console.info("连接成功");
+                /**
+                 * 消息的监听，这个必须写在回调里头
+                 */
+                QimoSDK.onMessage(function(data){
+                    //var def = $.Deferred(); 
+                    console.log(data);
+                    if(data.errcode == 0){
+                        //todo 新消息过来的处理，数组
+                        if(data.type == "newMsg"){
+                            //def.reject('新消息');
+                            parent.chatOnlineCallback(true);
+                        }
+                        //todo 系统通知的处理
+                        else if(data.type == "systemNotice"){
+                            var notice = data.data;
+
+                            //座席在线，弹出会话框
+                            if(notice.type == "online"){
+                                // todo 客服在线
+                                //console.log('客服在线');
+                                //def.resolve('客服在线');
+                                parent.chatOnlineCallback(true);
+                            }
+                            //座席不在线，转留言
+                            else if(notice.type == "offline"){
+                                // todo 客服不在线
+                                //console.log('客服不在线');
+                                //def.reject('客服不在线');
+                                parent.chatOnlineCallback(false);
+                            }
+                            //座席响应会话
+                            else if(notice.type == "claim"){
+                                // todo 客服 notice.kefu 受理了该会话
+                                //def.reject('受理会话');
+                                parent.chatOnlineCallback(true);
+                            }
+                            //会话被座席结束，前端要有个响应
+                            else if(notice.type == "finish"){
+                                // todo 会话被系统终结
+                                //def.reject('会话被座席结束');
+                            }
+                            //客服转接,即将由另外一位客服服务
+                            else if(notice.type == "redirect"){
+                                // todo 会话转由另外一个座席处理
+                                //def.reject('客服转接');
+                            }
+
+                            //机器人服务
+                            else if(notice.type == "robot" && notice.kefu){
+                                // todo 机器人服务
+                                //def.reject('机器人服务');
+                            }
+
+                            else if(notice.type == "queueNum" && notice.queueNum && notice.queueNum > 0 ){
+                                //展示
+                                //def.reject('提问排队');
+                                parent.chatOnlineCallback(true);
+
+                            }
+                            else if(notice.type == "typeNotice"){
+                                //展示 客服正在输入...
+                                //def.reject('客服正在输入');
+                            }
+                            else if(notice.type == "vipAssignFail"){
+                                //def.reject('vipAssignFail');
+                            }
+
+                            console.log(notice.type);
+                        }else if(data.type == "investigate"){
+                            //todo 展示调查内容
+                            //def.reject('展示调查内容');
+                        }
+
+                        console.log(data.type);
+
+                    }else{
+                        console.info(data.errmsg);
+                        //def.reject(data.errmsg);
+                    }
+
+                    /*
+                        def
+                        .done(function(msg){
+                            //console.info(msg);
+                            parent.chatOnlineCallback(true);
+                        })
+                        .fail(function(msg){
+                            parent.chatOnlineCallback(false);
+                        });
+                    */
+                });
+
+                QimoSDK.startChat(function(chatData){
+                    //断开前提醒
+                    //showWarmTip();
+
+                });
+
+            }else if(initData.errcode == 1){
+                console.info("连接认证失败");
+                
+            }
+
+        });
+    });
+    
+    //最长20秒的检测时长
+    setTimeout(function(){
+        parent.chatOnlineCallback(false);
+    },1000*20)
+    
+</script>
+</html>

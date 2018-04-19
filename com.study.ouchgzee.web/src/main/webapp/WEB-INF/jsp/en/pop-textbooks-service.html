@@ -1,0 +1,192 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+</head>
+<body class="body-pop">
+<div class="u-panel overlay-wrapper">
+  <form class="theform">
+	  <div class="u-panel-head">
+	    教材服务
+	    <span class="pop-close" data-role="pop-close"></span>
+  	</div>
+  	<div class="u-panel-body scroll-box">
+      <div style="width:90%;" class="center-block padding_t25"  data-role="box">
+      </div>
+  	</div>
+  	<div class="u-panel-footer">
+  		<div class="in" align="right">
+        <button class="btn btn-md btn-gray margin_r10 min-width-100" data-role="pop-close">取消</button>
+  			<button type="submit" class="btn btn-md btn-orange min-width-100">确定</button>
+  		</div>
+  	</div>
+    <div class="overlay" style="display:none;background-position:center center;"></div>
+  </form>
+</div>
+
+<!--表单模板-->
+<script type="text/template" id="temp">
+  <table class="general_tb0 custom-tbl" width="100%">
+    <tbody>
+      <tr>
+        <td width="65" class="text-right font16" valign="top">
+          售后类型
+        </td>
+        <td>
+            <label>
+              <input type="radio" name="feedbackType" value="1" checked> 退换教材
+            </label>
+            <label class="left10">
+              <input type="radio" name="feedbackType" value="2"> 补发教材
+            </label>
+            <label class="left10">
+              <input type="radio" name="feedbackType" value="3"> 其它
+            </label>
+            <p class="gray f12">多发、发错教材或教材损坏请选择“退换教材”，少发请选择“补发”</p>
+        </td>
+      </tr>
+      <tr>
+        <td class="text-right font16">
+          问题教材
+        </td>
+        <td>
+          <div class="valid-control">
+            <select class="form-control" datatype="*" nullmsg="请选择问题教材" name="textbookId">
+              <option value="">选择教材</option>
+              {{if textbookDistributionDetas}}
+                {{each textbookDistributionDetas}}
+                  <option value="{{$value.textbookId}}">{{$value.textbookName}}</option>
+                {{/each}}
+              {{/if}}
+            </select>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="text-right font16" valign="top">
+          原因
+        </td>
+        <td>
+          <div class="valid-control">
+            <textarea class="form-control full-width" rows="5" placeholder="请说明申请售后服务的具体原因，如物流损坏、漏发等。" datatype="*" nullmsg="请填写原因" name="reason"></textarea>
+          </div>
+          <p class="font_red f12 margin_t5">注：申请后1-2个工作日内工作人员会与你联系，请保持手机畅通！</p>
+          <input name="distributeId" type="hidden" value="{{distributeId}}">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</script>
+
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+  var ifrJson=frameElement.data;
+
+  $('[data-role="box"]').html(
+    template('temp',ifrJson)
+  );
+
+  //“x”关闭窗口
+  $('[data-role="pop-close"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  //表单验证
+  require(['Validform'],function(){
+    JPlaceHolder.init();
+
+    $('.valid-control').append([
+      '<div class="tooltip yellow_tip t_arrow tooltip-valid">',
+        '<div class="tooltip-in"></div>',
+        '<span class="t_arrow"><i class="arrow"></i><i class="arrow arrow_inner"></i></span>',
+      '</div>'
+    ].join(''));
+
+    $.Tipmsg.r='';
+    $(".theform").Validform({
+      //showAllError:true,
+      ajaxPost:true,
+      //ignoreHidden:true,
+      tiptype:function(msg,o,cssctl){
+        //msg：提示信息;
+          //o:{obj:*,type:*,curform:*},
+          //obj指向的是当前验证的表单元素（或表单对象，验证全部验证通过，提交表单时o.obj为该表单对象），
+          //type指示提示的状态，值为1、2、3、4， 1：正在检测/提交数据，2：通过验证，3：验证失败，4：提示ignore状态, 
+          //curform为当前form对象;
+        if(!o.obj.is("form")){
+          var objtip=o.obj.closest('.valid-control').find(".tooltip");
+          switch(o.type){
+              case 3:
+                objtip.children('.tooltip-in').text(msg).parent().show();
+                break;
+              default:
+                objtip.children('.tooltip-in').text('').parent().hide();
+                break;
+            }
+        }
+      },
+      beforeSubmit:function(curform){
+        $('.overlay').show();
+
+        ajaxProcess({
+            url:'/pcenter/textbook/addTextbookFeedback',
+            type:'POST',
+            data:$('.theform').serialize(),
+            success:function(renderData){
+                if(renderData.msgCode==200){
+                    $.when($.resultDialog(1,'提交成功'))
+                    .done(function(){
+                        parent.$.closeDialog(frameElement.api);
+                    });
+                }
+                else{
+                    $.resultDialog(0,renderData.message);
+                }
+            },
+            fail:function(textStatus){
+                $.resultDialog( 2,textStatus );
+            },
+            always:function(){
+                $('.overlay').hide();
+            }
+        });
+
+        return false;
+      },
+      callback:function(data){
+        //data 后台返回的数据对象结果
+        
+      }
+    });
+  });
+
+  if($(frameElement).height()>0){
+    $('.scroll-box').height($(frameElement).height()-90);
+  }
+
+  $('html,body').height('100%');
+});
+</script>
+</body>
+</html>

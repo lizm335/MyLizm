@@ -1,0 +1,317 @@
+<div class="padding10" data-role="inf-box">
+  <div class="text-center"><i class="loading"></i></div>
+</div>
+
+<script type="text/template" id="zjzl-temp">
+  <div class="info-section nomargin">
+    <div class="section-header clearfix">
+      <h4 class="font16 text-no-bold" data-role="toggle">
+        <i class="icon-plus"></i>
+        电子版免冠一寸蓝底证件照
+      </h4>
+    </div>
+    <div class="section-body">
+      <div class="padding_l20 padding_r20 padding_b20 padding_t10">
+        <div class="clearfix margin-t30 margin_b10">
+          <div class="col-4">
+            <div class="cert-wrap cert-wrap-2">
+              <div class="cert-box has-upload cert-box-3">
+                {{if zp}}
+                  <a href="javascript:void(0);" class="info-img-box">
+                    <img class="info-img" src="{{zp | imgUrlFormat:[150,210]}}">
+                  </a>
+                  <a href="{{zp | imgUrlFormat}}" class="light-box" data-role="fancybox">点击放大</a>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="info-section">
+    <div class="section-header clearfix">
+      <h4 class="font16 text-no-bold" data-role="toggle">
+        
+        <i class="icon-plus"></i>
+        身份证原件正反面扫描件
+      </h4>
+    </div>
+    <div class="section-body">
+      <div class="padding_l20 padding_r20 padding_b20 padding_t10">
+        <div class="clearfix margin_t10 margin_b10">
+          <div class="col-6">
+            <div class="cert-wrap">
+              <h4 class="cert-title">身份证原件正面</h4>
+              <div class="cert-box cert-box-4 has-upload">
+                {{if sfzz}}
+                  <a href="javascript:void(0);" class="info-img-box">
+                    <img class="info-img" src="{{sfzz | imgUrlFormat:[340,210]}}">
+                  </a>
+                  <a href="{{sfzz | imgUrlFormat}}" class="light-box" data-role="fancybox">点击放大</a>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="cert-wrap">
+              <h4 class="cert-title">身份证原件反面</h4>
+              <div class="cert-box cert-box-5 has-upload">
+                {{if sfzf}}
+                  <a href="javascript:void(0);" class="info-img-box">
+                    <img class="info-img" src="{{sfzf | imgUrlFormat:[340,210]}}">
+                  </a>
+                  <a href="{{sfzf | imgUrlFormat}}" class="light-box" data-role="fancybox">点击放大</a>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--本科(普通)显示 开始-->
+  {{if isUndergraduateCourse==1}}
+    <div class="info-section">
+      <div class="section-header clearfix">
+        <h4 class="font16 text-no-bold" data-role="toggle">
+          
+          <i class="icon-plus"></i>
+          毕业证原件
+        </h4>
+      </div>
+      <div class="section-body">
+        <div class="padding_l20 padding_r20 padding_b20 padding_t10">
+          <div class="clearfix margin_t10 margin_b10">
+            <div class="col-6">
+              <div class="cert-wrap">
+                <h4 class="cert-title">毕业证原件</h4>
+                <div class="cert-box cert-box-6 has-upload">
+                  {{if byzz}}
+                    <a href="javascript:void(0);" class="info-img-box">
+                      <img class="info-img" src="{{byzz | imgUrlFormat:[340,210]}}">
+                    </a>
+                    <a href="{{byzz | imgUrlFormat}}" class="light-box" data-role="fancybox">点击放大</a>
+                  {{/if}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="info-section">
+      <div class="section-header clearfix">
+        <h4 class="font16 text-no-bold" data-role="toggle">
+          
+          <i class="icon-plus"></i>
+          《中国高等教育学历认证报告》或《教育部学历证书电子注册备案表》原件
+        </h4>
+      </div>
+      <div class="section-body">
+        <div class="padding_l20 padding_r20 padding_b20 padding_t10">
+          <div class="clearfix margin_t10 margin_b10">
+            <div class="col-6 nomargin">
+              <div class="cert-wrap">
+                <div class="cert-box cert-box-8 has-upload">
+                  {{if xlz}}
+                    <a href="javascript:void(0);" class="info-img-box">
+                      <img class="info-img" src="{{xlz | imgUrlFormat:[340,210]}}">
+                    </a>
+                    <a href="{{xlz | imgUrlFormat}}" class="light-box" data-role="fancybox">点击放大</a>
+                  {{/if}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/if}}
+  <!--本科(普通)显示 结束-->
+
+  <!--专科显示 开始-->
+  {{if isUndergraduateCourse==0}}
+    {{if zgxlRadioType==0}}
+      <div class="info-section">
+        <div class="section-header clearfix">
+          <h4 class="font16 text-no-bold" data-role="toggle">
+            
+            <i class="icon-plus"></i>
+            最高学历证明
+          </h4>
+        </div>
+        <div class="section-body">
+          <div class="padding_l20 padding_r20 padding_b20 padding_t10">
+            <div class="clearfix margin_t10 margin_b10">
+              <div class="col-6 nomargin">
+                <div class="cert-wrap">
+                  <h4 class="cert-title f14">高中或职高、中专、技校等同等学历的毕业证扫描件</h4>
+                  <div class="cert-box has-upload cert-box-8">
+                      {{if byzz}}
+                        <a href="javascript:void(0);" class="info-img-box">
+                          <img class="info-img" src="{{byzz | imgUrlFormat:[340,210]}}">
+                        </a>
+                        <a href="{{byzz | imgUrlFormat}}" class="light-box" data-role="fancybox">点击放大</a>
+                      {{/if}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    {{else zgxlRadioType==1}}
+
+      <div class="info-section">
+        <div class="section-header clearfix">
+          <h4 class="font16 text-no-bold" data-role="toggle">
+            
+            <i class="icon-plus"></i>
+            最高学历证明
+          </h4>
+        </div>
+        <div class="section-body">
+          <div class="padding_l20 padding_r20 padding_b20 padding_t10">
+            <div class="clearfix margin_t10 margin_b10">
+              <div class="col-6 nomargin">
+                <div class="cert-wrap">
+                  <h4 class="cert-title">学历证明</h4>
+                  <div class="cert-box has-upload cert-box-2 center-block" style="width:150px;">
+                      {{if xlzm}}
+                        <a href="javascript:void(0);" class="info-img-box">
+                          <img class="info-img" src="{{xlzm | imgUrlFormat:[150,210]}}">
+                        </a>
+                        <a href="{{xlzm | imgUrlFormat}}" class="light-box" data-role="fancybox">点击放大</a>
+                      {{/if}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 nomargin">
+                <div class="cert-wrap">
+                  <h4 class="cert-title">专科承诺书</h4>
+                  <div class="cert-box has-upload cert-box-2 center-block" style="width:150px;">
+                      {{if cns}}
+                        <a href="javascript:void(0);" class="info-img-box">
+                          <img class="info-img" src="{{cns | imgUrlFormat:[150,210]}}">
+                        </a>
+                        <a href="{{cns | imgUrlFormat}}" class="light-box" data-role="fancybox">点击放大</a>
+                      {{/if}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    {{/if}}
+  {{/if}}
+  <!--专科显示 结束-->
+
+  {{if isOffsite==1}}
+    <div class="info-section">
+      <div class="section-header clearfix">
+        <h4 class="font16 text-no-bold" data-role="toggle">
+          
+          <i class="icon-plus"></i>
+            {{signupJzzType==0?'区域证明':'在读年级证明'}}
+        </h4>
+      </div>
+      <div class="section-body">
+        <div class="padding_l20 padding_r20 padding_b20 padding_t10">
+          <div class="clearfix margin_t10 margin_b10">
+            {{if signupJzzType==0}}
+            <div class="col-6 nomargin">      
+              <div class="cert-wrap">
+                <h4 class="cert-title">区域证明正面</h4>
+                <div class="cert-box has-upload cert-box-8">
+                    {{if jzz}}
+                      <a href="javascript:void(0);" class="info-img-box">
+                        <img class="info-img" src="{{jzz | imgUrlFormat:[340,210]}}">
+                      </a>
+                      <a href="{{jzz | imgUrlFormat}}" class="light-box" data-role="fancybox">点击放大</a>
+                    {{/if}}
+                </div>
+              </div>
+            </div>
+            <div class="col-6 nomargin">
+              <div class="cert-wrap">
+                <h4 class="cert-title">区域证明反面</h4>
+                <div class="cert-box has-upload cert-box-8">
+                    {{if jzzf}}
+                      <a href="javascript:void(0);" class="info-img-box">
+                        <img class="info-img" src="{{jzzf | imgUrlFormat:[340,210]}}">
+                      </a>
+                      <a href="{{jzzf | imgUrlFormat}}" class="light-box" data-role="fancybox">点击放大</a>
+                    {{/if}}
+                </div>
+              </div>
+            </div>
+            {{else}}
+              <div class="col-6 nomargin">      
+                <div class="cert-wrap">
+                  <div class="cert-box has-upload cert-box-8">
+                      {{if ygzm}}
+                        <a href="javascript:void(0);" class="info-img-box">
+                          <img class="info-img" src="{{ygzm | imgUrlFormat:[340,210]}}">
+                        </a>
+                        <a href="{{ygzm | imgUrlFormat}}" class="light-box" data-role="fancybox">点击放大</a>
+                      {{/if}}
+                  </div>
+                </div>
+              </div>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/if}}
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+
+    var $container=$('[data-role="inf-box"]');
+
+    // 展开/收缩
+    $container.on('click','[data-role="toggle"]',function(event) {
+      $(this).find(".icon-plus").toggleClass('icon-add');
+      $(this).parent().siblings('.section-body').slideToggle(400);
+    });
+
+    //查看大图
+    require(['jquery.fancybox'],function(){
+      $('[data-role="fancybox"]').fancybox();
+    });
+
+  //数据绑定
+  ;(function(){
+    var url=webSiteConfig['basePath']+'/pcenter/roll/getCertificateInfo';
+    
+    var xhr=$.get(url)
+      .done(function(renderData){
+          if(renderData.msgCode==200){
+            if(renderData.data){
+              var render = template.compile($("#zjzl-temp").html(),{escape:false});
+              var renderHtml = render(renderData.data);
+                $container.html(renderHtml);
+            }
+            else{
+              $container.html('无数据');
+            }
+          }
+          else{
+              $container.html( renderData.message )
+          }
+      })
+      .fail(function(XMLHttpRequest, textStatus){
+            $container.html( textStatus )
+        });
+    window['jqAjaxCollectors'].push(xhr);
+  })();
+});
+</script>

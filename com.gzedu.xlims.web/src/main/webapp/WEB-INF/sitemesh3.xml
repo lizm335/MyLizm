@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemesh>
+	<mapping path="/admin/login/*" exclude="true" />
+	<mapping path="/static/*" exclude="true" />
+	<mapping path="/model/*" exclude="true" />
+	<!-- <mapping path="/index" decorator="/WEB-INF/jsp/index.jsp" /> -->
+	<mapping path="/*" decorator="/WEB-INF/layouts/default.jsp" />
+</sitemesh>

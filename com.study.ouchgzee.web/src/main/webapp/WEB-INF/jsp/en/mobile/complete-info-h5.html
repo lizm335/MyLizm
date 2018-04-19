@@ -1,0 +1,3272 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>完善信息</title>
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta content="telephone=no" name="format-detection">
+  <meta content="email=no" name="format-detection">
+
+  <link rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/css/sm.min.css">
+  <link rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/css/sm-extend.min.css">
+  <link rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/css/style.css">
+  <!--图片裁切-->
+  <link rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/js/crop4/cropper.css" />
+</head>
+<body>
+
+<div class="page-group page-group-hide">
+
+</div>
+
+<!--签名功能相关js-->
+<script type="text/javascript" src="http://css.gzedu.com/common/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript">jQuery.noConflict();</script>
+<script type="text/javascript" src="http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/js/jSignature.min.noconflict.js"></script>
+<!--签名功能相关js-->
+
+<script type='text/javascript' src='http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/js/zepto.min.js'></script>
+<script type='text/javascript' src='http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/js/sm.min.js'></script>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/js/sm-extend.min.js"></script>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/js/sm-city-picker.js"></script>
+
+<script src='http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/js/template.js'></script>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/js/clipboard.min.js"></script>
+
+<!--图片裁切-->
+<script type="text/javascript" src="http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/js/crop4/cropper.min.js"></script>
+
+<script type="text/javascript" src="http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/js/lazyload/lazyload.min.js"></script>
+
+<!--分页模板-->
+<script id="page-temp" type="text/html">
+{{each data}}
+  <div class="page {{if $value.isCurPage}}page-current{{/if}}" id="{{$value.id}}">
+      <header class="bar bar-nav bar-nav-top">
+          {{if $value.prevLink}}
+            <a class="button button-link button-nav pull-left" href="{{$value.prevLink}}">
+                <span class="icon icon-left"></span>
+            </a>
+          {{/if}}
+          <h1 class="title">{{$value.title}}</h1>
+      </header>
+      {{if $value.isShowNextBtnBar}}
+        <div class="bar bar-standard bar-footer padding-none">
+          <button type="button" class="button button-step bg-green">下一步</button>
+        </div>
+      {{/if}}
+      <div class="content">
+          {{if $value.isShowInitCnt}}
+            <div class="preloader-indicator-modal"><span class="preloader preloader-white"></span></div>
+          {{/if}}
+      </div>
+  </div>
+{{/each}}
+</script>
+<!--分页模板 初始化-->
+<script type="text/javascript">
+;(function($){
+  var pageGroup={
+    data:[
+      {
+        id          : 'page-index',
+        title       : '确认个人信息',
+        prevLink      : false,
+        isShowNextBtnBar  : true,
+        isCurPage     : true,
+        isShowInitCnt   : true
+      },
+      {
+        id          : 'page-step1',
+        title       : '确认通讯信息',
+        prevLink      : '#page-index',
+        isShowNextBtnBar  : true,
+        isCurPage     : false,
+        isShowInitCnt   : false
+      },
+      {
+        id          : 'page-step2',
+        title       : '确认报读信息',
+        prevLink      : '#page-step1',
+        isShowNextBtnBar  : true,
+        isCurPage     : false,
+        isShowInitCnt   : false
+      },
+      {
+        id          : 'page-step3',
+        title       : '确认原最高学历',
+        prevLink      : '#page-step2',
+        isShowNextBtnBar  : true,
+        isCurPage     : false,
+        isShowInitCnt   : false
+      },
+      {
+        id          : 'page-step4',
+        title       : '确认学籍信息',
+        prevLink      : '#page-step3',
+        isShowNextBtnBar  : true,
+        isCurPage     : false,
+        isShowInitCnt   : false
+      },
+      {
+        id          : 'page-step5',
+        title       : '确认签名',
+        prevLink      : '#page-step4',
+        isShowNextBtnBar  : true,
+        isCurPage     : false,
+        isShowInitCnt   : false
+      },
+      {
+        id          : 'page-step6',
+        title       : '提交结果',
+        prevLink      : '#page-step5',
+        isShowNextBtnBar  : false,
+        isCurPage     : false,
+        isShowInitCnt   : false
+      }
+    ]
+  };
+  var renderHtml = template('page-temp', pageGroup);
+  $('.page-group').html(renderHtml);
+})(Zepto);
+</script>
+
+<!--第一步 完善个人资料(基础信息)-->
+<script id="index-temp" type="text/html">
+  <form id="info-form">
+  <div class="panel-box">
+    <div class="panel-box-body">
+      <div class="list-block margin-none">
+        <ul>
+          <!-- Text inputs -->
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label">姓名</div>
+                <div class="item-input text-right text-gray-lighten">
+                  {{info.xm}}
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              
+              <div class="item-inner">
+                <div class="item-title label">
+                  {{if !info.xbm}}
+                    <span class="text-orange-dark">*</span>
+                  {{/if}}
+                  性别
+                </div>
+                <div class="item-input text-right text-gray-lighten">
+                  <!--{{info.xbmName}}-->
+                  {{if info.xbm}}
+                    {{if dicSexList && dicSexList.length>0}}
+                      {{each dicSexList}}
+                        {{if info.xbm==$value.code}}
+                          {{$value.name}}
+                        {{/if}}
+                      {{/each}}
+                    {{/if}}
+                  {{else}}
+                    <select class="text-direction-rtl text-gray" name="xbm" data-title="性别" data-rule=".+" data-msg-empty="请选择性别" data-msg-error="请选择性别" data-check="1">
+                        <option value="">请选择性别</option>
+                        {{each dicSexList}}
+                            <option value="{{$value.code}}">{{$value.name}}</option>
+                        {{/each}}
+                    </select>
+                  {{/if}}
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label">学号</div>
+                <div class="item-input text-right text-gray-lighten">
+                  {{info.xh}}
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label">证件类型</div>
+                <div class="item-input text-right text-gray-lighten">
+                  {{info.certificatetype}}
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label">证件号</div>
+                <div class="item-input text-right text-gray-lighten">
+                  {{info.sfzh}}
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">籍贯</span></div>
+                <div class="item-input text-right text-gray">
+                  <input type="text" id="city-picker2" name="nativeplace" placeholder="请填写籍贯" data-title="籍贯" data-rule=".+" data-msg-empty="请填写籍贯" data-msg-error="请填写籍贯" class='text-right text-gray' data-check="1" value="{{info.nativeplace?info.nativeplace:''}}">
+                </div>
+                <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+              </div>
+            </div>
+          </li>
+          
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">民族</span></div>
+
+                <div class="item-input text-right text-gray">
+                  <select class="text-direction-rtl text-gray" name="mzm">
+                    {{if dicNationList}}
+                      {{each dicNationList}}
+                          <option
+                          {{if info.mzm==$value.code}}
+                            selected
+                          {{/if}}
+                          value="{{$value.code}}">{{$value.name}}</option>
+                      {{/each}}
+                    {{/if}}
+                  </select>
+                </div>
+                <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">政治面貌</span></div>
+
+                <div class="item-input text-right">
+                  <select class="text-direction-rtl text-gray" name="politicsstatus">
+                    {{if dicPoliticsstatuList}}
+                      {{each dicPoliticsstatuList}}
+                          <option
+                          {{if info.politicsstatus==$value.code}}
+                            selected
+                          {{/if}}
+                          value="{{$value.code}}">{{$value.name}}</option>
+                      {{/each}}
+                    {{/if}}
+                  </select>
+                </div>
+                <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">婚姻状态</span></div>
+
+                <div class="item-input text-right">
+                  <select class="text-direction-rtl text-gray" name="hyzkm">
+                    {{if dicMaritalList}}
+                      {{each dicMaritalList}}
+                          <option
+                          {{if info.hyzkm==$value.code}}
+                            selected
+                          {{/if}}
+                          value="{{$value.code}}">{{$value.name}}</option>
+                      {{/each}}
+                    {{/if}}
+                  </select>
+                </div>
+                <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">户口性质</span></div>
+
+                <div class="item-input text-right">
+                  <select class="text-direction-rtl text-gray" name="hkxzm">
+                    {{if dicAccountsNatureList}}
+                      {{each dicAccountsNatureList}}
+                          <option                      
+                          {{if info.hkxzm==$value.code}}
+                            selected
+                          {{/if}}
+                          value="{{$value.code}}">{{$value.name}}</option>
+                      {{/each}}
+                    {{/if}}
+                  </select>
+                </div>
+                <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">出生日期</span></div>
+
+                <div class="item-input text-right text-gray-lighten">
+                  {{if info.csrq}}
+                    {{info.csrq}}
+                  {{else}}
+                    <input type="text" name="csrq" data-role="date-picker" placeholder="请填写出生日期" data-title="出生日期" data-msg-empty="请填写出生日期" data-msg-error="请填写出生日期" data-check="1" data-rule=".+" class="text-gray text-right" readonly>
+                  {{/if}}
+                  
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">在职状况</span></div>
+
+                <div class="item-input text-right">
+                  <select class="text-direction-rtl text-gray" name="isonjob">
+                    {{if dicOccupationList}}
+                      {{each dicOccupationList}}
+                        <option                      
+                        {{if info.isonjob==$value.code}}
+                          selected
+                        {{/if}}
+                        value="{{$value.code}}">{{$value.name}}</option>
+                      {{/each}}
+                    {{/if}}
+                  </select>
+                </div>
+                <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">户口所在地</span></div>
+                <div class="item-input text-right text-gray">
+                  <input type="text" placeholder="请填写户口所在地" class='text-right text-gray' data-check="1" id="city-picker1" name="hkszd" data-title="户口所在地" data-rule=".+" data-msg-empty="请填写户口所在地" data-msg-error="请填写户口所在地" value="{{info.hkszd?info.hkszd:''}}">
+                  
+                </div>
+                <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </form>
+  </script>
+  <!--第一步 完善个人资料(通讯信息)-->
+  <script id="step1-temp" type="text/html">
+  <form id="info-form1">
+  <div class="panel-box">
+    <div class="panel-box-body">
+      <div class="list-block margin-none">
+        <ul>
+          <!-- Text inputs -->
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label"><span class="text-orange-dark">*</span> 手机号码</div>
+                <div class="item-input text-right text-gray-lighten">
+                  <input type="email" name="sjh" value="{{info.sjh}}" class="text-right text-gray" placeholder="请填手机号码" data-check="1" data-focus="focus-last" data-title="手机号码" data-rule="^1[3-9][0-9]{9}$" data-msg-empty="请填手机号码" data-msg-error="手机号码格式不对">
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              
+              <div class="item-inner">
+                <div class="item-title label"><span class="f-label">固定电话</span></div>
+
+                <div class="item-input text-right text-gray">
+                  <input type="text" value="{{info.lxdh}}" name="lxdh" class="text-right text-gray" data-focus="focus-last" placeholder="请填写固定电话" data-title="固定电话" data-rule="(^(0[0-9]{2,3})-([2-9][0-9]{6,7})+(-[0-9]{1,4})?$)" data-msg-empty="请填写固定电话" data-msg-error="固定电话号码格式不对">
+                </div>
+                <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              
+              <div class="item-inner">
+                <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">邮箱</span></div>
+
+                <div class="item-input text-right text-gray">
+                  <input type="email" name="dzxx" value="{{info.dzxx}}" class="text-right text-gray" placeholder="请填写邮箱" data-check="1" data-focus="focus-last" data-title="邮箱" data-rule="^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$" data-msg-empty="请填写邮箱" data-msg-error="邮箱格式不对">
+                </div>
+                <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">通信地址</span></div>
+
+                <div class="item-input text-right text-gray">
+                  <input type="text" name="txdz" data-check="1" value="{{info.txdz}}" class="text-right text-gray input-edit" placeholder="请填写通信地址" data-title="通信地址" data-rule=".+" data-msg-empty="请填写通信地址" data-msg-error="请填写通信地址" readonly>
+                </div>
+                <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">邮编</span></div>
+
+                <div class="item-input text-right text-gray">
+                  <input type="number" name="yzbm" data-check="1" data-focus="focus-last" value="{{info.yzbm}}" class="text-right text-gray" placeholder="请填写邮编" data-title="邮编" data-rule="^[0-9]{6}$" data-msg-empty="请填写邮编" data-msg-error="邮编格式不对">
+                </div>
+                <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">所在单位</span></div>
+
+                <div class="item-input text-right text-gray">
+                  <input type="text" name="scCo" data-check="1" value="{{info.scCo}}" class="text-right text-gray" placeholder="请填写所在单位" data-title="所在单位" data-rule=".+" data-msg-empty="请填写所在单位" data-msg-error="请填写所在单位">
+                </div>
+                <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">单位地址</span></div>
+
+                <div class="item-input text-right text-gray">
+                  <input type="text" name="scCoAddr" data-check="1" value="{{info.scCoAddr}}" class="text-right text-gray input-edit" placeholder="请填写单位地址" data-title="单位地址" data-rule=".+" data-msg-empty="请填写单位地址" data-msg-error="请填写单位地址" readonly>
+                </div>
+                <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">岗位职务</span></div>
+
+                <div class="item-input text-right text-gray">
+                  <input type="text" name="jobPost" data-check="1" data-focus="focus-last" value="{{info.jobPost}}" class="text-right text-gray" placeholder="请填写岗位职务" data-title="岗位职务" data-rule=".+" data-msg-empty="请填写岗位职务" data-msg-error="请填写岗位职务">
+                </div>
+                <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </form>
+  </script>
+  <!--第一步 完善个人资料(报读信息)-->
+  <script id="step2-temp" type="text/html">
+  <form id="info-form2">
+  <div class="panel-box">
+    <div class="panel-box-body">
+      <div class="list-block margin-none">
+        <ul>
+          <!-- Text inputs -->
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label">年级</div>
+                <div class="item-input text-right text-gray">
+                  {{info.gradeName}}
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label">专业</div>
+                <div class="item-input text-right text-gray">
+                  {{info.specialtyName}}
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label">层次</div>
+                <div class="item-input text-right text-gray">
+                  {{info.pyccName}}
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label">学习方式</div>
+                <div class="item-input text-right text-gray">
+                  {{info.academic}}
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label">报读院校</div>
+                <div class="item-input text-right text-gray">
+                  {{info.xxmc}}
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label">班级</div>
+                <div class="item-input text-right text-gray">
+                  {{info.bjmc}}
+                </div>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label">学习中心</div>
+                <div class="item-input text-right text-gray">
+                  {{info.xxzxName}}
+                </div>
+              </div>
+            </div>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+  </form>
+  </script>
+  <!--第一步 完善个人资料(原最高学历)-->
+  <script id="step3-temp" type="text/html">
+  <form id="info-form3">
+  <div class="panel-box">
+    <div class="panel-box-body">
+      <div class="list-block margin-none">
+        <ul>
+          <!-- Text inputs -->
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">原学历层次</span></div>
+
+                <div class="item-input text-right">
+                  <select class="text-direction-rtl text-gray" name="exedulevel">
+                      {{if dicExedulevelList}}
+                        {{each dicExedulevelList}}
+                          <option                      
+                          {{if info.exedulevel==$value.code}}
+                            selected
+                          {{/if}}
+                          value="{{$value.code}}">{{$value.name}}</option>
+                        {{/each}}
+                      {{/if}}
+                  </select>
+                </div>
+                <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="item-content">
+              <div class="item-inner">
+                <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">原毕业学校</span></div>
+
+                <div class="item-input text-right text-gray">
+                  <input type="text" name="exschool" data-check="1" data-focus="focus-last" value="{{info.exschool}}" class="text-right text-gray" placeholder="请填写原毕业学校" data-title="原毕业学校" data-rule=".+" data-msg-empty="请填写原毕业学校" data-msg-error="请填写原毕业学校">
+                </div>
+                <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+
+              </div>
+            </div>
+          </li>
+          <!--非电大续读生 才显示以下内容-->
+          {{if info.userType!='42'}}
+            <li>
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">毕业时间</span></div>
+
+                  <div class="item-input">
+                    <input type="text" name="exgraduatedtime" data-role="date-picker" placeholder="请填写毕业时间" data-title="毕业时间" data-msg-empty="请填写毕业时间" data-msg-error="请填写毕业时间" data-check="1" data-rule=".+" value="{{info.exgraduatedtime | dateFormat}}" class="text-gray text-right" readonly>
+                  </div>
+                  <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+
+                </div>
+              </div>
+            </li>
+            <!--isUndergraduateCourse-->
+            {{if info.isUndergraduateCourse==1}}
+              <li>
+                <div class="item-content">
+                  <div class="item-inner">
+                    <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">原学科</span></div>
+
+                    <div class="item-input text-right">
+                      <select class="text-direction-rtl text-gray" name="exsubject">
+                          {{if dicExsubjectList}}
+                            {{each dicExsubjectList}}
+                              <option                      
+                              {{if info.exsubject==$value.code}}
+                                selected
+                              {{/if}}
+                              value="{{$value.code}}">{{$value.name}}</option>
+                            {{/each}}
+                          {{/if}}
+                      </select>
+                    </div>
+                    <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+
+                  </div>
+                </div>
+              </li>
+            
+              <li>
+                <div class="item-content">
+                  <div class="item-inner">
+                    <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">原学科门类</span></div>
+
+                    <div class="item-input text-right text-gray">
+                      <!--<input type="text" name="exsubjectkind" data-check="1" value="{{info.exsubjectkind}}" class="text-right text-gray" placeholder="请填写原学科门类" data-title="原学科门类" data-rule=".+" data-msg-empty="请填写原学科门类" data-msg-error="请填写原学科门类">
+                      -->
+                      <select class="text-direction-rtl text-gray" name="exsubjectkind" data-check="1" data-title="原学科门类" data-rule=".+" data-msg-empty="请选择原学科门类" data-msg-error="请选择原学科门类">
+                        <option value="">请选择原学科门类</option>
+                      </select>
+                    </div>
+                    <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+
+                  </div>
+                </div>
+              </li>
+              
+              <li>
+                <div class="item-content">
+                  <div class="item-inner">
+                    <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">原学历学习类型</span></div>
+
+                    <div class="item-input text-right">
+                      <select class="text-direction-rtl text-gray" name="exedubaktype">
+                          {{if dicExedubaktypeList}}
+                            {{each dicExedubaktypeList}}
+                              <option                      
+                              {{if info.exedubaktype==$value.code}}
+                                selected
+                              {{/if}}
+                              value="{{$value.code}}">{{$value.name}}</option>
+                            {{/each}}
+                          {{/if}}
+                      </select>
+                    </div>
+                    <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+
+                  </div>
+                </div>
+              </li>
+
+              <li>
+                <div class="item-content">
+                  <div class="item-inner">
+                    <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">原学历所学专业</span></div>
+
+                    <div class="item-input text-right text-gray">
+                      <input type="text" name="exedumajor" data-check="1" value="{{info.exedumajor}}" class="text-right text-gray" placeholder="请填写原学历所学专业" data-title="原学历所学专业" data-rule=".+" data-msg-empty="请填写原学历所学专业" data-msg-error="请填写原学历所学专业">
+                    </div>
+                    <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+
+                  </div>
+                </div>
+              </li>
+
+              <li>
+                <div class="item-content">
+                  <div class="item-inner">
+                    <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">原学历毕业证书编号</span></div>
+
+                    <div class="item-input text-right text-gray">
+                      <input type="text" name="excertificatenum" data-check="1" value="{{info.excertificatenum}}" class="text-right text-gray" placeholder="请填写原学历毕业证书编号" data-title="原学历毕业证书编号" data-rule=".+" data-msg-empty="请填写原学历毕业证书编号" data-msg-error="请填写原学历毕业证书编号">
+                    </div>
+                    <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+                  </div>
+                </div>
+              </li>
+
+              <li>
+                <div class="item-content">
+                  <div class="item-inner">
+                    <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">原学历证明材料</span></div>
+
+                    <div class="item-input text-right">
+                      <select class="text-direction-rtl text-gray" name="excertificateprove">
+                          {{if dicExcertificateproveList}}
+                            {{each dicExcertificateproveList}}
+                              <option                      
+                              {{if info.excertificateprove==$value.code}}
+                                selected
+                              {{/if}}
+                              value="{{$value.code}}">{{$value.name}}</option>
+                            {{/each}}
+                          {{/if}}
+                      </select>
+                    </div>
+                    <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+
+                  </div>
+                </div>
+              </li>
+
+              <li>
+                <div class="item-content">
+                  <div class="item-inner">
+                    <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">原学历证明材料编号</span></div>
+
+                    <div class="item-input text-right text-gray">
+                      <input type="text" name="excertificateprovenum" data-check="1" value="{{info.excertificateprovenum}}" class="text-right text-gray" placeholder="请填写原学历证明材料编号" data-title="原学历证明材料编号" data-rule=".+" data-msg-empty="请填写原学历证明材料编号" data-msg-error="请填写原学历证明材料编号">
+                    </div>
+                    <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+                  </div>
+                </div>
+              </li>
+
+              <li>
+                <div class="item-content">
+                  <div class="item-inner">
+                    <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">原学历姓名</span></div>
+
+                    <div class="item-input text-right text-gray">
+                      <input type="text" name="exeduname" data-check="1" value="{{info.exeduname}}" class="text-right text-gray" placeholder="请填写原学历姓名" data-title="原学历姓名" data-rule=".+" data-msg-empty="请填写原学历姓名" data-msg-error="请填写原学历姓名">
+                    </div>
+                    <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+
+                  </div>
+                </div>
+              </li>
+
+              <li>
+                <div class="item-content">
+                  <div class="item-inner">
+                    <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">原学历证件类型</span></div>
+
+                    <div class="item-input text-right">
+                      <select class="text-direction-rtl text-gray" name="exeducertificate">
+                          {{if dicExeduCertificateList}}
+                            {{each dicExeduCertificateList}}
+                              <option                      
+                              {{if info.exeducertificate==$value.code}}
+                                selected
+                              {{/if}}
+                              value="{{$value.code}}">{{$value.name}}</option>
+                            {{/each}}
+                          {{/if}}
+                      </select>
+                    </div>
+                    <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+
+                  </div>
+                </div>
+              </li>
+
+              <li>
+                <div class="item-content">
+                  <div class="item-inner">
+                    <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">原学历证件号码</span></div>
+
+                    <div class="item-input text-right text-gray">
+                      <input type="text" name="exedunum" data-check="1" value="{{info.exedunum}}" class="text-right text-gray" placeholder="请填写原学历证件号码" data-title="原学历证件号码" data-rule=".+" data-msg-empty="请填写原学历证件号码" data-msg-error="请填写原学历证件号码">
+                    </div>
+                    <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+
+                  </div>
+                </div>
+              </li>
+            {{/if}}
+
+            <li>
+              <div class="item-content">
+                <div class="item-inner">
+                  <div class="item-title label"><span class="text-orange-dark">*</span> <span class="f-label">是否电大毕业</span></div>
+
+                  <div class="item-input text-right">
+                    <select class="text-direction-rtl text-gray" name="isgraduatebytv">
+                      {{if dicIsgraduatebytvList}}
+                          {{each dicIsgraduatebytvList}}
+                            <option                      
+                            {{if info.isgraduatebytv==$value.code}}
+                              selected
+                            {{/if}}
+                            value="{{$value.code}}">{{$value.name}}</option>
+                          {{/each}}
+                        {{/if}}
+                    </select>
+                  </div>
+                  <div class="item-title label width-rem text-right"><span class="icon icon-right"></span></div>
+                </div>
+              </div>
+            </li>
+          {{/if}}
+        </ul>
+      </div>
+    </div>
+  </div>
+  </form>
+</script>
+
+<!--第二步 完善证件资料-->
+<script id="step4-temp" type="text/html">
+  <form id="complete-form">
+    <div class="panel-box">
+      <div class="panel-box-header clearfix bg-green">
+        <a href="#" onclick="modalHelper.modal_2()" class="view-sample">
+          查看样例
+        </a>
+        <h3 class="pull-left">电子版免冠一寸蓝底证件照</h3>
+      </div>
+      <div class="panel-box-body with-pad">
+        <div class="row">
+          <div class="col-50" style="width:42%">
+            <div class="upload-wrap upload-wrap-v">
+              <div class="upload-box">
+                <div class="upload-inner">
+                  <div class="upload-in">
+                    {{if zp}}
+                      <img data-original="{{zp | imgUrlFormat}}" class="lazy">
+                    {{else}}
+                      <div class="uploader"></div>
+                    {{/if}}
+                    <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                    <!--<input class="upload-placeholer" type="file" accept="image/jpg">-->
+                    <input class="file-path" type="hidden" name="zp" value="{{zp | imgUrlFormat}}" data-title="电子版免冠一寸蓝底证件照">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-50" style="width:54%;margin-left:0;">
+            请按样例中的要求上传你的电子版免冠一寸蓝底证件照
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-box">
+      <div class="panel-box-header clearfix bg-green">
+        <a href="#" onclick="modalHelper.modal_1()" class="view-sample">
+          查看样例
+        </a>
+        <h3 class="pull-left">身份证原件正反面扫描件</h3>
+        
+      </div>
+      <div class="panel-box-body with-pad">
+        <ul class="stu-type-tap" data-role="stu-type-tap" data-type="id-type">
+          <li class="{{signupSfzType==0?'actived':''}} clearfix">
+            <span>中国居民身份证</span>
+            <input type="radio" name="signupSfzType" value="0" style="display:none;" {{signupSfzType==0?"checked":""}}>
+          </li>
+          <li class="{{signupSfzType==1?'actived':''}} clearfix">
+            <span>其他身份证件（中国居民临时身份证、港澳台、外籍人士身份证）</span>
+            <input type="radio" name="signupSfzType" value="1" style="display:none;" {{signupSfzType==1?"checked":""}}>
+          </li>
+        </ul>
+        <div class="row">
+          <div class="col-50">
+            <p class="img-label">身份证原件正面</p>
+            <div class="upload-wrap upload-wrap-h">
+              <div class="upload-box">
+                <div class="upload-inner">
+                  <div class="upload-in">
+                    {{if sfzz}}
+                      <img data-original="{{sfzz | imgUrlFormat}}" class="lazy">
+                    {{else}}
+                      <div class="uploader"></div>
+                    {{/if}}
+                    <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                    <!--<input class="upload-placeholer" type="file" accept="image/jpg">-->
+                    <input class="file-path" type="hidden" name="sfzz" value="{{sfzz | imgUrlFormat}}" data-title="身份证原件正面">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-50">
+            <p class="img-label">身份证原件反面</p>
+            <div class="upload-wrap upload-wrap-h">
+              <div class="upload-box">
+                <div class="upload-inner">
+                  <div class="upload-in">
+                    {{if sfzf}}
+                      <img data-original="{{sfzf | imgUrlFormat}}" class="lazy">
+                    {{else}}
+                      <div class="uploader"></div>
+                    {{/if}}
+                    <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                    <!--<input class="upload-placeholer" type="file" accept="image/jpg">-->
+                    <input class="file-path" type="hidden" name="sfzf" value="{{sfzf | imgUrlFormat}}" data-title="身份证原件反面">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--正式生/正式跟读生 开始-->
+    {{if userType=='11' || userType=='12'}}
+      <!--本科生显示-->
+      {{if isUndergraduateCourse==1}}
+        <div class="panel-box" data-role="graduate-panel">
+          <div class="panel-box-header clearfix bg-green">
+            <a href="#" onclick="modalHelper.modal_10()" class="view-sample" style="display:{{signupByzType==0?'inline':'none'}};">
+              查看样例
+            </a>
+            <a href="#" onclick="modalHelper.modal_9()" class="view-sample" style="display:{{signupByzType==1?'inline':'none'}};">
+              查看样例
+            </a>
+            <h3 class="pull-left">毕业信息</h3>
+            
+          </div>
+          <div class="panel-box-body with-pad">
+            <ul class="stu-type-tap" data-role="graduate-type-tap">
+              <li class="{{signupByzType==0?'actived':''}} clearfix">
+                <span>毕业证原件+《中国高等教育学历认证报告》或《教
+          育部学历证书电子注册备案表》原件</span>
+                <input type="radio" name="signupByzType" value="0" style="display:none;" {{signupByzType==0?"checked":""}}>
+              </li>
+              <li class="{{signupByzType==1?'actived':''}} clearfix">
+                <span>毕业电子注册号证明+学生证原件</span>
+                <input type="radio" name="signupByzType" value="1" style="display:none;" {{signupByzType==1?"checked":""}}>
+              </li>
+            </ul>
+            <div class="stu-type-cnt">
+              <div class="stu-type-item margin-t_5em" style="display:{{signupByzType==0?'block':'none'}}">
+                <div class="row">
+                  <div class="col-50">
+                  <div class="upload-wrap upload-wrap-h">
+                    <div class="upload-box">
+                      <div class="upload-inner">
+                        <div class="upload-in">
+                          {{if byzz}}                  
+                            <img data-original="{{byzz | imgUrlFormat}}" class="lazy">
+                          {{else}}
+                            <div class="uploader"></div>
+                          {{/if}}
+                          <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                          <!--<input class="upload-placeholer" type="file" accept="image/jpg">-->
+                          <input class="file-path" type="hidden" name="byzz" value="{{byzz | imgUrlFormat}}" data-title="毕业证原件照片">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                  <div class="col-50">
+                  <div class="upload-wrap upload-wrap-h">
+                    <div class="upload-box">
+                      <div class="upload-inner">
+                        <div class="upload-in">
+                          {{if xlz}}
+                            <img data-original="{{xlz | imgUrlFormat}}" class="lazy">
+                          {{else}}
+                            <div class="uploader"></div>
+                          {{/if}}
+                          <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                          <!--<input class="upload-placeholer" type="file" accept="image/jpg">-->
+                          <input class="file-path" type="hidden" name="xlz" value="{{xlz | imgUrlFormat}}" data-title="《中国高等教育学历认证报告》或《教育部学历证书电子注册备案表》原件照片">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </div>
+              </div>
+              <div class="stu-type-item margin-t_5em" style="display:{{signupByzType==1?'block':'none'}}">
+                <div class="row">
+                  <div class="col-50">
+                    <div class="upload-wrap upload-wrap-h">
+                      <div class="upload-box">
+                        <div class="upload-inner">
+                          <div class="upload-in">
+                            {{if dzzch}}                  
+                              <img data-original="{{dzzch | imgUrlFormat}}" class="lazy">
+                            {{else}}
+                              <div class="uploader"></div>
+                            {{/if}}
+                            <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                            <!--<input class="upload-placeholer" type="file" accept="image/jpg">-->
+                            <input class="file-path" type="hidden" name="dzzch" value="{{dzzch | imgUrlFormat}}" data-title="注册号证明">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-50">
+                    <div class="upload-wrap upload-wrap-h">
+                      <div class="upload-box">
+                        <div class="upload-inner">
+                          <div class="upload-in">
+                            {{if xsz}}                  
+                              <img data-original="{{xsz | imgUrlFormat}}" class="lazy">
+                            {{else}}
+                              <div class="uploader"></div>
+                            {{/if}}
+                            <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                            <!--<input class="upload-placeholer" type="file" accept="image/jpg">-->
+                            <input class="file-path" type="hidden" name="xsz" value="{{xsz | imgUrlFormat}}" data-title="学生证原件">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      {{/if}}
+
+      <!--专科生显示-->
+      {{if isUndergraduateCourse==0}}
+      <div class="panel-box">
+        <div class="panel-box-header clearfix bg-green">
+          <a href="#" onclick="modalHelper.modal_5($('[data-role=stu-type-tap][data-type=change] li.actived').attr('data-id'))" class="view-sample">
+            查看样例
+          </a>
+          <h3 class="pull-left">最高学历证明</h3>
+          
+        </div>
+        <div class="panel-box-body with-pad">
+          <ul class="stu-type-tap" data-role="stu-type-tap" data-type="change">
+            <li class="{{zgxlRadioType==0?'actived':''}} clearfix" data-id="0">
+              <span>毕业证原件</span>
+              <input type="radio" name="zgxlRadioType" value="0" style="display:none;" {{zgxlRadioType==0?"checked":""}}>
+            </li>
+            <li class="{{zgxlRadioType==1?'actived':''}} clearfix" data-id="1">
+              <span>学历证明{{if !isMcDonaldScholl}}+专科承诺书{{/if}}</span>
+              <input type="radio" name="zgxlRadioType" value="1" style="display:none;" {{zgxlRadioType==1?"checked":""}}>
+            </li>
+          </ul>
+          <div class="stu-type-cnt">
+            <div class="stu-type-item margin-t_5em" style="display:{{zgxlRadioType==0?'block':'none'}}">
+              <div class="row">
+                <div class="col-50">
+                  <div class="upload-wrap upload-wrap-h">
+                    <div class="upload-box">
+                      <div class="upload-inner">
+                        <div class="upload-in">
+                          {{if byzz}}
+                            <img data-original="{{byzz | imgUrlFormat}}" class="lazy">
+                          {{else}}
+                            <div class="uploader"></div>
+                          {{/if}}
+                          <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                          <!--<input class="upload-placeholer" type="file" accept="image/jpg">-->
+                          <input class="file-path" type="hidden" name="byzz" value="{{byzz | imgUrlFormat}}" data-title="毕业证原件">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-50">
+                  请按样例中的要求上传图片
+                </div>
+              </div>
+            </div>
+            <div class="stu-type-item margin-t_5em" style="display:{{zgxlRadioType==1?'block':'none'}}">
+              <div class="row">
+                <div class="col-50">
+                  <div class="upload-wrap upload-wrap-h">
+                    <div class="upload-box">
+                      <div class="upload-inner">
+                        <div class="upload-in">
+                          {{if xlzm}}
+                            <img data-original="{{xlzm | imgUrlFormat}}" class="lazy">
+                          {{else}}
+                            <div class="uploader"></div>
+                          {{/if}}
+                          <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                          <!--<input class="upload-placeholer" type="file" accept="image/jpg">-->
+                          <input class="file-path" type="hidden" name="xlzm" value="{{xlzm | imgUrlFormat}}" data-title="学历证明">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {{if !isMcDonaldScholl}}
+                  <div class="col-50">
+                    <div class="upload-wrap upload-wrap-h">
+                      <div class="upload-box">
+                        <div class="upload-inner">
+                          <div class="upload-in">
+                            {{if cns}}
+                              <img data-original="{{cns | imgUrlFormat}}" class="lazy">
+                            {{else}}
+                              <div class="uploader"></div>
+                            {{/if}}
+                            <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                            <!--<input class="upload-placeholer" type="file" accept="image/jpg">-->
+                            <input class="file-path" type="hidden" name="cns" value="{{cns | imgUrlFormat}}" data-title="专科承诺书">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+
+    <!--本科(电大续读生)-->
+    {{else if userType=='42'}} 
+      <div class="panel-box">
+        <div class="panel-box-header clearfix bg-green">
+          <a href="#" onclick="modalHelper.modal_11()" class="view-sample">
+            查看样例
+          </a>
+          <h3 class="pull-left">国家开放大学或广州电大学生证原件</h3>
+        </div>
+        <div class="panel-box-body with-pad">
+          <div class="row">
+            <div class="col-50">
+              <div class="upload-wrap upload-wrap-h">
+                <div class="upload-box">
+                  <div class="upload-inner">
+                    <div class="upload-in">
+                      {{if xsz}}                  
+                        <img data-original="{{xsz | imgUrlFormat}}" class="lazy">
+                      {{else}}
+                        <div class="uploader"></div>
+                      {{/if}}
+                      <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                      <!--<input class="upload-placeholer" type="file" accept="image/jpg">-->
+                      <input class="file-path" type="hidden" name="xsz" value="{{xsz | imgUrlFormat}}" data-title="国家开放大学或广州电大学生证原件">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-50">
+              请按样例中的要求上传图片
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-box">
+        <div class="panel-box-header clearfix bg-green">
+          <a href="#" onclick="modalHelper.modal_12()" class="view-sample">
+            查看样例
+          </a>
+          <h3 class="pull-left">成绩单</h3>
+        </div>
+        <div class="panel-box-body with-pad">
+          <div class="row">
+            <div class="col-50">
+              <div class="upload-wrap upload-wrap-h">
+                <div class="upload-box">
+                  <div class="upload-inner">
+                    <div class="upload-in">
+                      {{if cjd}}                  
+                        <img data-original="{{cjd | imgUrlFormat}}" class="lazy">
+                      {{else}}
+                        <div class="uploader"></div>
+                      {{/if}}
+                      <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                      <!--<input class="upload-placeholer" type="file" accept="image/jpg">-->
+                      <input class="file-path" type="hidden" name="cjd" value="{{cjd | imgUrlFormat}}" data-title="成绩单照片">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-50">
+              电大校本部学籍科打印的成绩单为准
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!--本科(外校预科生) -->
+    {{else if userType=='51'}}
+      <div class="panel-box">
+        <div class="panel-box-header clearfix bg-green">
+          <a href="#" onclick="modalHelper.modal_12()" class="view-sample">
+            查看样例
+          </a>
+          <h3 class="pull-left">成绩单</h3>
+        </div>
+        <div class="panel-box-body with-pad">
+          <div class="row">
+            <div class="col-50">
+              <div class="upload-wrap upload-wrap-h">
+                <div class="upload-box">
+                  <div class="upload-inner">
+                    <div class="upload-in">
+                      {{if cjd}}                  
+                        <img data-original="{{cjd | imgUrlFormat}}" class="lazy">
+                      {{else}}
+                        <div class="uploader"></div>
+                      {{/if}}
+                      <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                      <!--<input class="upload-placeholer" type="file" accept="image/jpg">-->
+                      <input class="file-path" type="hidden" name="cjd" value="{{cjd | imgUrlFormat}}" data-title="成绩单照片">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-50">
+              所在学校学籍或教务处出具的盖有公章的已修学科成绩单
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-box">
+        <div class="panel-box-header clearfix bg-green">
+          <a href="#" onclick="modalHelper.modal_13()" class="view-sample">
+            查看样例
+          </a>
+          <h3 class="pull-left">录取名册或入学通知书</h3>
+        </div>
+        <div class="panel-box-body with-pad">
+          <div class="row">
+            <div class="col-50">
+              <div class="upload-wrap upload-wrap-h">
+                <div class="upload-box">
+                  <div class="upload-inner">
+                    <div class="upload-in">
+                      {{if lqmc}}                  
+                        <img data-original="{{lqmc | imgUrlFormat}}" class="lazy">
+                      {{else}}
+                        <div class="uploader"></div>
+                      {{/if}}
+                      <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                      <!--<input class="upload-placeholer" type="file" accept="image/jpg">-->
+                      <input class="file-path" type="hidden" name="lqmc" value="{{lqmc | imgUrlFormat}}" data-title="成绩单照片">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-50">
+              请按样例中的要求上传图片
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-box">
+        <div class="panel-box-header clearfix bg-green">
+          <a href="#" onclick="modalHelper.modal_15()" class="view-sample">
+            查看样例
+          </a>
+          <h3 class="pull-left">应届毕业生证明</h3>
+        </div>
+        <div class="panel-box-body with-pad">
+          <div class="row">
+            <div class="col-50">
+              <div class="upload-wrap upload-wrap-h">
+                <div class="upload-box">
+                  <div class="upload-inner">
+                    <div class="upload-in">
+                      {{if yjbyszm}}                  
+                        <img data-original="{{yjbyszm | imgUrlFormat}}" class="lazy">
+                      {{else}}
+                        <div class="uploader"></div>
+                      {{/if}}
+                      <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                      <input class="file-path" type="hidden" name="yjbyszm" value="{{yjbyszm | imgUrlFormat}}" data-title="应届毕业生证明">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-50">
+              请按样例中的要求上传图片
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-box">
+        <div class="panel-box-header clearfix bg-green">
+          <a href="#" onclick="modalHelper.modal_14()" class="view-sample">
+            查看样例
+          </a>
+          <h3 class="pull-left">承诺书</h3>
+        </div>
+        <div class="panel-box-body with-pad">
+          <div class="row">
+            <div class="col-50">
+              <div class="upload-wrap upload-wrap-h">
+                <div class="upload-box">
+                  <div class="upload-inner">
+                    <div class="upload-in">
+                      {{if ykcns}}                  
+                        <img data-original="{{ykcns | imgUrlFormat}}" class="lazy">
+                      {{else}}
+                        <div class="uploader"></div>
+                      {{/if}}
+                      <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                      <!--<input class="upload-placeholer" type="file" accept="image/jpg">-->
+                      <input class="file-path" type="hidden" name="ykcns" value="{{ykcns | imgUrlFormat}}" data-title="承诺书照片">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-50">
+              请按样例中的要求上传图片
+            </div>
+          </div>
+        </div>
+      </div>
+    {{/if}}
+
+    <!--非广东籍学员 显示  开始-->
+    {{if isOffsite==1}}
+      <div class="panel-box">
+        <div class="panel-box-header clearfix bg-green">
+          <h3 class="pull-left">{{signupJzzType==0?"区域证明":"在读年级证明"}}</h3>
+        </div>
+        <div class="panel-box-body with-pad">
+          <ul class="stu-type-tap row" data-id="jzz-box">
+            <li class="{{signupJzzType==0?'actived':''}} col-50" title="区域证明">
+              <span>区域证明</span>
+              <input type="radio" name="signupJzzType" value="0" style="display:none;" {{signupJzzType==0?"checked":""}}>
+            </li>
+            <li class="{{signupJzzType==1?'actived':''}} col-50" title="在读年级证明">
+              <span>在读年级证明</span>
+              <input type="radio" name="signupJzzType" value="1" style="display:none;" {{signupJzzType==1?"checked":""}}>
+            </li>
+          </ul>
+          <div>
+            <div class="row stu-type-item" data-id="jzz-cnt-box" data-v="0" style='display:{{signupJzzType==0?"block":"none"}};'>
+              <div class="col-50">
+                <p class="img-label text-center">区域证明正面</p>
+                <div class="upload-wrap upload-wrap-h">
+                  <div class="upload-box">
+                    <div class="upload-inner">
+                      <div class="upload-in">
+                        {{if jzz}}                  
+                          <img data-original="{{jzz | imgUrlFormat}}" class="lazy">
+                        {{else}}
+                          <div class="uploader"></div>
+                        {{/if}}
+                        <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                        <!--<input class="upload-placeholer" type="file" accept="image/jpg">-->
+                        <input class="file-path" type="hidden" name="jzz" value="{{jzz | imgUrlFormat}}" data-title="区域证明正面">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-50">
+                <p class="img-label text-center">区域证明反面</p>
+                <div class="upload-wrap upload-wrap-h">
+                  <div class="upload-box">
+                    <div class="upload-inner">
+                      <div class="upload-in">
+                        {{if jzzf}}                  
+                          <img data-original="{{jzzf | imgUrlFormat}}" class="lazy">
+                        {{else}}
+                          <div class="uploader"></div>
+                        {{/if}}
+                        <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                        <!--<input class="upload-placeholer" type="file" accept="image/jpg">-->
+                        <input class="file-path" type="hidden" name="jzzf" value="{{jzzf | imgUrlFormat}}" data-title="区域证明反面">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row stu-type-item" data-id="jzz-cnt-box" data-v="1" style='display:{{signupJzzType==1?"block":"none"}};'>
+              <div class="col-50">
+                <p class="img-label text-center">在读年级证明</p>
+                <div class="upload-wrap upload-wrap-h">
+                  <div class="upload-box">
+                    <div class="upload-inner">
+                      <div class="upload-in">
+                        {{if ygzm}}                  
+                          <img data-original="{{ygzm | imgUrlFormat}}" class="lazy">
+                        {{else}}
+                          <div class="uploader"></div>
+                        {{/if}}
+                        <div class="text-gray margin-t_5em upload-label">点击上传</div>
+                        <!--<input class="upload-placeholer" type="file" accept="image/jpg">-->
+                        <input class="file-path" type="hidden" name="ygzm" value="{{ygzm | imgUrlFormat}}" data-title="在读年级证明">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-50">
+                <table width="100%" height="124" style="margin-top: 1.57rem;">
+                  <tr>
+                    <td align="center">
+                      <a href="/template/在读年级证明-个人.docx" class="external text-blue" data-clipboard-text="/template/在读年级证明-个人.docx" data-download-url><u>点击下载模板</u></a>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="margin-t1rem" data-id="qz-txt" style="font-size: 85%;">
+            <div style="display:{{signupJzzType!=1?'block':'none'}}">广州市居住证、社保卡、医保卡，劳动合同、租房协议、个人所得税完税证明、户口本、房产证、社保缴纳证明（以上任一扫描件，并注意：证明真实有效，公章所在区域与本人居住区域务必一致。）</div>
+            <div style="display:{{signupJzzType==1?'block':'none'}}">向在读学校申请开具在读年级证明，盖有学校公章后，扫描原件上传。</div>
+          </div>
+        </div>
+      </div>
+    {{/if}}
+  </form>
+</script>
+
+<!--第三步 确认签名-->
+<script id="step5-temp" type="text/html">
+  <form id="signup-form">
+  <div class="content-padded">
+    <div class="input-group">
+      <div class="input-btn">
+        <div id="preview_images" class="preview_images"></div>
+        <input name="sign" id="signup" type="hidden">
+      </div>
+      
+      <div class="group-btn">
+        <button type="button" class="sign-btn btn-bg-white" id="reSign">重签</button>
+      </div>
+      <div class="group-btn">
+        <button type="button" class="sign-btn" id="confirm-btn">确认</button>
+      </div>
+    </div>
+
+    <div class="enroll_box_qianm">
+      <div id="signature" class="signature"></div>
+      <div class="tips">
+        请在横线上签上你的姓名全称
+      </div>
+      <div class="mark-over" style="display:none;">
+        <table width="100%" height="100%">
+          <tr>
+            <td valign="middle" style="font-size:90%;">签名已确认，如需重签请点击“重签”按钮</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <input type="hidden" name="complete" value="1">
+    <div class="checkbox">
+      <i id="category" class="icon-check"></i><span class="category_span">我承诺及确认以上信息正确无误并保证其真实性</span>
+    </div>
+    <div class="alert-panel pad-1em text-gray margin-t_5em" style="font-size:75%">
+      1、签名必须是你的姓名全称:<br>
+      2、签名尽量连续写完，不要逐字书写，避免无法签完姓名全称
+    </div>
+    <div class="text-center text-gray margin-t1em" style="font-size:75%;">
+      主办：国家开放大学
+    </div>
+  </div>
+  </form>
+</script>
+
+<!--第四步 提交结果-->
+<script id="step6-temp" type="text/html">
+  <div class="content-padded">
+    <div class="page-index">
+      <div class="text-center">
+        
+        <div class="img-gruid margin-t1rem">
+          {{if auditState==1}}
+            <div><img src="http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/images/img10.png" style="max-width:60%;" /></div>
+            <div style="color:#f34e2b;font-size:1rem;margin-top: .8em;">
+              资料审核已通过，请开始学习
+            </div>
+            <div class="text-gray text-left margin-t1em">你的学籍正在注册中，请留意个人学习空间中的学籍注册状态，注册成功后可在学信网（http://www.chsi.com.cn/）查询</div>
+
+            <div class="margin-t1em"><img id="note-cert" /></div>
+            <div class="text-left alert-panel text-gray margin-t1rem pad-1em" style="font-size:80%">
+              1、你可以登录官网（http://gzsy.oucnet.cn）进行学习，也可以扫描下方二维码下载APP进行学习<br>
+              2、在学习过程中，遇到任何不理解或有疑问的事情都可以与您的班主任进行沟通<br>
+              3、尽快开始你的学习之旅吧，祝你学习顺利，生活愉快！
+            </div>
+
+          {{else if auditState==0}}
+            <div><img src="http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/images/apply-fail.png" style="max-width:60%;" /></div>
+            <div style="color:#f34e2b;font-size:1rem;margin-top: .8em;">
+              资料审核不通过
+            </div>
+            <div class="text-gray text-left margin-t1em">你的资料未通过审核，请按要求重新提交资料！</div>
+
+            <div class="text-left text-gray alert-panel pad-1em margin-t_5em" style="font-size:80%;">
+                <div>不通过原因：</div>
+                <div>{{auditContent}}</div>
+                <div class="margin-t_5em" style="font-size:80%;">
+                  审批人：{{auditOperator}}<br>
+                  审批时间：{{auditDt}}
+                </div>
+            </div>
+            <a href="#page-index" onclick="$('body').data('re-sign',true)" class="button button-big button-fill button-danger margin-t1em">重交资料</a>
+          {{else}}
+
+            <div><img src="http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/images/img10.png" style="max-width:60%;" /></div>
+            <div style="color:#f34e2b;font-size:1rem;margin-top: .8em;">
+              资料提交成功，待审核
+            </div>
+            <div class="text-gray text-left margin-t1em">你的资料需要通过审核后才能注册学籍，请耐心等待审核。</div>
+
+            <div class="text-left text-gray alert-panel pad-1em margin-t_5em" style="font-size:80%;">
+                1、资料审核通过后，你可以登录官网（http://gzsy.oucnet.cn）进行学习，也可以扫描下方二维码下载APP进行学习<br>
+                2、资料审核状态可以在登录后的个人学习中心查看
+            </div>
+          {{/if}}
+
+          {{if auditStatus!=0}}
+            <div class="padding-t_8em margin-t1rem" style="border-top:#dcdcdc 1px solid;">
+              <div><img src="http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/images/img9.png" width="150" /></div>
+              <div class="margin-t_5em text-gray">扫描二维码<br>下载国开在线APP进行学习
+              </div>
+            </div>
+          {{/if}}
+
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+<!--图片上传弹窗-->
+<script type="text/html" id="img-upload-temp">
+  <div class="cleafix margin-t1rem">
+    <div class="img-process-container">
+      <span class="preloader" style="display:none;"></span>
+    </div>
+  </div>
+  <div class="clearfix margin-t_5em">
+    <div class="position-relative sel-img">
+        <a href="javascript:void(0)" id="sel-pic" class="external button">选择图片</a>
+        <!--<input class="upload-file-placeholer" id="img-file" type="file" accept="image/jpg">-->
+    </div>
+    <div class="upload-controller">
+      <span class="icon icon-reset"></span>
+      <span class="icon icon-rotate-right"></span>
+    </div>
+  </div>
+  <div class="margin-t_8em text-left" style="font-size:0.7rem">
+    1.上传的照片必须保证清晰、完整，不能倾斜<br>
+    2.请确保照片中证件周边干净，可使用白色A4纸作为背景拍摄<br>
+    3.可参照标准示例，对照片进行裁切操作
+  </div>
+  <div class="row clearfix margin-t_8em">
+      <div class="col-50">
+        <button class="button button-fill button-md full-width" data-role="cancel" onclick="$.closeModal();">取消</button>
+      </div>
+      <div class="col-50">
+        <button data-role="sure-cropper" class="button button-fill button-md full-width">
+          <span class="text">确定</span>
+          <span class="preloader" style="display:none;width: .9rem;height: .9rem;"></span></button> 
+      </div>
+  </div>
+</script>
+
+<!--图片提交模板-->
+<script type="text/html" id="h-tmp">
+  <html>
+  <head>
+  </head>
+  <body>
+  <form id="submitForm" name="submitForm" method="post" enctype="multipart/form-data" action="http://eefile.gzedu.com/ossupload/uploadInterface.do">
+    <input type="file" name="files" id="file" accept="image/jpg">    
+    <input type="hidden" name="formMap.FILE_TYPE" value="files">
+    <input type="hidden" name="formMap.origin" value="{{basePath}}/pcenter/mobile/uploadIframe.html">
+    <input type="hidden" name="formMap.filecwd" value="/APP038/xj/image">
+    <input type="hidden" name="formMap.ACCESS_KEY_ID" value="b49ca70bac1082b01318bd3cecf317e4">
+    <input type="hidden" name="formMap.ACCESS_KEY_SECRET" value="17b16aedf2f46e32ccfbd6049090925f">
+  </form>
+  </body>
+  </html>
+</script>
+<script>
+/** 格式化输入字符串**/
+//用法: "hello{0}".format('world')；返回'hello world'
+String.prototype.format= function(){
+  var args = arguments;
+  return this.replace(/\{(\d+)\}/g,function(s,i){
+    return args[i];
+  });
+}
+
+$(function () {
+
+  //ajax请求时长设置
+  $.ajaxSettings.timeout=100*1000;//请求最大时长 100秒
+
+  //ajax请求异常处理
+  $.ajaxSettings.error=function(xhr, errorType, error){
+    $.hidePreloader();
+    $.hideIndicator();
+
+    var ajaxTips=[];
+    if(xhr.responseURL.length>0){
+      ajaxTips.push('请求URL：<span style="word-break: break-all;">'+xhr.responseURL+'</span><br>');
+    }
+    ajaxTips.push(errorType+( error?(': '+error):'' ));
+
+    $.modal({
+      text : ajaxTips.join(''),
+      buttons : [
+        {
+          text: '刷新重新加载',
+          onClick: function() {
+            window.location.reload();
+          }
+        }
+      ]
+    });
+  };
+
+  function convertDate(date){
+    if(!date){
+      //var d=new Date();
+      //return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+      return '';
+    }
+
+    date=date.replace(' ','');
+    date=date.replace(/[\/]/g,'');
+
+    if(date.indexOf('-')!=-1){
+      return date;
+    }
+    else if(date.length==8){     
+      return date.substring(0,4)+'-'+date.substring(4,6)+'-'+date.substring(6,8);
+    }
+    else{
+      var d=new Date();
+      return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+    }
+  }
+
+  //模板引擎辅助器
+  template.helper('nativeFormat', function (native) {
+      return !native?'':native.replace(',',' ');
+  });
+  template.helper('dateFormat', convertDate);
+  template.helper('imgUrlFormat', function (native) {
+      var result='';
+      
+      if(!!native && native!=null){
+        if(native.indexOf('http://eefile.download.eenet.com')==-1){
+          result=native;
+        }
+        else{
+          if(native.indexOf('?x-oss-process=image')==-1){
+              result=native+'?x-oss-process=image/resize,h_4000,w_4000/auto-orient,1'
+          }
+          else{
+              result=native+'/{0}';
+              result=result.format(result.indexOf('resize,h_4000,w_4000/auto-orient,1')==-1?'resize,h_4000,w_4000/auto-orient,1':'');
+          }
+        }
+        
+      }
+      return result;
+  });
+
+  //弹窗工具类
+  window.modalHelper={
+    //身份证原件样例
+    'path':'http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/images/',
+    'modal_1':function (){
+      var domModal=$.modal({
+        title:  '身份证原件样例<span class="icon icon-close" onclick="$.closeModal()"></span>',
+        text: [
+          '<div class="row cleafix margin-t1rem">',
+            '<div class="col-50">',
+              '<figure class="margin-none">',
+                '<img src="'+this.path+'img1.jpg" data-large="'+this.path+'img1.jpg" class="full-width" height="100" title="身份证原件正面" />',
+                '<div class="img-label2 margin-t_5em">身份证原件正面</div>',
+              '</figure>',
+            '</div>',
+            '<div class="col-50">',
+              '<figure class="margin-none">',
+                '<img src="'+this.path+'img2.jpg" data-large="'+this.path+'img2.jpg" class="full-width" height="100" title="身份证原件反面" />',
+                '<div class="img-label2 margin-t_5em">身份证原件反面</div>',
+              '</figure>',
+            '</div>',
+          '</div>',
+          '<div class="margin-t_8em">',
+            '<a href="javascript:void(0)" onclick="$.closeModal()" class="button button-fill button-md">确定</a>',
+          '</div>'
+        ].join(''),
+        extraClass:'my-modal'
+      });
+
+      this.showLargePhoto($(domModal).find('img'));
+    },
+
+
+    //电子版免冠一寸蓝底证件照
+    'modal_2':function (){
+      var domModal=$.modal({
+        title:  '电子版免冠一寸蓝底证件照<span class="icon icon-close" onclick="$.closeModal()"></span>',
+        text: [
+          '<div class="">',
+            '<figure class="margin-none">',
+              '<p class="img-label"></p>',
+              '<img src="'+this.path+'img3.jpg" data-large="'+this.path+'img3.jpg" class="" height="200" title="电子版免冠一寸蓝底证件照" />',
+            '</figure>',
+            '<div class="text-left padding-t_5em" style="font-size:0.7rem">要求：<br>1、规范清晰，图像大小在30K-900K之间；<br>2、格式为jpg；<br>3、图像“高”要求在640-768像素(px)之间，“宽”要求在480-600 像素(px)之间，高宽比严格为4:3(若高为640 px，则宽必需为480 px)；<br>4、分辨率最小为72 dpi（像素/英寸）</div>',
+            '</div>',
+          '</div>',
+          '<div class="margin-t_8em">',
+            '<a href="javascript:void(0)" onclick="$.closeModal()" class="button button-fill button-md">确定</a>',
+          '</div>'
+        ].join(''),
+        extraClass:'my-modal'
+      });
+
+      this.fixModal(domModal);
+      
+      this.showLargePhoto($(domModal).find('img'));
+    },
+
+    //毕业证原件照片
+    'modal_3':function (){
+      var domModal=$.modal({
+        title:  '毕业证原件照片<span class="icon icon-close" onclick="$.closeModal()"></span>',
+        text: [
+          '<div class="text-center">',
+            '<img src="'+this.path+'img4.jpg" data-large="'+this.path+'img4-lg.png" style="max-width:70%;" height="130" title="毕业证原件照片" />',
+          '</div>',
+          '<div class="margin-t_8em text-left" style="font-size:0.7rem">',
+            '1.因改名导致毕业证书与身份证上姓名不符须有户口本变更记录或户籍所在地所出具的单独证明。（户籍所在地派出所出具的单独证明内容应包含本人现用名、曾用名、身份证号、姓名变更时间及原因、并粘贴本人免冠照片加盖骑缝章，姓名全部变更要出具公证书） <div class="margin-t_5em">2.毕业学校笔误导致毕业证书与身份证上姓名不符， 须提供学校出具的证明，并加盖学校印章。</div>',
+          '</div>',
+          '<div class="margin-t_8em">',
+            '<a href="javascript:void(0)" onclick="$.closeModal()" class="button button-fill button-md">确定</a>',
+          '</div>'
+        ].join(''),
+        extraClass:'my-modal'
+      });
+
+      this.fixModal(domModal);
+
+      this.showLargePhoto($(domModal).find('img'));
+    },
+
+    //原件样例
+    'modal_4':function (){
+      var domModal=$.modal({
+        title:  '原件样例<span class="icon icon-close" onclick="$.closeModal()"></span>',
+        text: [
+          '<div class="row cleafix margin-t1rem">',
+            '<div class="col-50">',
+              '<figure class="margin-none">',
+                '<img src="'+this.path+'img5.jpg" data-large="'+this.path+'img5-lg.png" class="full-width" height="200" title="中国高等教育学历认证报告" />',
+                '<div class="img-label2 margin-t_5em">中国高等教育学历认证报告</div>',
+              '</figure>',
+            '</div>',
+            '<div class="col-50">',
+              '<figure class="margin-none">',
+                '<img src="'+this.path+'img6.jpg" data-large="'+this.path+'img6-lg.png" class="full-width" height="200" title="教育部学历证书电子注册备案表" />',
+                '<div class="img-label2 margin-t_5em">教育部学历证书电子注册备案表</div>',
+              '</figure>',
+            '</div>',
+          '</div>',
+          '<div class="margin-t_8em text-left" style="font-size:0.7rem">*报读本科专业的学生必须提供《教育部学历证书电子注册备案表》[学信网上下载]（注意：1991年 - 2001年的专科毕业生需提供《中国高等教育学历认证报告》）</div>',
+          '<div class="margin-t_8em">',
+            '<a href="javascript:void(0)" onclick="$.closeModal()" class="button button-fill button-md">确定</a>',
+          '</div>'
+        ].join(''),
+        extraClass:'my-modal'
+      });
+
+      this.fixModal(domModal);
+
+      this.showLargePhoto($(domModal).find('img'));
+    },
+
+    //最高学历证明
+    'modal_5':function (n){
+      n=parseInt(n);
+      var t1 = n==0?'职业中等专业（中专）':'工学历证明（模版）';
+      var t2 = n==0?'普通高中（高中）':'专科承诺书（模版）';
+      //文件模板下载地址
+      var domModal=$.modal({
+        title:  '最高学历证明<span class="icon icon-close" onclick="$.closeModal()"></span>',
+        text: [
+          '<div class="row cleafix margin-t1rem">',
+            '<div class="col-50">',
+              '<figure class="margin-none">',
+                '<img src="'+this.path+(n==0?'u67':'u69')+'.jpg" data-large="'+this.path+(n==0?'u67':'u69')+'-lg.png" class="full-width" height="'+(n==0?'100':'200')+'" title="'+t1+'" />',
+                '<div class="img-label2 margin-t_5em">'+t1+'</div>',
+              '</figure>',
+            '</div>',
+            '<div class="col-50">',
+              '<figure class="margin-none">',
+                '<img src="'+this.path+(n==0?'u68':'u70')+'.jpg" data-large="'+this.path+(n==0?'u68':'u70')+'-lg.png" class="full-width" height="'+(n==0?'100':'200')+'" title="'+t2+'" />',
+                '<div class="img-label2 margin-t_5em">'+t2+'</div>',
+              '</figure>',
+            '</div>',
+          '</div>',
+          '<div class="margin-t_8em text-left" style="font-size:0.7rem">',
+            n==0?'需要提供高中或职高、中专、技校等同等学历的毕业证扫描件':'学历证明：请打印填写，到公司或街道盖章后拍照上传<br>专科承诺书：请打印填写，亲笔签名后拍照上传照片',
+          '</div>',
+          n==0?['<div class="margin-t_8em">',
+            '<a href="javascript:void(0)" onclick="$.closeModal()" class="button button-fill button-md">确定</a>',
+            '</div>'].join(''):['<div class="row clearfix margin-t_8em">',
+            '<div class="col-50" data-role="downfile-box">',
+              '<a href="javascript:void(0)" class="external button button-fill button-md">地址获取中...</a>',
+            '</div>',
+            '<div class="col-50">',
+              '<a href="javascript:void(0)" data-role="send-email" class="button button-fill button-md">发送至邮箱</a>',
+            '</div>',            
+          '</div>'].join('')
+        ].join(''),
+        extraClass:'my-modal'
+      });
+      
+      this.fixModal(domModal);
+
+      this.showLargePhoto($(domModal).find('img'));
+
+      
+      //获取文件下载地址
+      var self=this;
+      $.getJSON('/pcenter/roll/getLinkXlzmTemplate', function(response){
+
+        if(response.msgCode!=200){
+          $.alert(response.message);
+          return;
+        }
+
+        $('[data-role="downfile-box"]').html(
+          ($.device.android || (!$.device.android&&!$.device.ios))?
+          ['<a href="'+response.data.link+'" onclick="$.closeModal()" class="external button button-fill button-md">下载模板</a>',].join('')
+          :
+          ['<a href="javascript:void(0)" class="external button button-fill button-md" data-clipboard-text="'+response.data.link+'" data-down-el>复制下载链接</a>'].join('')
+        );
+
+        //ios 复制下载地址
+        var copy = document.querySelector('[data-down-el]');
+        if(copy){   
+          var clipboard = new Clipboard(copy);        
+          clipboard.on('success', function(e) {
+              $.closeModal();
+              self.modal_8();
+              clipboard.destroy();
+          });
+        }
+      });
+
+      //发送邮件
+      var sendEmail = $('[data-role="send-email"]');
+      if(sendEmail.length>0){
+        sendEmail.one('click',function(){
+          $.closeModal();
+          $.showPreloader('邮件发送中');
+          $.post('/pcenter/roll/sendMailXlzmTemplate', function(response){
+              $.hidePreloader();
+              if(response.msgCode!=200){
+                $.alert(response.message);
+                return;
+              }
+              self.modal_7(true,'已发送模板到你的邮箱',response.data);
+          });
+        })
+      }
+    },
+
+    //温馨提示
+    'modal_6':function (){
+      $.modal({
+        title:  '温馨提示<span class="icon icon-close" onclick="$.closeModal()"></span>',
+        text: [
+          '<div class="text-center">',
+            '<span class="icon icon-exclamation text-orange-dark" style="font-size:3.5rem;line-height:1.1em;margin-top:.4rem;"></span>',
+            '<div>请先完善全部资料</div>',
+          '</div>',
+          '<div class="margin-t_8em">',
+            '<a href="javascript:void(0)" onclick="$.closeModal()" class="button button-fill button-md">确定</a>',
+          '</div>'
+        ].join(''),
+        extraClass:'my-modal'
+      });
+    },
+
+    //'已发送模板到你的邮箱'温馨提示
+    'modal_7':function (isSuc,msg,email){
+      /*
+       * @isSuc 成功true,失败false
+       * @mes   结果信息
+      */
+      isSuc?(isSuc=true):(isSuc=false);
+      msg||(msg='');
+      email||(email='');
+
+      $.modal({
+        title:  '温馨提示<span class="icon icon-close" onclick="$.closeModal()"></span>',
+        text: [
+          '<div class="text-center">',
+            '<span class="icon '+(isSuc?'icon-check-circle text-green':'icon-exclamation text-orange-dark')+'" style="font-size:3.5rem;line-height:1.1em;margin-top:.4rem;"></span>',
+            '<div>'+msg+'</div>',
+            '<div style="font-size:.65rem;">'+email+'</div>',
+          '</div>',
+          '<div class="margin-t_8em">',
+            '<a href="javascript:void(0)" onclick="$.closeModal()" class="button button-fill button-md">确定</a>',
+          '</div>'
+        ].join(''),
+        extraClass:'my-modal'
+      });
+    },
+
+    //'已复制模板下载链接'温馨提示
+    'modal_8':function (){
+      $.modal({
+        title:  '温馨提示<span class="icon icon-close" onclick="$.closeModal()"></span>',
+        text: [
+          '<div class="text-center">',
+            '<span class="icon icon-exclamation text-orange-dark" style="font-size:3.5rem;line-height:1.1em;margin-top:.4rem;"></span>',
+            '<div>已复制模板下载链接</div>',
+            '<div style="font-size:.65rem;">你可以粘贴到浏览器或发送链接到微信、QQ</div>',
+          '</div>',
+          '<div class="margin-t_8em">',
+            '<a href="javascript:void(0)" onclick="$.closeModal()" class="button button-fill button-md">确定</a>',
+          '</div>'
+        ].join(''),
+        extraClass:'my-modal'
+      });
+    },
+
+    //毕业电子注册号证明+学生证原件 样例
+    'modal_9':function (){
+      var domModal=$.modal({
+        title:  '毕业信息样例<span class="icon icon-close" onclick="$.closeModal()"></span>',
+        text: [
+          '<div class="row cleafix margin-t1rem">',
+            '<div class="col-50">',
+              '<figure class="margin-none">',
+                '<img src="'+this.path+'u131.jpg" data-large="'+this.path+'u131-lg.jpg" class="full-width" height="100" title="毕业电子注册号" />',
+                '<div class="img-label2 margin-t_5em">毕业电子注册号</div>',
+              '</figure>',
+            '</div>',
+            '<div class="col-50">',
+              '<figure class="margin-none">',
+                '<img src="'+this.path+'u101.jpg" data-large="'+this.path+'u101-lg.png" class="full-width" height="100" title="学生证原件" />',
+                '<div class="img-label2 margin-t_5em">学生证原件</div>',
+              '</figure>',
+            '</div>',
+          '</div>',
+          '<div class="margin-t_8em">',
+            '<a href="javascript:void(0)" onclick="$.closeModal()" class="button button-fill button-md">确定</a>',
+          '</div>'
+        ].join(''),
+        extraClass:'my-modal'
+      });
+
+      this.fixModal(domModal);
+
+      this.showLargePhoto($(domModal).find('img'));
+    },
+
+    //毕业证原件+《中国高等教育学历认证报告》或《教      育部学历证书电子注册备案表》原件 样例
+    'modal_10':function (){
+      var domModal=$.modal({
+        title:  '毕业信息样例<span class="icon icon-close" onclick="$.closeModal()"></span>',
+        text: [
+          '<div class="text-center">',
+            '<img src="'+this.path+'img4.jpg" data-large="'+this.path+'img4-lg.png" style="max-width:70%;" height="130" title="毕业证原件照片" />',
+          '</div>',
+          '<div class="margin-t_8em text-left" style="font-size:0.7rem">',
+            '1.因改名导致毕业证书与身份证上姓名不符须有户口本变更记录或户籍所在地所出具的单独证明。（户籍所在地派出所出具的单独证明内容应包含本人现用名、曾用名、身份证号、姓名变更时间及原因、并粘贴本人免冠照片加盖骑缝章，姓名全部变更要出具公证书） <div class="margin-t_5em">2.毕业学校笔误导致毕业证书与身份证上姓名不符， 须提供学校出具的证明，并加盖学校印章。</div>',
+          '</div>',
+          '<div class="row cleafix margin-t1rem">',
+            '<div class="col-50">',
+              '<figure class="margin-none">',
+                '<img src="'+this.path+'img5.jpg" data-large="'+this.path+'img5-lg.png" class="full-width" height="200" title="中国高等教育学历认证报告" />',
+                '<div class="img-label2 margin-t_5em">中国高等教育学历认证报告</div>',
+              '</figure>',
+            '</div>',
+            '<div class="col-50">',
+              '<figure class="margin-none">',
+                '<img src="'+this.path+'img6.jpg" data-large="'+this.path+'img6-lg.png" class="full-width" height="200" title="教育部学历证书电子注册备案表" />',
+                '<div class="img-label2 margin-t_5em">教育部学历证书电子注册备案表</div>',
+              '</figure>',
+            '</div>',
+          '</div>',
+          '<div class="margin-t_8em text-left" style="font-size:0.7rem">*报读本科专业的学生必须提供《教育部学历证书电子注册备案表》[学信网上下载]（注意：1991年 - 2001年的专科毕业生需提供《中国高等教育学历认证报告》）</div>',
+          '<div class="margin-t_8em">',
+            '<a href="javascript:void(0)" onclick="$.closeModal()" class="button button-fill button-md">确定</a>',
+          '</div>'
+        ].join(''),
+        extraClass:'my-modal'
+      });
+
+      this.fixModal(domModal);
+
+      this.showLargePhoto($(domModal).find('img'));
+    },
+
+    //国家开放大学或广州电大学生证原件 样例
+    'modal_11':function (){
+      var domModal=$.modal({
+        title:  '学生证原件样例<span class="icon icon-close" onclick="$.closeModal()"></span>',
+        text: [
+          '<div class="text-center margin-t1rem">',
+            '<img src="'+this.path+'u101.jpg" data-large="'+this.path+'u101-lg.png" style="max-width:70%;" height="130" title="国开大学或广州电大学生证原件" />',
+          '</div>',
+          '<div class="margin-t1rem">',
+            '<a href="javascript:void(0)" onclick="$.closeModal()" class="button button-fill button-md">确定</a>',
+          '</div>'
+        ].join(''),
+        extraClass:'my-modal'
+      });
+
+      this.fixModal(domModal);
+
+      this.showLargePhoto($(domModal).find('img'));
+    },
+
+    //成绩单原件 样例
+    'modal_12':function (){
+      var domModal=$.modal({
+        title:  '成绩单原件样例<span class="icon icon-close" onclick="$.closeModal()"></span>',
+        text: [
+          '<div class="text-center margin-t1rem">',
+            '<img src="'+this.path+'u129.jpg" data-large="'+this.path+'u129-lg.png" style="max-width:70%;" height="130" title="成绩单原件样例" />',
+          '</div>',
+          '<div class="margin-t1rem">',
+            '<a href="javascript:void(0)" onclick="$.closeModal()" class="button button-fill button-md">确定</a>',
+          '</div>'
+        ].join(''),
+        extraClass:'my-modal'
+      });
+
+      this.fixModal(domModal);
+
+      this.showLargePhoto($(domModal).find('img'));
+    },
+
+    //录取名册或入学通知书 样例
+    'modal_13':function (){
+      var domModal=$.modal({
+        title:  '录取名册原件样例<span class="icon icon-close" onclick="$.closeModal()"></span>',
+        text: [
+          '<div class="text-center margin-t1rem">',
+            '<img src="'+this.path+'u130.jpg" data-large="'+this.path+'u130-lg.png" style="max-width:70%;" height="130" title="录取名册原件样例" />',
+          '</div>',
+          '<div class="margin-t_8em text-left" style="font-size:0.7rem">大专入学录取名册原件并盖存档部门公章，或大专入学通知书。（以上材料原件需有省教育行政部门公章才有效）</div>',
+          '<div class="margin-t1rem">',
+            '<a href="javascript:void(0)" onclick="$.closeModal()" class="button button-fill button-md">确定</a>',
+          '</div>'
+        ].join(''),
+        extraClass:'my-modal'
+      });
+
+      this.fixModal(domModal);
+
+      this.showLargePhoto($(domModal).find('img'));
+    },
+
+    //承诺书 样例
+    'modal_14':function (){
+      var domModal=$.modal({
+        title:  '承诺书原件样例<span class="icon icon-close" onclick="$.closeModal()"></span>',
+        text: [
+          '<div class="text-center margin-t1rem">',
+            '<img src="'+this.path+'u132.jpg" data-large="'+this.path+'u132-lg.png" style="max-width:70%;border:1px solid #ccc;" height="200" title="承诺书原件样例" />',
+          '</div>',
+          '<div class="margin-t_8em text-center" style="font-size:0.7rem">国家开放大学（广州）开放教育预科生信息表（承诺书）</div>',
+          '<div class="margin-t1rem">',
+            '<a href="javascript:void(0)" onclick="$.closeModal()" class="button button-fill button-md">确定</a>',
+          '</div>'
+        ].join(''),
+        extraClass:'my-modal'
+      });
+
+      this.fixModal(domModal);
+
+      this.showLargePhoto($(domModal).find('img'));
+    },
+
+    //应届毕业生证明 样例
+    'modal_15':function (){
+      var domModal=$.modal({
+        title:  '毕业生证明原件样例<span class="icon icon-close" onclick="$.closeModal()"></span>',
+        text: [
+          '<div class="text-center margin-t1rem">',
+            '<img src="'+this.path+'u133.jpg" data-large="'+this.path+'u133-lg.png" style="max-width:70%;border:1px solid #ccc;" height="200" title="证明原件样例" />',
+          '</div>',
+          '<div class="margin-t_8em text-center" style="font-size:0.7rem">普通高等学校应届毕业生证明</div>',
+          '<div class="margin-t1rem">',
+            '<a href="javascript:void(0)" onclick="$.closeModal()" class="button button-fill button-md">确定</a>',
+          '</div>'
+        ].join(''),
+        extraClass:'my-modal'
+      });
+
+      this.fixModal(domModal);
+
+      this.showLargePhoto($(domModal).find('img'));
+    },
+
+    //显示大图
+    'showLargePhoto':function($img){
+      if( $img.length>0 ){
+        $img.one('click', function(event) {
+          var initIndex=$.inArray(this,$img);
+          initIndex=initIndex?initIndex:0;
+
+          var arrPhotos=[];
+          $img.each(function(index, el) {
+            var obj={};
+            obj.url=$(this).attr('data-large');
+            obj.caption=this.title?this.title:'';
+            arrPhotos.push(obj);
+          });
+
+          $.closeModal();
+
+          //api: http://www.swiper.com.cn/api/index.html
+          $.photoBrowser({
+            photos : arrPhotos,
+            theme: 'dark',
+            ofText:'\/',
+            initialSlide:initIndex,
+            //swipeToClose:false,
+            expositionHideCaptions:true,
+            type: 'standalone',
+            preloadImages: false,
+            lazyLoading: true,
+            onLazyImageReady: function(swiper){
+              var $c=$(swiper.swiperContainer[0]);
+              var $activedImg=$c.find('img').eq(swiper.activeIndex);
+              
+              if($activedImg.height()>$c.height()){
+                $activedImg.parent().height('100%');
+              }
+            }            
+          }).open();
+        });
+        
+      }
+    },
+    //当弹窗的高度超过屏幕的高度，调整弹窗适应
+    'fixModal':function(domModal){
+      $(domModal).one('transitionend webkitTransitionEnd', function(event) {
+        var $boxH=$(this).height();
+        var $winH=$(window).height();
+        var $modalInner=$(this).find('.modal-inner');
+        var $modalText=$(this).find('.modal-text');
+        var $modalTextH=$modalText.height();
+        var offsetTop=$(this).offset().top;
+        var rem=$('html').css('font-size');
+        rem=rem.replace('px','');
+
+        var differ=$boxH-1.5 * Math.floor(rem)- $modalInner.children('.modal-title').height();
+        
+        
+        if( differ < $modalTextH ){
+          $modalText.css({
+              'overflow-y': 'auto'
+            }).height( differ );
+        }
+        
+      });
+    },
+
+    //上传图片弹窗
+    'uploadModal':function (imgURL){
+      var domModal=$.modal({
+        title:  '图片上传<span class="icon icon-close" onclick="$.closeModal()"></span>',
+        text: $('#img-upload-temp').html(),
+        extraClass:'my-modal'
+      });
+
+      //清除生成的动态表单
+      $(domModal).find('.icon-close,[data-role="cancel"]').on('click', function(event) {
+        var ifrm=$('#ifr');
+        if(ifrm){
+          ifrm.remove();
+        }
+      });
+
+      ;(function($){
+        //var $img=$('.process-image');
+        if(imgURL!=''){
+          controlBusiness(imgURL);
+        }
+
+        //重置
+        $('.icon-reset').click(function(event) {
+          $('.process-image').cropper('reset');
+        });
+
+        //向右旋转
+        $('.icon-rotate-right').click(function(event) {
+          $('.process-image').cropper('rotate', 45);
+        });
+
+        //动态创建iframe图片上传框
+        createUploadIframe();
+
+        //选择图片
+        $('#sel-pic').click(function(event) {
+            createUploadIframe();
+            $('#ifr').contents().find("#file").trigger('click');
+        });
+
+        //确定裁切图片
+        $('[data-role="sure-cropper"]').click(function(event) {
+            var $img=$('.process-image');
+            if($img.length>0){
+              $img.cropper('disable');
+
+              var $box=$('.upload-box.actived');
+              var $loadImg=$box.find('img');
+              var src=$img.attr('src');
+              src=src.replace(/\/resize,h_4000,w_4000\/auto-orient,1/g,'');
+              var url=src+$img.attr('data-crop-param');
+
+              if($loadImg.length<=0){
+                $box.find('.upload-in').prepend('<img src="'+url+'">');
+                $loadImg=$box.find('img');
+                $box.find('.uploader').remove();                
+              }
+
+              $loadImg.attr('src',url);
+
+              $box.find('.file-path').val(url).attr('data-change-val','true');
+
+              $(this).addClass('disabled').prop('disabled',true)
+                  .children('.preloader').show().siblings('.text').text('图片处理中');
+
+              $loadImg.on('load', function() {
+                  Zepto.closeModal();
+              });
+            }
+            else{
+              Zepto.closeModal();
+            }
+        });
+
+      })(jQuery);
+
+      this.fixModal(domModal);
+    }
+  }
+
+  /*
+  * 表单验证
+  * @jqForm:form 的jq 对象
+  */
+  window.checkform=function(jqForm){
+    var hasFin=true;
+    $('[data-check="1"]',jqForm).each(function(index, el) {
+      var that=this;
+      if( $.trim($(this).val())=='' ){
+        $.alert($(this).attr('data-msg-empty'),function(){
+          $(that).focus();
+        });
+        hasFin=false;
+        return false;
+      }
+      else{
+        var reg=new RegExp($(this).attr('data-rule'),'g');
+        if( !reg.test($(this).val()) ){
+          $.alert($(this).attr('data-msg-error'),function(){
+            $(that).focus();
+          });
+          hasFin=false;
+          return false;
+        }
+      }
+    });
+
+    return hasFin;
+  }
+
+  ;(function(){
+      // Android 手机下输入框获取焦点时, 输入法挡住输入框的 bug
+      if (/Android/gi.test(navigator.userAgent)) {
+          window.addEventListener('resize', function () {
+              if (document.activeElement.tagName == 'INPUT' || document.activeElement.tagName == 'TEXTAREA') {
+                  window.setTimeout(function () {
+                      document.activeElement.scrollIntoViewIfNeeded();
+                  }, 0);
+              }
+          })
+      }
+  })(window);
+
+  //内容编辑
+  $('body').on('click','.input-edit',function () {
+    var that=this;
+    var html=[
+      '<div class="popup popup-edit-box">',
+        '<header class="bar bar-nav bar-nav-top">',
+          '<a class="button button-link button-nav pull-left close-popup" href="#">',
+              '<span class="icon icon-left"></span>',
+          '</a>',
+          '<button class="button pull-right padding-none text-white border-none close-popup">',
+            '取消',
+          '</button>',
+          '<h1 class="title">修改\"{1}\"</h1>',
+        '</header>',
+        '<div class="content">',
+          '<div class="content-padded">',
+            '{0}',
+            '<div class="margin-t1rem"><button type="button" class="button button-fill full-width button-md" data-role="save">保存</button></div>',
+          '</div>',
+        '</div>',
+      '</div>'
+    ].join('');
+
+    html=html.replace(/\{0\}/g,'<input type="'+(that.type?that.type:'text')+'" value="'+that.value+'" data-focus="focus-last" required="required" class="popup-input-edit" placeholder="输入关键字..."/>');
+    html=html.replace(/\{1\}/g,$(that).attr('data-title'));
+
+    $.popup(html);
+    $('.popup-edit-box').on('opened',function(event) {
+      event.preventDefault();
+      var $this=$(this);
+      var $inputEdit=$(".popup-input-edit",$this);
+      var $sureBtn=$('[data-role="save"]',$this);
+
+      $inputEdit.trigger('click');
+
+      $sureBtn.on('click', function(event) {
+        event.preventDefault();
+        if(!$this.attr('required') && $inputEdit.val()==''){
+          $.alert('"'+$(that).attr('data-title')+'"不能为空');
+          return; 
+        }
+        else{
+          var reg=new RegExp($(that).attr('data-rule'),'g');
+          if( !reg.test($inputEdit.val()) ){
+            $.alert($(that).attr('data-msg-error'));
+            return;
+          }
+        }
+
+        that.value=$inputEdit.val();
+
+        $.closeModal('.popup-edit-box')
+      });
+    });
+  });
+
+  //第一次点击文本框时，光标置后
+  $('body').on('click','[data-focus="focus-last"]',function () {
+    if( $(this).attr('data-has-focus')!='1' ){
+      var t=this.value;
+      $(this).val("").focus().val(t);
+      $(this).attr('data-has-focus','1');
+    }
+  });
+
+  /**********各页面业务逻辑***********/
+
+  //完善个人资料(基础信息)
+  $(document).on("pageInit","#page-index", function(e, pageId, $page) {
+    //显示 加载器
+    $.showPreloader();
+
+    $page.children('.bar-nav-top,.bar-footer').hide();
+
+    //1.0.1 学员登录后获取相关状态
+    $.getJSON('/pcenter/getStatusByPC',function(getStatus){
+      if(getStatus.msgCode==200){
+        var data=getStatus.data;
+        if(data){
+          var contentJson=data.content;
+            //审核状态类型
+            if( data.type===0 ){
+              
+              if( contentJson ){
+                //资料完善状态-已完善
+                if( contentJson.perfectStatus==1 && !$('body').data('re-sign')){
+                  $.router.load("#page-step6",true);//跳到结果页面
+                }
+                //资料完善状态-未完善
+                else{
+                
+                  $.getJSON('/pcenter/roll/getBaseInfo', function(renderData, textStatus) {
+                    $.hidePreloader();
+                    if(!renderData.data){
+                      $.alert('数据异常');
+                      return;
+                    }
+                    $page.children('.bar-nav-top,.bar-footer').show();
+
+                    var renderHtml = template('index-temp',renderData.data);
+                    $('.content',$page).html(renderHtml);
+
+                    //检测是否完善表单
+                    $('[data-check="1"]',$page).each(function(index, el) {
+                      if($(this).val()==''){
+                        $('.button-step',$page).removeClass('bg-green');
+                        return false;
+                      }
+                    });
+
+                    
+
+                    //选择 籍贯
+                    $("#city-picker2").cityPicker({
+                      showDistrict: false,
+                      onChange: function (picker, values, displayValues) {
+                        //console.log(values, displayValues);
+                      }
+                    });  
+
+                    //选择 户口所在地
+                    $("#city-picker1").cityPicker({
+                      showDistrict: false,
+                      onChange: function (picker, values, displayValues) {
+                        //console.log(values, displayValues);
+                      }
+                    });
+
+                    //选择 出生日期
+                    $('[data-role="date-picker"]',$page).calendar(
+                      renderData.data.info.csrq?{
+                        value: [convertDate($('[data-role="date-picker"]',$page).val())]
+                      }:{}
+                    );
+
+                  });
+                }
+              }
+              else{
+                $.hidePreloader();
+                $.alert('账户异常');
+              }
+            }
+            else{
+              $.hidePreloader();
+              $.alert('账户异常');
+            }
+        }
+      }
+    });
+
+    
+    
+    $('.button-step',$page).unbind('click').click(function(event) {
+      var that=this;
+      var $jqForm=$('#info-form',$page);
+
+      //检测是否还没完善资料，如果还没，就中断业务
+      if( !checkform( $jqForm ) ) return;
+      
+      $.showPreloader('数据提交中...');
+
+      //出生日期 数据在提交前进行转化YYYYMMDD
+      var params=$jqForm.serializeArray();
+      $.each(params, function(index, val) {
+         if(val.name=='csrq'){
+          val.value=val.value.replace(/[-\/]/g,'');
+          return false;
+         }
+      });
+
+      $.post('/pcenter/roll/updateBaseInfo', params, function(response){
+        $.hidePreloader();
+
+        if(response.msgCode!=200){
+          $.alert(response.message);
+          return;
+        }
+
+        //$(that).unbind('click');
+        $.router.load("#page-step1",true);
+
+      })
+    });
+  });
+
+  //完善个人资料(通讯信息)
+  $(document).on("pageInit","#page-step1", function(e, pageId, $page) {
+    //显示 加载器
+    $.showPreloader();
+
+    $.getJSON('/pcenter/roll/getBaseInfo', function(renderData, textStatus) {
+      //关闭 加载器
+      $.hidePreloader();
+      var renderHtml = template('step1-temp',renderData.data);
+      $('.content',$page).html(renderHtml);
+
+      //检测是否完善表单
+      $('[data-check="1"]',$page).each(function(index, el) {
+        if($(this).val()==''){
+          $('.button-step',$page).removeClass('bg-green');
+          return false;
+        }
+      });
+
+    });
+    
+    $('.button-step',$page).unbind('click').click(function(event) {
+      var that=this;
+      var $jqForm=$('#info-form1',$page);
+
+      //检测是否还没完善资料，如果还没，就中断业务
+      if( !checkform( $jqForm ) ) return;
+      
+      $.showPreloader('数据提交中...');
+
+      var params=$jqForm.serializeArray();
+
+      $.post('/pcenter/roll/updateBaseInfo', params, function(response){
+        $.hidePreloader();
+
+        if(response.msgCode!=200){
+          $.alert(response.message);
+          return;
+        }
+
+        //$(that).unbind('click');
+        $.router.load("#page-step2",true);
+
+      })
+    });
+  });
+
+  //完善个人资料(报读信息)
+  $(document).on("pageInit","#page-step2", function(e, pageId, $page) {
+    
+    //显示 加载器
+    $.showPreloader();
+
+    $.getJSON('/pcenter/roll/getBaseInfo', function(renderData, textStatus) {
+      //关闭 加载器
+      $.hidePreloader();
+      var renderHtml = template('step2-temp',renderData.data);
+      $('.content',$page).html(renderHtml);
+
+    });
+    
+    $('.button-step',$page).unbind('click').click(function(event) {
+      var that=this;
+      $.router.load("#page-step3",true);
+    });
+  });
+
+  //完善个人资料(原最高学历)
+  $(document).on("pageInit","#page-step3", function(e, pageId, $page) {
+
+    //显示 加载器
+    $.showPreloader();
+
+    $.getJSON('/pcenter/roll/getBaseInfo', function(renderData, textStatus) {
+      //关闭 加载器
+      $.hidePreloader();
+      var renderHtml = template('step3-temp',renderData.data);
+      $('.content',$page).html(renderHtml);
+
+      //原学科
+      var $EXSUBJECT=$('[name="exsubject"]',$page);
+      //原学科门类
+      var $EXSUBJECTKIND=$('[name="exsubjectkind"]',$page);
+      if( renderData.data.dicExsubjectList && $EXSUBJECTKIND.length>0 ){
+        var html=[
+          '<option value="">请选择原学科门类</option>',
+          '{{each node.dicExsubjectkindList}}',
+            '<option value="{{$value.code}}" {{selectedVal===$value.code?"selected":""}}>{{$value.name}}</option>',
+          '{{/each}}'
+        ].join('');
+
+        $EXSUBJECTKIND.on('click', function(event) {
+          if($EXSUBJECT.val()===''){
+            $.alert('请先选择原学科',function(){
+              $EXSUBJECT.focus();
+            });
+          }
+        });
+
+        if($EXSUBJECT.val()!=''){
+
+          //初始化“原学科门类”的数据
+          $.each(renderData.data.dicExsubjectList, function(index, node) {
+             if( $EXSUBJECT.val()==node.code ){
+              var render=template.compile(html)
+              var r=render({
+                node:node,
+                selectedVal:( renderData.data.info.exsubjectkind?renderData.data.info.exsubjectkind:'' )
+              });
+              $EXSUBJECTKIND.html(r);
+              return false;
+             }
+          });
+
+          $EXSUBJECT.on('change', function(event) {
+            var key=$EXSUBJECT.val();
+
+            $.each(renderData.data.dicExsubjectList, function(index, node) {
+               if( $EXSUBJECT.val()==node.code ){
+                var render=template.compile(html)
+                var r=render({
+                  node:node,
+                  selectedVal:''
+                });
+                $EXSUBJECTKIND.html(r);
+                return false;
+               }
+            });
+          });
+        }
+      }
+
+      //检测是否完善表单
+      $('[data-check="1"]',$page).each(function(index, el) {
+        if($(this).val()==''){
+          $('.button-step',$page).removeClass('bg-green');
+          return false;
+        }
+      });
+
+      //选择 毕业时间
+      $('[data-role="date-picker"]',$page).calendar(
+        renderData.data.info.exgraduatedtime?{
+          value: [$('[data-role="date-picker"]',$page).val()]
+        }:{}
+      );
+
+    });
+    
+    $('.button-step',$page).unbind('click').click(function(event) {
+      var that=this;
+
+      var $jqForm=$('#info-form3',$page);
+
+      //检测是否还没完善资料，如果还没，就中断业务
+      if( !checkform( $jqForm ) ) return;
+      
+      $.showPreloader('数据提交中...');
+
+      var params=$jqForm.serializeArray();
+      //毕业时间 数据在提交前进行转化YYYYMMDD
+      /*$.each(params, function(index, val) {
+         if(val.name=='exgraduatedtime'){
+          val.value=val.value.replace(/[-\/]/g,'');
+          return false;
+         }
+      });*/
+
+      $.post('/pcenter/roll/updateBaseInfo', params, function(response){
+        $.hidePreloader();
+
+        if(response.msgCode!=200){
+          $.alert(response.message);
+          return;
+        }
+
+        $.router.load("#page-step4",true);
+
+      });
+    });
+  });
+
+  /*完善证件资料*/
+
+  ;(function($){
+    //图片回调处理方法（跨域上传图片时，图片上传后需要调用的方法）
+    window.imgCallback=function(ajaxFilelist){
+
+      if(ajaxFilelist){
+        
+        var url=ajaxFilelist.resultList[0].FILE_PATH+'?x-oss-process=image/resize,h_4000,w_4000/auto-orient,1';
+
+        controlBusiness(url);
+        
+        $('[data-role="sure-cropper"]').removeClass('disabled').prop('disabled',false)
+                  .children('.preloader').hide().siblings('.text').text('确定');
+      }
+    }
+
+    //图片上传成功后，处理逻辑
+    window.controlBusiness=function(url){
+      var $imgContainer=$('.img-process-container');
+      var $img=$('.process-image');
+
+      if($img.length<=0){
+        $imgContainer.append('<img class="process-image" src="'+url+'">');
+        imgCropper();
+      }
+      else{
+        $img.attr('src',url).cropper('replace',url);
+      }
+      $('.preloader',$imgContainer).show();
+    }    
+
+    //图片裁切初使化
+    window.imgCropper=function (){
+      var $img=$('.process-image');
+      var $loader=$('.img-process-container > .preloader');
+
+      if($img.length<=0 && !$img.attr('src')) return;
+      $loader.show();
+      $img.cropper({
+        crop: function(data) {
+          // 出来裁切后的图片数据.
+          var param='/rotate,{0}/crop,x_{1},y_{2},w_{3},h_{4}/{5}';
+          param=param.format(
+            Math.round(data.rotate),
+            Math.round(data.x),
+            Math.round(data.y),
+            Math.round(data.width),
+            Math.round(data.height),
+            (param.indexOf('resize,h_4000,w_4000/auto-orient,1')==-1?'resize,h_4000,w_4000/auto-orient,1':'')
+          );
+
+          $img.attr('data-crop-param',param);
+        },
+        build:function(){
+          $loader.show();
+        },
+        built:function () {
+          $loader.hide();
+        }
+      });
+    };
+
+    //动态创建iframe上传文件
+    window.createUploadIframe=function (){
+      var ifrm=$('#ifr');
+      if(ifrm){
+        ifrm.remove();
+      }
+      $('body').append('<iframe id="ifr" name="ifr" src="about:blank" style="display:none;"></iframe>');
+      ifrm=document.getElementById('ifr');
+      var doc=ifrm.contentWindow.document;
+
+      doc.open();
+      doc.write(template('h-tmp',{basePath:location.protocol+'//'+location.host}));
+      doc.close();
+
+      //显示图片
+      $(ifrm.contentWindow.document).find('#file').on('change', function(event) {
+        event.preventDefault();
+
+        $('[data-role="sure-cropper"]').addClass('disabled').prop('disabled',true)
+                  .children('.preloader').show().siblings('.text').text('图片上传中');
+
+        var ifrm=document.getElementById('ifr');
+        var doc=ifrm.contentWindow.document;
+        
+        doc.forms.submitForm.submit();
+      });
+    }
+
+  })(jQuery);
+
+  $(document).on("pageInit","#page-step4", function(e, pageId, $page) {
+    
+      $.showPreloader();
+
+      if(!window.xxId){
+        $.getJSON('/pcenter/home/copyright/getCopyright', function(json) {
+
+          if(json.msgCode==200 && json.data){
+            window.xxId=json.data.xxId;
+            getCertificateInfo(window.xxId);
+          }
+          else{
+            $.hidePreloader();
+            $.modal({
+              text : '加载出错',
+              buttons : [
+                {
+                  text: '刷新重新加载',
+                  onClick: function() {
+                    window.location.reload();
+                  }
+                }
+              ]
+            });
+          }
+        });
+      }
+      else{
+        getCertificateInfo(window.xxId);
+      }
+
+      function getCertificateInfo(xxId){
+        $.getJSON('/pcenter/roll/getCertificateInfo', function(renderData, textStatus) {
+          var renderHtml = template('step4-temp',$.extend({}, renderData.data, {isMcDonaldScholl:xxId=='9b2f42ececf64f38af621554d1ea5b79'?true:false
+            })
+          );
+          $('.content',$page).html(renderHtml);
+
+          //图片懒加载 https://github.com/jieyou/lazyload/
+          $('.lazy').lazyload({
+              event : "myevent",
+              effect:'fadein',
+              placeholder_data_img:'http://css.gzedu.com/ouchgzee_com/person_center/complete-info-mobile/images/loading.gif',
+              load:function($elements, elements_left, options){
+                
+              }
+          }).trigger("myevent");
+
+          //检测是否完善表单
+          $('.panel-box',$page).each(function(index, el) {
+            var that=this;
+            $('.file-path',this).each(function(index, el) {
+              var $p=$(this).closest('.stu-type-item');
+              if($(this).val()==''){
+                if($p.length>0){
+                  if(($p.css('display')).toLowerCase()=='block'){
+                    $('.button-step',$page).removeClass('bg-green');
+                  }
+                }
+                else{
+                  $('.button-step',$page).removeClass('bg-green');
+                }
+                
+                return false;
+              }
+            });
+          });
+
+          $(".upload-box",$page).each(function(index, el) {
+            $('.upload-in',this).height($(this).height());
+          });
+
+          //选择学历证明类型
+          var $tabsContainer=$('[data-role="stu-type-tap"][data-type="change"]');
+          if($tabsContainer.length>0){
+            $tabsContainer.children('li').on('click',function(event) {
+              var index=$(this).attr('data-id');
+              index=parseInt(index);
+              $(this).children('input').attr('checked', 'checked')
+              $(this).addClass('actived').siblings().removeClass('actived').children('input').removeAttr('checked');
+
+              var $typeCnt=$(this).closest('[data-role="stu-type-tap"]').next(".stu-type-cnt");
+              if($typeCnt.length>0){
+                var $cnt=$typeCnt.children(".stu-type-item").eq(index); 
+                $cnt.show().siblings().hide();
+                $(".upload-box",$cnt).each(function(index, el) {
+                  $('.upload-in',this).height($(this).height());
+                });
+              }
+            });
+          }
+
+          //选择毕业信息类型
+          var $tabsContainer3=$('[data-role="graduate-type-tap"]');
+          if($tabsContainer3.length>0){
+            $tabsContainer3.children('li').on('click',function(event) {
+              var index=$(this).index();
+              $(this).children('input').attr('checked', 'checked')
+              $(this).addClass('actived').siblings().removeClass('actived').children('input').removeAttr('checked');
+
+              $('[data-role="graduate-panel"] .view-sample').eq(index).show().siblings('.view-sample').hide();
+
+              var $typeCnt=$(this).closest('[data-role="graduate-type-tap"]').next(".stu-type-cnt");
+              if($typeCnt.length>0){
+                var $cnt=$typeCnt.children(".stu-type-item").eq(index); 
+                $cnt.show().siblings().hide();
+                $(".upload-box",$cnt).each(function(index, el) {
+                  $('.upload-in',this).height($(this).height());
+                });
+              }
+            });
+          }
+
+          //选择身份证类型
+          var $tabsContainer2=$('[data-role="stu-type-tap"][data-type="id-type"]');
+          if($tabsContainer2.length>0){
+            $tabsContainer2.children('li').on('click',function(event) {
+              $(this).children('input').attr('checked', 'checked')
+              $(this).addClass('actived').siblings().removeClass('actived').children('input').removeAttr('checked');
+            });
+          }
+
+          //选择区域证明/在读年级证明类型
+          var $tabsContainer3=$('[data-id="jzz-box"]');
+          if($tabsContainer3.length>0){
+            $tabsContainer3.children('li').on('click',function(event) {
+              var $c=$(this).children('input');
+              $c.attr('checked', 'checked');
+              $(this).addClass('actived').siblings().removeClass('actived').children('input').removeAttr('checked');
+
+              var $cnt=$('[data-id="jzz-cnt-box"][data-v="'+$c.val()+'"]');
+              
+              $cnt.show().siblings().hide();
+
+              $('[data-id="qz-txt"]').children().eq($c.val()).show().siblings().hide();
+              
+              $(".upload-box",$cnt).each(function(index, el) {
+                  $('.upload-in',this).height($(this).height());
+              });
+            });
+          }
+
+          $.hidePreloader();
+          
+          var postParams={};//存放更新的字段及内容
+
+          //下一步
+          $('.button-step',$page).unbind('click').click(function(event) {
+            var that=this;
+
+            //检测是否都已经上传了图片
+            var hasAllPost=true;
+            $('.file-path',$page).each(function(index, el) {
+              if(this.value==''){
+                var $p=$(this).closest('.stu-type-item');
+                if( ($p.length>0 && $p.css('display')=='block') || $p.length<=0 ){
+                  $.alert('请上传：'+$(this).attr('data-title'));
+                  hasAllPost=false;
+                  return false;
+                }
+              }
+              else{
+                if($(this).attr('data-change-val')=='true'){
+                  postParams[this.name]=this.value;
+                }
+              }
+            });
+            //如果存在有没上传的情况，就中断以下操作
+            if(!hasAllPost) return;
+
+            //序列化'最高学历类型'参数
+            if( $('[name="zgxlRadioType"]').length>0 ){
+              postParams['zgxlRadioType']=$('[name="zgxlRadioType"]:checked').val();
+            }
+            //序列化'身份证件类型'参数
+            if( $('[name="signupSfzType"]').length>0 ){
+              postParams['signupSfzType']=$('[name="signupSfzType"]:checked').val();
+            }
+
+            //序列化'毕业信息 类型'参数
+            if( $('[name="signupByzType"]').length>0 ){
+              postParams['signupByzType']=$('[name="signupByzType"]:checked').val();
+            }
+
+            //序列化'区域证明/在读年级证明 类型'参数
+            if( $('[name="signupJzzType"]').length>0 ){
+              postParams['signupJzzType']=$('[name="signupJzzType"]:checked').val();
+            }
+
+            
+            var params=$.param(postParams);
+            
+            //如果更新过，就重新提交，否则直接转到下一步
+            if(params!=''){
+              $.showPreloader('数据提交中...');
+
+              $.ajax({
+                type: 'POST',
+                url: '/pcenter/roll/updateCertificateInfo',
+                data: params,
+                success: function(response){
+                  $.hidePreloader();
+
+                  if(response.msgCode!=200){ 
+                    $.alert(response.message);
+                    return;
+                  }
+
+                  //$(that).unbind('click');
+                  $.router.load("#page-step5",true);
+                }
+              });
+            }
+            else{
+              //$(that).unbind('click');
+              $.router.load("#page-step5",true);
+            }
+            
+          });
+
+
+          var dEl=document.querySelector('[data-download-url]');
+          var clipboard;
+          if(dEl && $.device.ios){
+            clipboard = new Clipboard(dEl); 
+            clipboard.on('success', function(e) {
+                modalHelper.modal_8();
+                clipboard.destroy();
+            });
+          }
+
+          $page.on('click', '[data-download-url]', function(event) {
+            if($.device.ios){
+              event.preventDefault();
+              /*
+                var filePath=$(this).attr('href');
+
+                //ios 复制下载地址
+                if(clipboard){     
+                  clipboard.on('success', function(e) {
+                      modalHelper.modal_8();
+                      clipboard.destroy();
+                  });
+                }
+              */
+            }
+
+          });
+
+          //点击上传图片
+          $('.upload-box').click(function(event) {
+            $('.upload-box').removeClass('actived');
+            $(this).addClass('actived');
+
+            var url=$(this).find('.file-path').val()
+            modalHelper.uploadModal( url );
+          });
+
+        });
+      }
+  });
+
+  //确认签名
+  $(document).on("pageInit","#page-step5", function(e, pageId, $page) {
+
+    ;(function($){
+
+      $('.content',$page).html($("#step5-temp").html());
+    
+      //当前签名的字数
+      var sign_count = 0;
+      //最新的Base30
+      var currnetSignBase30Content;
+
+      function onPageLoad(signature){
+        if(signature){
+          //已存在签名数据,则点击重签后才进行签名初始化操作
+          var isFirstReSign = true;
+          $("#reSign").click(function(){
+            if(isFirstReSign){
+              $(".enroll_box_qianm").show();
+              $(".sign_block").css("padding","0 0 40px");
+              initSignature();
+              
+              isFirstReSign = false;
+            }
+            reSign();
+          });
+          
+        }else{
+          //尚未有签名,则正常初始化签名插件
+          $(".sign_block").css("padding","0 0 40px");
+          $(".enroll_box_qianm").show();
+          initSignature();
+          $("#reSign").click(function(){
+            reSign();
+          });
+        }
+      }
+
+      function initSignature(){
+        //初始化签名插件
+        $("#signature").jSignature({
+          width : '100%',
+          height : '100%'
+        });
+        //启动输入检测
+        //setInterval(checkSign, 500);
+      }
+
+      $('#confirm-btn').click(function(){
+          if($('#signup').val()!=''){ 
+              return;
+          }
+          else{
+            var base30 =jQuery("#signature").jSignature("getData", "base30");
+            if(!base30 || (base30.length == 2 && base30[1])=="" ){
+              Zepto.alert('请签名');
+              return;
+            }
+          }
+          checkSign();
+          addSign();
+          //关闭签名
+          
+      });
+
+      //检测用户的输入
+      function checkSign(){
+        var $signArea=$("#signature");
+        //获取Base30数据
+        var base30 = $signArea.jSignature("getData", "base30");
+        if(!base30 || base30.length != 2){
+          return;
+        }
+        var base30Content = base30[1];
+        if(!base30Content){
+          //空内容 不处理
+          return;
+        }
+        if(base30Content == currnetSignBase30Content){
+          //如果当前的BASE30与最新的BASE30一致,则认为用户已经书写完成
+          addSign();
+        }else{
+          //否则更新最新的BASE30内容
+          currnetSignBase30Content = base30Content;
+        }
+
+        
+      }
+
+      //将写字板的内容添加至展示区
+      function addSign(){
+        var $signArea=$("#signature");
+        var data = $signArea.jSignature("getData", "image");
+        if(data && data.length > 1){
+          sign_count++;
+          var src = "data:" + data[0] + "," + data[1];
+          //构建IMG标签
+          var img = $("<img name=\"preview_image\" class=\"preview_image\" />")
+          img.attr("id","preview_image_" + sign_count);
+          img.attr("src", src);
+
+          reSign();
+          
+          $(img).appendTo("#preview_images");
+          $("#signup").val(src);
+          //擦除写字板
+          erase();
+
+          $(".mark-over").show();
+          $signArea.jSignature("disable");
+        }
+      }
+
+      //重签
+      function reSign(){
+        var $signArea=$("#signature");
+        $(".mark-over").hide();
+        $signArea.jSignature("enable");
+        //if(sign_count > 0){
+          $("#preview_images").empty();
+          sign_count = 0;
+        //}
+        $("#signup").val('');
+        erase();
+      }
+
+      //擦除
+      function erase(){
+        $("#signature").jSignature("reset");
+      }
+
+      $(".checkbox").on('click', function(event) {
+        event.preventDefault();
+        $(this).toggleClass('actived');
+      });
+      
+      onPageLoad();
+    })(jQuery);
+
+    $('.button-step',$page).unbind('click').bind('click',function(event) {
+      var that=this;
+      if($('#signup').val()==''){
+        var base30 =jQuery("#signature").jSignature("getData", "base30");
+        if(!base30 || (base30.length == 2 && base30[1])!="" ){
+          $.alert('请确认签名');
+        }
+        else{
+          $.alert('请签名');
+        }
+        return;
+      }
+
+      if(!$('.checkbox').hasClass('actived')){
+        $.alert('请勾选我承诺信息的真实性')
+        return;
+      }
+
+      $.showPreloader('数据提交中...');
+
+      var params=$('#signup-form',$page).serialize();
+
+      $.post('/pcenter/roll/updateCertificateInfo', params, function(response){
+        $.hidePreloader();
+
+        if(response.msgCode!=200){
+          $.alert(response.message);
+          return;
+        }
+
+        $.router.load("#page-step6",true);
+      });
+      
+    });
+  });
+
+  $(document).on("pageInit","#page-step6", function(e, pageId, $page) {
+      $('body').data('re-sign',false)
+
+      if($('.modal').length<=0){
+        $.showPreloader();
+      }
+
+      $.getJSON('/pcenter/getStatusByPC', function(renderData, textStatus) {
+          if(renderData.data.content.auditStatus!=1){
+            $.hidePreloader();
+          }
+          if(renderData.msgCode==200){
+            var renderHtml = template('step6-temp',renderData.data.content);
+            $('.content',$page).html(renderHtml);
+
+            $('#note-cert').attr('src','/pcenter/roll/getNoticeToFile').on('load', function(event) {
+              $.hidePreloader();
+            });
+          }
+          else{//失败
+            $.modal({
+              text : renderData.message,
+              buttons : [
+                {
+                  text: '关闭'
+                }
+              ]
+            });
+          }
+      });
+
+      
+  });
+
+  //页面初使化
+  $.init();
+
+});
+</script>
+
+
+</body>
+</html>

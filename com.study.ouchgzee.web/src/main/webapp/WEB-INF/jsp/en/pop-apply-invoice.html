@@ -1,0 +1,276 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+</head>
+<body class="body-pop">
+<div class="u-panel overlay-wrapper">
+    <form class="theform">
+  	  <div class="u-panel-head">
+  	    申请发票
+  	    <span class="pop-close" data-role="pop-close"></span>
+    	</div>
+    	<div class="u-panel-body scroll-box">
+        <div class="padding15">
+            <table class="table-gray-th">
+                <tbody>
+                  <tr>
+                    <th width="25%" class="text-right">发票金额：</th>
+                    <td>￥3450</td>
+                  </tr>
+                  <tr>
+                    <th class="text-right">发票类型：</th>
+                    <td>
+                      <label>
+                        <input type="radio" name="r1" checked> 普通发票
+                      </label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="text-right">发票抬头：</th>
+                    <td>
+                      <label class="margin_r10">
+                        <input type="radio" name="r2"> 个人
+                      </label>
+                      <label class="margin_r10">
+                        <input type="radio" name="r2" checked> 单位
+                      </label>
+                      <span class="valid-control inline-block">
+                        <input placeholder="发票抬头" class="form-control" type="text" datatype="*" nullmsg="请填写发票抬头" style="width:230px;">
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="text-right">发票内容：</th>
+                    <td>
+                      <label>
+                        <input type="radio" name="r3" checked> 学费
+                      </label>
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
+
+            <div class="margin_b5 margin_t10">
+              请选择发票获取方式：
+              <label>
+                <input type="radio" name="r5" data-value="tab-1" checked> 快递寄送
+              </label>
+              <label class="margin_l10">
+                <input type="radio" name="r5" data-value="tab-2"> 自取
+              </label>
+            </div>
+
+            <div class="text-red margin_b5" data-id="tab-1">
+              快递寄送发票，采用到付的方式，你需要支付快递费。
+            </div>
+            <table class="table-gray-th">
+                <tbody data-id="tab-1">
+                  <tr>
+                    <th width="25%" class="text-right">收件人：</th>
+                    <td>
+                      <div class="valid-control">
+                        <input placeholder="收件人" class="form-control form-control-block" type="text" datatype="*" nullmsg="请填写收件人" value="李晓明">
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="text-right">联系电话：</th>
+                    <td>
+                      <div class="valid-control">
+                        <input placeholder="联系电话" class="form-control form-control-block" type="text" datatype="m|/(^(0[0-9]{2,3})-([2-9][0-9]{6,7})+(-[0-9]{1,4})?$)/g" nullmsg="请填写联系电话" errormsg="联系电话格式不对" value="13800138000">
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="text-right">邮寄地址：</th>
+                    <td>
+                      <div class="col-offset-5 clearfix" data-role="city-select">
+                        <div class="col-custom-3 valid-control">
+                          <select class="form-control form-control-block prov" data-value="广东省" datatype="*" nullmsg="请选择省份">
+                          </select>
+                        </div>
+                        <div class="col-custom-3 valid-control">
+                          <select class="form-control form-control-block city" data-value="广州市" datatype="*" nullmsg="请选择城市">
+                          </select>
+                        </div>
+                        <div class="col-custom-3 valid-control">
+                          <select class="form-control form-control-block dist" data-value="越秀区" datatype="*" nullmsg="请选择地区">
+                        </select>
+                        </div>
+                      </div>
+                      <div class="valid-control padding_t10">
+                        <input placeholder="详细地址" class="form-control form-control-block" type="text" datatype="*" nullmsg="请填写详细地址">
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody data-id="tab-2" style="display:none;">
+                  <tr>
+                    <th width="25%" class="text-right">自取地址：</th>
+                    <td>
+                      广州省广州市黄埔区创业路90号
+                    </td>
+                  </tr>
+                </tbody>
+            </table>
+
+            <div class="alert-panel padding_1l5 padding_r15 padding_t10 padding_b10 font12 font_gray margin_t10">
+              <dl>
+                  <dt>温馨提示：</dt>
+                  <dd>
+                  1. 只有学费才能申请开发票，其它费用如教材费、补考费等为代收代缴，不能开发票。
+                  </dd>
+                  <dd>
+                  2. 第三学期可以开第一学年的发票，第五学期可以开第二学年的发票。
+                  </dd>   
+              </dl>
+            </div>
+        </div>
+    	</div>
+    	<div class="u-panel-footer">
+    		<div class="in" align="right">
+          <button class="btn btn-md btn-gray margin_r10" data-role="close" style="width:100px;">取消</button>
+    			<button type="submit" class="btn btn-md btn-orange" data-role="sure" style="width:100px;">提交</button>
+    		</div>
+    	</div>
+    </form>
+    <div class="overlay bg-center" style="display:none;"></div>
+</div>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+<script type="text/javascript">
+require(['jquery','common'], function ($) {
+  //“x”关闭窗口
+  $('[data-role="pop-close"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  //关闭
+  $('[data-role="close"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  //省市区三级联动
+  require(['cityselect'],function(){
+    $('[data-role="city-select"]').cxSelect({
+        selects: ['prov', 'city', 'dist'],
+        data: cityJSON,
+        emptyStyle:"none"
+    });
+  });
+
+  //发票获取方式
+  $(':radio[data-value]').click(function(event) {
+    var vId=$(this).attr('data-value');
+    $('[data-id^=tab]').hide().filter('[data-id='+vId+']').show();
+  });
+
+  //表单验证
+  require(['Validform'],function(){
+    JPlaceHolder.init();
+
+    $('.valid-control').append([
+      '<div class="tooltip yellow_tip t_arrow tooltip-valid">',
+        '<div class="tooltip-in"></div>',
+        '<span class="t_arrow"><i class="arrow"></i><i class="arrow arrow_inner"></i></span>',
+      '</div>'
+    ].join(''));
+
+    $('[data-role="city-select"] select').change(function(event) {
+      $('[data-role="city-select"] select').each(function(index, el) {
+          var g=$(this).closest('.valid-control').siblings();
+          g.each(function(index, el) {
+            $(this).find('.form-control').removeClass('Validform_error');
+            $(this).find('.tooltip').hide().children('.tooltip-in').empty();
+          });
+      });
+    });
+
+    $.Tipmsg.r='';
+    $(".theform").Validform({
+      //showAllError:true,
+      ajaxPost:true,
+      ignoreHidden:true,
+      tiptype:function(msg,o,cssctl){
+        //msg：提示信息;
+          //o:{obj:*,type:*,curform:*},
+          //obj指向的是当前验证的表单元素（或表单对象，验证全部验证通过，提交表单时o.obj为该表单对象），
+          //type指示提示的状态，值为1、2、3、4， 1：正在检测/提交数据，2：通过验证，3：验证失败，4：提示ignore状态, 
+          //curform为当前form对象;
+        if(!o.obj.is("form")){
+          var objtip=o.obj.closest('.valid-control').find(".tooltip");
+          switch(o.type){
+              case 3:
+                objtip.children('.tooltip-in').text(msg).parent().show();
+                break;
+              default:
+                objtip.children('.tooltip-in').text('').parent().hide();
+                break;
+            }
+        }
+      },
+      beforeSubmit:function(curform){
+        $('.overlay').show();
+      },
+      callback:function(data){
+        //data 后台返回的数据对象结果
+        setTimeout(function(){
+          $('.overlay').hide();
+
+          var pop=$.tipsDialog({
+              width:300,
+              height:70,
+              zIndex:1110,
+              content: [
+                '<div class="text-center">',
+                  '<span class="btn btn-md btn-green border-radius padding_l20 padding_r20 padding_t10 padding_b10"><i class="alert-icon alert-icon-120x0"></i><em class="text-style-normal font18 margin_l10">提交成功</em></span>',
+                  //'<span class="btn btn-md btn-red border-radius padding_l20 padding_r20 padding_t10 padding_b10"><i class="alert-icon alert-icon-0x62"></i><em class="text-style-normal font18 margin_l5">发表失败</em></span>',
+                  //'<span class="btn btn-md btn-orange border-radius padding_l20 padding_r20 padding_t10 padding_b10"><i class="alert-icon alert-icon-56x62"></i><em class="text-style-normal font18 margin_l5">服务器繁忙，请稍后再试</em></span>',
+                '</div>'
+              ].join(''),
+              init:function(){
+                var $box=$('[data-pop-id="tips"]');
+                $box.find('.u-pop-content').addClass('no-bg')
+              }
+          });
+
+          setTimeout(function(){
+              //$.closeDialog(pop);
+              parent.$.closeDialog(frameElement.api);
+          },1500);
+
+        },1000);
+      }
+    });
+  });
+
+  if($(frameElement).height()>0){
+    $('.scroll-box').height($(frameElement).height()-90);
+  }
+
+  $('html,body').height('100%');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+<style type="text/css">
+html,body{height: 100%;}
+</style>
+</head>
+<body class="body-pop overlay-wrapper">
+<div class="u-panel">
+	<div class="u-panel-head">
+	    选择考点
+	    <span class="pop-close" data-role="pop-close"></span>
+  	</div>
+  	<div class="u-panel-body" data-role="list-wrapper">
+      <div class="pop-search-bar clearfix">
+        <div class="fl margin_r15" data-role="city-select">
+            <select class="form-control prov" data-first-title="请选择省份" style="width:150px;width:130px !ie;"></select>
+            <select class="form-control city margin_l10" data-first-title="请选择城市" style="width:150px;width:130px !ie;">
+            </select>
+        </div>
+        <div class="fl margin_r15">
+            <input class="form-control input-search padding_r5" placeholder="请输入考点名称" style="width:200px;background:#fff;">
+        </div>
+        <button type="button" class="btn btn-normal btn-gray fl" data-role="search">搜索</button>
+      </div>
+      <div class="scroll-box position-relative" style="height:420px;">
+        <div class="padding15" data-role="type-content">
+
+          <div data-role="item-list-container" class="overlay-wrapper">
+            <div class="text-center"><i class="loading"></i></div>
+          </div>
+
+        </div>
+      </div>
+  	</div>
+  	<div class="u-panel-footer">
+  		<div class="in" align="right">
+        <button class="btn btn-md btn-gray margin_r10" data-role="pop-close" style="width:100px;">取消</button>
+  			<button class="btn btn-md btn-orange disabled" data-role="sure" style="width:100px;" disabled>确认选择</button>
+  		</div>
+  	</div>
+</div>
+<div class="overlay bg-center hide" data-role="page-overlay"></div>
+<!--列表模板-->
+<script type="text/template" id="list-render-temp">
+  {{if totalElements>0}}
+    <div class="row-box clearfix">
+      {{each content}}
+        <div class="col-6">
+          <div class="in">
+            <div class="place-panel {{(selectedExamPointId!=='' && selectedExamPointId==$value.EXAM_POINT_ID)?'actived':''}}">
+              <dl data-exam-point-id='{{$value.EXAM_POINT_ID}}'>
+                <dt title="{{$value.POINT_NAME}}">{{$value.POINT_NAME}}</dt>
+                <dd>{{$value.ADDRESS}}</dd>
+              </dl>
+              <i class="icon icon-0x0"></i>
+            </div>
+          </div>
+        </div>
+      {{/each}}              
+    </div>
+  {{/if}}
+</script>
+
+<!--分页模板-->
+<script type="text/templte" id="pagenation-temp">
+  {{if totalPages>1}}
+      <div data-role="page-box">
+        <nav class="pagination-box text-center">
+            <div class="inline-block vertical-middle" id="page-render"></div>
+            <div class="pageing-info">
+              <span>共 {{totalPages}} 页，到第 </span>
+              <input type="text" class="form-control" value="1" size="2" data-role="jump-page-input">
+              <span>页</span>
+              <button class="btn btn-normal btn-gray" data-role="jump-page-btn">确定</button>
+            </div>
+        </nav>
+      </div>
+  {{/if}}
+</script>
+
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','cityselect','common'], function ($,template) {
+  //关闭窗口
+  $('[data-role="pop-close"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  var frmData=frameElement.data;
+  if(!frmData) return;
+
+  var $container=$('[data-role="type-content"]');
+  var xhrUrl='/pcenter/exam/queryPointList';
+  var noDataTips=top['noDataTips'];
+
+   //分页ajax
+  function pageAjax(searchData){
+    var $box=$('[data-role="item-list-container"]');
+    $box.append('<div class="overlay bg-center"></div>');
+
+
+    var xhr=ajaxProcess({
+      url:xhrUrl,
+      type:'GET',
+      data:{
+        EXAM_BATCH_CODE:frmData.EXAM_BATCH_CODE,
+        POINT_NAME:searchData?(searchData.POINT_NAME||''):'',
+        PROVINCE_NAME:searchData?(searchData.PROVINCE_NAME||''):'',
+        CITY_NAME:searchData?(searchData.CITY_NAME||''):'',
+        EXAM_TYPE:frmData.EXAM_TYPE,
+        pageSize:searchData?(searchData.pageSize||2):2,
+        pageNumber:searchData?(searchData.pageNumber||1):1
+      },
+      success:function(renderData){
+        if(renderData.msgCode==200){
+          var dataJson=renderData.data;
+          if(dataJson && dataJson.pageInfo && dataJson.pageInfo.totalElements>0){
+              var renderHtml = template('list-render-temp', $.extend(true, dataJson.pageInfo, {selectedExamPointId:frmData.EXAM_POINT_ID})
+               );
+              $box.html(renderHtml);
+
+              if($('.place-panel.actived').length>0){
+                $('[data-role="sure"]').removeClass('disabled').prop('disabled', false)
+              }
+          }
+          else{
+            $box.html(noDataTips);
+          }
+        }
+        else{
+          $box.html( renderData.message )
+        }
+      }
+    });
+
+    return xhr;
+  }
+
+  //创建html
+  function createHtml(filterType){
+    var flag=true;
+    var keyword=$('.input-search').val();
+    var prov=$('.prov').val();
+    var city=$('.city').val();
+
+    var def=pageAjax({
+      POINT_NAME:keyword,
+      PROVINCE_NAME:prov,
+      CITY_NAME:city,
+      pageSize:6,
+      pageNumber:1
+    })
+    .done(function(renderData){
+      if(renderData.data&&renderData.data.pageInfo){
+        var pageInfo=renderData.data.pageInfo;
+        flag=false;
+        if(pageInfo.totalElements>0){
+          var html=template('pagenation-temp',pageInfo);
+          if($('[data-role="page-box"]',$container).length<=0){
+            $container.append(html);
+          }
+          else{
+            $('[data-role="page-box"]',$container).replaceWith(html);
+          }
+
+          //生成分页
+          createPagination({
+            pageCount:pageInfo.totalElements,
+            pageSize:pageInfo.size,
+            currentPage:pageInfo.number-1
+          },function (new_page_index, pagination_container) {
+            if(flag){
+              pageAjax({
+                POINT_NAME:keyword,
+                PROVINCE_NAME:prov,
+                CITY_NAME:city,
+                pageSize:pageInfo.size,
+                pageNumber:new_page_index+1
+              });
+            }
+            flag=true;
+            return false;
+          });
+        }
+        else{
+          $('[data-role="page-box"]',$container).remove();
+          $box=$('[data-role="item-list-container"]',$container);
+          $box.html(noDataTips);
+        }
+      }
+    });
+    return def;
+  }
+
+  //分页跳转
+  $('[data-role="list-wrapper"]').on('click', '[data-role="jump-page-btn"]', function(event) {
+    var $pageContainer=$("#page-render");
+    var jumpPageNum=$('[data-role="jump-page-input"]',$pageContainer.parent()).val()-1;
+    var pageCount=$pageContainer.data('pageCount');
+    var curPage=$pageContainer.data('current_page');
+    if( $.isNumeric(jumpPageNum) && pageCount && pageCount>1 && curPage!=jumpPageNum && jumpPageNum<pageCount){
+      $pageContainer.trigger('setPage', [jumpPageNum]);
+    }
+  });
+
+  //搜索
+  $('[data-role="search"]').on('click', function(event) {
+      createHtml();
+  });
+
+  createHtml();
+
+  //确定
+  $('[data-role="sure"]').on('click', function(event) {
+    event.preventDefault();
+    var EXAM_POINT_ID=$('.place-panel.actived').children('dl').data('exam-point-id');
+
+    if(!EXAM_POINT_ID) return;
+
+    var $mark=$('[data-role="page-overlay"]');
+
+    $mark.show();
+
+    var xhr=ajaxProcess({
+        url:'/pcenter/exam/saveExamPointApp',
+        type:'GET',
+        data:{
+          TERM_ID:frmData.TERM_ID,
+          EXAM_POINT_ID:EXAM_POINT_ID,
+          EXAM_POINT:frmData.EXAM_POINT,
+          EXAM_BATCH_CODE:frmData.EXAM_BATCH_CODE
+        },
+        success:function(renderData){
+          if(renderData.msgCode==200 && renderData.data && renderData.data.result==1){ 
+
+            $.resultDialog(1,'操作成功')
+            .done(function(){
+              parent.curRoute.app.refresh();       
+            });
+
+          }
+          else{
+            $.resultDialog(0,'操作失败');
+          }
+        },
+        always:function(){
+          $mark.hide();
+        }
+    });
+    
+  });
+
+  // 省市县三级联动
+  $('[data-role="city-select"]').cxSelect({
+      selects: ['prov', 'city'],
+      data: cityJSON
+  });
+
+  //选择考点
+  $container.on('click', '.place-panel', function(event) {
+    event.preventDefault();
+    var $examPlace=$('.place-panel');
+
+    if( !$(this).hasClass('actived') ){
+      $examPlace.removeClass('actived');
+      $(this).addClass('actived');
+      $('[data-role="sure"]').prop('disabled',false).removeClass('disabled');
+    }
+    else{
+      $(this).removeClass('actived');
+      $('[data-role="sure"]').prop('disabled',true).addClass('disabled');
+    }
+  });
+
+});
+</script>
+</body>
+</html>

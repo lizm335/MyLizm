@@ -1,0 +1,82 @@
+﻿<div class="graduate-cnt-box">
+  <button class="btn btn-gray border-radius btn-normal" style="width:80px;" onclick="window.history.back()">返回</button>
+  <div class="panel-tips padding15 tips-gray margin_t15">
+    <div class="clearfix">
+      <div class="fr margin_l10">
+        <button class="btn btn-orange btn-md margin_r15" style="width:130px;">更换学位院校</button>
+        <button class="btn btn-gray btn-md" style="width:130px;" data-role="give-up">放弃申请学位</button>
+      </div>
+      <div class="oh font20 text-overflow">
+        学位名称：东北财经大学管理学学士
+      </div>
+      
+    </div>
+  </div>
+  <h3 class="sub-title font18 text-no-bold margin_b10 margin_t25"><i class="ico_shuxian"></i>学位要求</h3>
+  <table class="table-basic text-center">
+    <thead>
+      <tr>
+        <th width="33%">条件</th>
+        <th width="50%">达标要求</th>
+        <th width="17%">达标状态</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>统设必修课平均成绩</td>
+        <td>≥75分</td>
+        <td class="font_green">已达标</td>
+      </tr>
+      <tr>
+        <td>其他课程平均成绩</td>
+        <td>≥70分</td>
+        <td class="font_orange">暂未达标</td>
+      </tr>
+      <tr>
+        <td>学位课程考试成绩</td>
+        <td>≥70分</td>
+        <td class="font_orange">暂未达标</td>
+      </tr>
+      <tr>
+        <td>
+          学位英语<small class="f12 font_orange">（满足一项要求即可）</small>
+        </td>
+        <td>
+          <ol class="ol-decimal text-left">
+            <li>通过东北财经大学工商管理专业开放教育学士学位英语水平考试</li>
+            <li>申请学位前四年内通过国家大学英语四级考试（含其他语种）</li>
+          </ol>
+        </td>
+        <td>
+          <div class="font_red">未上传</div>
+          <button class="btn btn-green margin btn-sm margin_t5" style="width:80px;">立即上传</button>
+        </td>
+      </tr>
+      <tr>
+        <td>毕业设计（论文）</td>
+        <td>≥75分</td>
+        <td class="font_green">已达标</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+  //放弃申请
+  $('[data-role="give-up"]').on('click', function(event) {
+      event.preventDefault();
+    
+      $.alertDialog({
+          width:340,
+          height:270,
+          cancelLabel:'取消',
+          okLabel:'放弃申请',
+          content:[
+            '<i class="alert-icon alert-icon-0x0 margin_r10"></i>',
+              '<span class="font18 text-orange vertical-middle inline-block">确认放弃申请学位？</span>'
+          ].join('')
+      });
+  });
+});
+</script>

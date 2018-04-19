@@ -1,0 +1,50 @@
+<div class="padding10" data-id="apply-exemption">
+  <table width="100%" height="400">
+    <tr>
+      <td valign="middle" align="center">
+        <p>
+          <i class="loading"></i>
+          </p>
+          <p class="font18 gray margin_t10">数据加载中...</p>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<script type="text/html" id="apply-exemption-tpl">
+  <div>
+    {{content}}
+  </div>
+  {{if fileUrl}}
+    <div class="article-addon">
+      附件：<a href="{{fileUrl}}" target="_blank">{{fileName?fileName:'点击下载'}}</a>
+    </div>
+  {{/if}}
+  <div class="text-center margin-t30">
+    <a href="#/sqmianxiu/apply" class="btn btn-lg btn-orange" style="width:200px;">申请免修免考</a>
+  </div>
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+    var $container=$('[data-id="apply-exemption"]');
+
+    ajaxProcess({
+        url:'/pcenter/learningGuide/mianxiumiankao',
+        type:'GET',
+        success:function(json){
+          if(json.msgCode==200 && json.data){
+            var render=template.compile($('#apply-exemption-tpl').html(),{escape:false});
+            var renderHtml=render(json.data);
+            $container.html( renderHtml );
+          }
+          else{
+            $container.html( template('error-tips-temp',{message:json.message}) );
+          }
+        },
+        fail:function(errmsg){
+          $container.html( template('error-tips-temp',{message:errmsg}) );
+        }
+    });
+});
+</script>

@@ -1,0 +1,187 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+<style type="text/css">
+html,body{
+  height: 100%;
+  overflow: hidden;
+}
+</style>
+</head>
+<body class="body-pop">
+<div class="u-panel overlay-wrapper">
+  
+</div>
+
+<script type="text/template" id="temp">
+  <form class="theform">
+    <div class="u-panel-head">
+      上传{{title}}
+      <span class="pop-close" data-role="pop-close"></span>
+    </div>
+    <div class="u-panel-body scroll-box">
+      <div style="padding:30px;">
+        <table width="100%" class="u-tbl">
+            <tbody>
+              <tr>
+                <td width="80" class="padding_r20 padding_t15" valign="top">
+                  上传文档
+                </td>
+                <td>
+                    <div class="typeset">
+                        <div class="fixed padding_t5 valid-control">
+                          <button type="button" class="btn btn-normal btn-gray" data-role="upload-btn">选择文件</button>
+                        </div>
+                        <div class="adaptive">
+                          <p class="gray margin_l10 f12" style="line-height:14px;"> 
+                            请上传word文档，限doc、docx、wps格式，<br>建议文档命名格式
+                            为：姓名-专业（层级）-社会实践名称，<br>如：李XX-连锁经营（本）-沃尔玛卖场商品布局与陈列分析
+                          </p>
+                        </div>
+                  </div>
+                  <div data-id="attachment-box">
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td valign="top" class="padding_r20">
+                  留言老师
+                </td>
+                <td>
+                  <div class="form valid-control">
+                    <textarea class="form-control form-control-block" rows="5" cols="30" placeholder="李XX-连锁经营（本）-沃尔玛卖场商品布局与陈列分析，请老师查阅。" datatype="*" nullmsg="请填写留言" errormsg="请填写留言" name="content"></textarea>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td valign="top" class="font16 txt_r padding_r20">
+                  
+                </td>
+                <td>
+                  <button type="submit" class="btn btn-normal btn-orange min-width-100">提交</button>
+                    <span class="gray margin_l10 f12">上传成功后，指导老师会对你上传的{{type==1?'论文':'社会实践'}}{{title}}进行指导</span>
+                  
+                </td>
+              </tr>
+            </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="overlay bg-center" style="display:none;"></div>
+  </form>
+</script>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+<script type="text/javascript">
+require(['jquery',"artTemplate",'common'], function ($,template) {
+  var frmData=frameElement.data;
+
+  $('.u-panel').html(
+    template('temp',frmData)
+  );
+  //“x”关闭窗口
+  $('[data-role="pop-close"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  //表单验证
+  initValidForm(
+      $(".theform"),
+      function(){
+        var $form=this;
+        $pageLoading=$('.overlay').show();
+
+        //校验附件
+        if($form.find('.u-upload-file').length<=0){
+          $('[data-role="upload-btn"]',$form).next('.tooltip').show().children('.tooltip-in').text('请上传'+frmData.title);
+          $pageLoading.hide();
+        }
+        
+        else{
+          $pageLoading.show();
+          ajaxProcess({
+              url:frmData.url,
+              type:'POST',
+              data:$(".theform").serialize()+'&applyId='+frmData.applyId,
+              success:function(data){
+                if(data.msgCode==200){
+                  $.when($.resultDialog(1,'提交成功'))
+                  .done(function(){
+                    parent.curRoute.app.refresh();
+                  });
+                }
+                else{
+                  $.resultDialog(2,data.message);
+                }
+              },
+              fail:function(errorMsg){
+                $.resultDialog(2,errorMsg,2000);
+              },
+              always:function(){
+                $pageLoading.hide();
+              }
+            })
+        }
+      }
+  );
+
+  //上传
+  $('[data-role="upload-btn"]').click(function(event) {
+    event.preventDefault();
+    var _this=this;
+    uploadFile({
+      filetype:'doc|docx|wps',
+      ok:function(filelist){
+              if(filelist){
+                if(filelist.length>0){
+                    var src=filelist[0].SFileName;
+                    var filename=filelist[0].CFileName;
+                    var temp=[
+                      '<span class="u-upload-file margin_t10 margin_r10">',
+                            '<a href="javascript:;" class="oh">{1}</a>',
+                            '<b data-role="remove-attachment">x</b>',
+                            '<input type="hidden" name="attachment" value="{0}">',
+                            '<input type="hidden" name="attachmentName" value="{1}">',
+                        '</span>'
+                    ].join('');
+                    temp=temp.format(src,filename);
+
+                    $(_this).next('.tooltip').hide();
+
+                    $('[data-id="attachment-box"]').html(temp)
+                  }               
+              }
+              $.closeDialog(this);
+      }
+    });
+  });
+
+  if($(frameElement).height()>0){
+    $('.scroll-box').height($(frameElement).height()-36);
+  }
+
+});
+</script>
+</body>
+</html>

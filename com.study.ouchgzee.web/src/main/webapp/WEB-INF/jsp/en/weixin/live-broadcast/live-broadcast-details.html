@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title></title>
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+<link rel="shortcut icon" href="/favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta content="telephone=no" name="format-detection">
+<meta content="email=no" name="format-detection">
+
+<link rel="stylesheet" href="http://css.gzedu.com/gzdd_ouchgzee_com/platform/student/mobile/css/sm.min.css">
+
+<style type="text/css">
+.banner{
+  padding-top: 50%;
+  position: relative;
+}
+.banner > img{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+.media{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  position: relative;
+}
+.width-border:before{
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    width: 100%;
+    background-color: #e7e7e7;
+    display: block;
+    z-index: 15;
+    -webkit-transform-origin: 50% 100%;
+    transform-origin: 50% 100%;
+}
+.media > .media-body{
+  margin-right: .8em;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  flex: 1;
+}
+
+.label {
+    display: inline;
+    padding: .4em .6em .3em;
+    font-size: 75%;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+}
+.bg-purple{
+  background-color: #e639cc !important;
+}
+.bg-orange{
+  background-color: #ffa302 !important;
+}
+.bg-green{
+  background-color: #1bbd17 !important;
+}
+.pad{
+  padding: .5rem;
+}
+.flat{
+  border-radius: 0 !important;
+}
+.broadcast-content-out{
+ overflow: hidden; 
+}
+.broadcast-content{
+  overflow:auto;
+  -webkit-overflow-scrolling: touch;
+}
+.broadcast-content img{
+  max-width: 100%;
+}
+</style>
+</head>
+<body>
+
+<div class="page-group">
+    <!-- 单个page ,第一个.page默认被展示-->
+    <div class="page page-current" id="index" style="background:#fff;">
+        
+    </div>
+
+    <div class="page" id='room'>
+        <div class="bar media" style="background:#fff7e7;">
+          <div class="media-body color-warning" style="font-size:75%">
+            下载国开在线，观看直播更流畅哦！
+          </div>
+          <div class="media-right">
+            <a href="http://manager.oupad.com.cn/appstore/downloadApp.do?formMap.MAPP_CODE=EHAPP012" class="button button-warning external" style="top:0;">
+              下载
+            </a>
+          </div>
+        </div>
+        <!-- 这里是页面内容区 -->
+        <div class="content" style="top:2.2rem;" id="room-iframe">
+            
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="http://css.gzedu.com/gzdd_ouchgzee_com/platform/student/mobile/js/zepto.min.js"></script>
+
+<script type="text/javascript" src="http://css.gzedu.com/gzdd_ouchgzee_com/platform/student/mobile/js/template.js"></script>
+
+
+<script type="text/javascript" src="http://css.gzedu.com/gzdd_ouchgzee_com/platform/student/mobile/js/sm.min.js"></script>
+
+<script type="text/template" id="index-temp">
+  <nav class="bar bar-tab">
+    {{if status==0}}
+      <a class="tab-item external" href="javascript:;">
+        直播未开始
+      </a>
+    {{else if status==1}}
+      {{if device=='app'}}
+        <a class="tab-item active external" href="javascript:Phone.joinLive('{{roomId}}', '{{appToken}}', '{{lessonName}}');">
+          看直播
+        </a>
+      {{else}}
+        <a class="tab-item active" href="#room">
+          看直播
+        </a>
+      {{/if}}
+    {{else if status==2}}
+      {{if device=='app'}}
+        <a class="tab-item active external" href="javascript:Phone.watchVideo('{{videoRoomId}}', '{{videoToken}}', '{{lessonName}}');">
+          看录像
+        </a>
+      {{else}}
+        <a class="tab-item active" href="#room">
+          看录像
+        </a>
+      {{/if}}
+    {{/if}}
+
+    
+  </nav>
+  <!-- 这里是页面内容区 -->
+  <div class="content">
+      <div class="banner">
+        {{if imgUrl}}
+          <img src="{{imgUrl}}" onerror="this.src='http://css.gzedu.com/common/v2/temp/demo_01.jpg'">
+        {{else}}
+          <img src="http://css.gzedu.com/common/v2/temp/demo_01.jpg">
+        {{/if}}
+      </div>
+
+      <div class="pad width-border" style="position:relative;">
+        <div>{{lessonName}}</div>
+        <div class="media" style="background-color:#fff;margin-top:.2rem;">
+          <div class="media-body">
+            <div class="color-gray"><small>直播时间：{{startTime}}</small></div>
+          </div>
+          <div class="media-right">
+            <!--status  number  直播状态：0未开始；1直播中；2已结束-->
+            {{if status==0}}
+              <label class="label bg-orange">未开始</label>
+            {{else if status==1}}
+              <label class="label bg-green">直播中</label>
+            {{else if status==2}}
+              <label class="label bg-purple">回放中</label>
+            {{/if}}
+          </div>
+        </div>
+      </div>
+
+      <div class="content-padded broadcast-content-out" style="font-size:0.7rem">
+        <div class="broadcast-content clearfix">
+          {{content}}
+        </div>
+      </div>
+  </div>
+</script>
+
+<script type="text/javascript">
+//获取地址参数值
+function GetQueryStringFn(name){
+   var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+   var r = window.location.search.substr(1).match(reg);
+   if(r!=null)return decodeURI(r[2]); return null;
+}
+
+$(function () {
+  var nickname=sessionStorage.getItem('nickname');//缓存的 昵称
+  var paramNickname=GetQueryStringFn('nickname');//url参数的 昵称
+  var liveBroadcastID=GetQueryStringFn('id');//直播ID
+  var paramDevice=GetQueryStringFn('device');//终端设备类型
+
+  if(!nickname && paramNickname){
+    nickname=paramNickname;
+    sessionStorage.setItem('nickname',paramNickname);
+  }
+
+  if(!liveBroadcastID){
+    $.alert('直播ID为空');
+    return;
+  }
+  
+  if(!nickname && $.device.isWeixin){
+    location.href="http://wechat.eenet.com/eeapi.php?myaction=oauth&uniacid=25&scope=user&backurl="+encodeURIComponent('http://'+location.host+'/wx/weixin/live-broadcast/live-broadcast-details.html?id='+liveBroadcastID);
+    return;
+  }
+  
+
+  
+  //nickname='sunnychen';
+
+  $.showIndicator();
+
+  $.ajax({
+    url: '/wx/onlinelesson/queryLiveVideoInfo',
+    type: 'GET',
+    dataType: 'json',
+    data: {
+      id: liveBroadcastID //'23f31abaee504d2894c94b89b0a550be'
+    },
+    success: function(json){
+
+      if(json.msgCode==200 && json.data){
+        var render=template.compile($('#index-temp').html(),{escape:false})
+        document.getElementById('index').innerHTML=render(
+          $.extend({}, json.data, {device:paramDevice})
+        );
+
+        document.title=json.data.lessonName;
+
+        $(document)
+        .on("pageInit", "#index", function(e, pageId, $page) {
+          document.getElementById('room-iframe').innerHTML='';
+        })
+        .on("pageInit", "#room", function(e, pageId, $page) {
+          var path='http://eenet.gensee.com/training/site';
+          //录像
+          if(json.data.status==2){
+            path=path+'/v/'+json.data.videoRoomId+'?nickname='+encodeURI(nickname)+'&token='+json.data.videoToken;
+          }
+          else{
+            path=path+'/s/'+json.data.roomId+'?nickname='+encodeURI(nickname)+'&token='+json.data.clientToken;
+          }
+
+          //path=path+'/s/12021329?nickname='+nickname+'&token=123456';
+
+          document.getElementById('room-iframe').innerHTML='<iframe src="'+path+'" width="100%;" height="100%" frameborder="0" scrolling="no"></iframe>';
+        });
+
+        $.init();
+      }
+      else{
+        $.alert(json.message);
+      }
+
+      $.hideIndicator();
+    }
+  });
+  
+
+  
+  
+});
+</script>
+</body>
+</html>

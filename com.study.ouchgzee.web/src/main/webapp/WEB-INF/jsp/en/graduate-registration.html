@@ -1,0 +1,320 @@
+<div class="padding10" data-id="by-complete-info">
+  <div class="text-center"><i class="loading"></i></div>
+</div>
+
+
+<!--模板-->
+<script type="text/template" id="by-complete-temp">
+  <h3 class="text-no-bold sub-title f18 margin_b10 clearfix">
+      学籍信息
+    </h3>
+    <table class="table-gray-th position-relative">
+        <colgroup>
+          <col width="12%"></col>
+          <col width="21%"></col>
+          <col width="12%"></col>
+          <col width="21%"></col>
+          <col width="12%"></col>
+          <col width="22%"></col>
+        </colgroup>
+        <tbody>
+            <tr>
+                <th class="text-right">姓名</th>
+                <td>{{xm}}</td>
+                <th class="text-right">性别</th>
+                <td>{{xbm}}</td>
+                <th class="text-right">学号</th>
+                <td>{{xh?xh:'--'}}</td>
+              </tr>
+              <tr>
+                <th class="text-right">出生日期</th>
+                <td>{{csrq}}</td>
+
+                <th class="text-right">民族</th>
+                <td>{{mzm?mzm:'--'}}</td>
+
+                <th class="text-right">政治面貌</th>
+                <td>{{politicsstatus?politicsstatus:'--'}}</td>
+              </tr>
+              <tr>
+                <th class="text-right">证件类型</th>
+                <td>{{certificatetype?certificatetype:'--'}}</td>
+
+                <th class="text-right">证件号</th>
+                <td>{{sfzh?sfzh:'--'}}</td>
+
+                <th class="text-right">学生类别</th>
+                <td>
+                  {{if specialtyCategory==1}}
+                    开放教育专业
+                  {{else if specialtyCategory==2}}
+                    助力计划专业
+                  {{else if specialtyCategory==3}}
+                    开放教育专科
+                  {{/if}} 
+                </td>
+              </tr>
+
+              <tr>
+                <th class="text-right">学历层次</th>
+                <td>
+                  {{exedulevel?exedulevel:'--'}}
+                </td>
+
+                <th class="text-right">专业</th>
+                <td>{{zymc?zymc:'--'}}</td>
+
+                <th class="text-right">入学时间</th>
+                <td>{{gradeName?gradeName:'--'}}</td>
+              </tr>
+        </tbody>
+    </table>
+
+    <div class="panel margin_t20 center-block" style="width:800px;">
+      <div class="panel-header font16">
+        <div class="sub-title">
+          第一步：下载毕业生登记
+        </div>
+      </div>
+      <div class="panel-body padding25">
+        <div class="text-center">
+          <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/regist.png" alt="" width="80">
+          <div class="margin_t15">
+            <a href="http://eefile.download.eenet.com/files2/pcourse/resourse/44fa3c0d301d4545b9558d48c7395636/fc2f4278920ca0e438a2130541063731.pdf" target="_blank" class="btn btn-normal btn-gray border-radius">下载毕业生登记</a>
+          </div>
+          <div class="inline-block text-left font_gray margin_t15">
+            （注：根据要求下载打印毕业生登记，统一寄送以下地址。为了顺利接收您的毕业生登记表，建议使用<span class="text-red">顺丰快递</span>。并完善以下快递信息）<a href="http://eefile.download.eenet.com/files2/test1/test/c61735f682cbd0574690790f995366d8.zip" target="_blank" class="text-blue">详细打印及填写要求请点击下载</a>
+          </div>
+          <!--
+          <div class="margin_t15">
+            <a href="#" class="btn btn-md btn-green">观看如何填写登记表</a>
+          </div>
+          -->
+        </div>
+      </div>
+    </div>
+
+    <div class="panel margin_t20 center-block" style="width:800px;">
+      <div class="panel-header font16">
+        <div class="sub-title">
+          第二步：快递到学院
+        </div>
+      </div>
+      <div class="panel-body padding25">
+        <div class="center-block" style="width:600px;">
+          <div class="text-center">
+            <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/deliver.png" alt="" width="80">
+          </div>
+          <div class="panel margin_t15">
+            <div class="panel-header">
+              <b>收货信息</b>
+            </div>
+            <div class="panel-body">
+              <p>邮编：{{postcode}}</p>
+              <p>联系人：{{receiver}}</p>
+              <p>电话：{{mobile}}</p>
+              <p>地址：{{address}}</p>
+            </div>
+          </div>
+          <div class="margin_t15">
+            <form data-id="form">
+              <table width="100%">
+                  <tbody>
+                    <tr>
+                      <td width="60" class="padding_r10">
+                        快递单号
+                      </td>
+                      <td class="padding_r10">
+                        <div class="valid-control">
+                          <input class="form-control form-control-block" type="text" placeholder="请输入您的快递单号" datatype="*" nullmsg="请填写快递单号" errormsg="请填写快递单号" name="expressNumber" value="{{expressNumber}}">
+                        </div>
+                      </td>
+                      <td width="60" class="padding_r10">
+                        快递公司
+                      </td>
+                      <td width="220">
+                        <div class="valid-control">
+                          <select name="expressCompany" class="form-control form-control-block" data-id="express-sel" datatype="*" nullmsg="请选择快递公司" errormsg="请选择快递公司" disabled>
+                            <option value=''>请选择快递公司</option>
+                          </select>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+              </table>
+              <div class="margin_t20 text-center">
+                <button type="submit" class="btn btn-md btn-orange min-width-120">提交</button>
+                <button type="button" class="btn btn-md btn-gray min-width-120 margin_l10" data-role="view-logistics">查看快递信息</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+</script>
+
+<!--查看物流 模板-->
+<script type="text/template" id="logistics-temp">
+    <div class="padding10 position-relative">
+        <div class="padding15 bg-fafafa">
+            <p>货运单号：{{expressNumber}}</p>
+            <p>快递名称：{{expressName}}</p>
+        </div>
+        <div class="logistics-box scroll-box f12">
+        {{each data}}
+            <dl class="{{$index==0?'first':($index==data.length-1?'last':'')}}">
+                <dt class="{{$index==0?'font_green':''}}">{{$value.context}}</dt>
+                <dd class="gray">{{$value.time}}</dd>
+                <dd class="icon-order"></dd>
+            </dl>            
+        {{/each}}
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+    var $container=$('[data-id="by-complete-info"]');
+
+    ajaxProcess({
+      url:'/pcenter/graduation/graduationRegister',//1.2.1毕业生登记表查询
+      type:'GET',
+      success:function(json){
+        if(json.msgCode==200 && json.data){
+          $container.html( template('by-complete-temp',json.data) );
+
+          ajaxProcess({
+            url:'/pcenter/thesis/queryExpress',//1.4.10 论文写作-查询快递公司列表
+            type:'GET',
+            success:function(queryExpress){
+              var renderHtml='';
+              if(queryExpress.msgCode==200 && queryExpress.data && queryExpress.data.length>0){
+                var render=template.compile([
+                  '{{each data}}',
+                    '<option value="{{$value.value}}" {{expressCompany==$value.value?"selected":""}}>',
+                      '{{$value.name}}',
+                    '</option>',
+                  '{{/each}}'
+                ].join(''));
+                var renderHtml=render(
+                  $.extend(true, queryExpress, {
+                    expressCompany:json.data.expressCompany
+                  })
+                )
+              }
+              $('[data-id="express-sel"]',$container).append(renderHtml).prop('disabled', false);
+
+              //查看物流
+              $container.on('click', '[data-role="view-logistics"]', function(event) {
+                if(!vForm.check()) return;
+
+                var $expressCompany=$('[name="expressCompany"]',$container);
+                var expressNumber=$('[name="expressNumber"]',$container).val();
+
+                //如果是顺丰快递，则跳转到其官网查询
+                if($expressCompany.val()=='shunfeng'){
+                  window.open('http://www.sf-express.com/cn/sc/dynamic_function/waybill/#search/bill-number/'+expressNumber)
+
+                  return;
+                }
+
+                var pop=$.mydialog({
+                        id : 'express-pop',
+                        width : 480,
+                        height : 400,
+                        zIndex : 1110,
+                        html : true,
+                        htmlConfig:{
+                          title: '物流状态',
+                          button:[
+                            {
+                            name: '关闭',
+                              btnClass:'btn btn-normal btn-gray min-width-100',
+                              callback:function(ev){
+                                $.closeDialog(pop);
+                              }
+                            }         
+                          ]
+                        },
+                        content: '<div class="overlay bg-center"></div>',
+                        onLoad:function(){
+                          this.wrapper.find('.u-panel-body').addClass('scroll-box overlay-wrapper').height(this.height-36-$(".u-panel-footer",pop).height());
+                        }
+                    });
+
+                var expressName=$expressCompany.get(0).options[$expressCompany.get(0).selectedIndex].text;
+                
+
+                  ajaxProcess({
+                        url:'/pcenter/thesis/queryLogistics',//1.4.12 论文写作-查询物流信息
+                        type:'GET',
+                        data:{
+                          expressCompany:$expressCompany.val(),
+                          expressNumber:expressNumber
+                        },
+                        success:function(renderData){
+                            var shtml='';
+                            if(renderData.msgCode==200){
+                                if( renderData.data ){
+                                    shtml=template('logistics-temp',
+                            $.extend(true, renderData, 
+                              {
+                                expressName:expressName,
+                                expressNumber:expressNumber
+                              }
+                            )
+                          );
+                                }
+                                else{
+                                    shtml='<div class="text-center padding_t10"><i class="alert-icon alert-icon-123x63"></i> <span class="f14">无数据</span></div>';
+                                }
+                            }
+                            else{
+                                shtml='<div class="text-center padding_t10"><i class="alert-icon alert-icon-123x63"></i> <span class="f14">'+renderData.message+'</span></div>';
+                            }
+
+                            $('.u-panel-body',pop).html(shtml);
+                        },
+                        always:function(){
+                            $('.u-panel-body',pop).children('.overlay').remove();
+                        }
+                    });
+                  
+              })
+            }
+          });
+
+          var vForm=initValidForm($('[data-id="form"]',$container),function(){
+            var $form=this;
+            $('[data-role="page-loading"]').show();
+            ajaxProcess({
+              url:'/pcenter/graduation/updateGraduationRegisterNew',//1.2.2 更新毕业生登记表（New）
+              type:'POST',
+              data:$form.serialize(),
+              success:function(data){
+                if(data.msgCode==200){
+                  $.resultDialog(1,'提交成功');
+                }
+                else{
+                  $.resultDialog(2,data.message);
+                }
+              },
+              fail:function(errorMsg){
+                $.resultDialog(2,errorMsg,2000);
+              },
+              always:function(){
+                $('[data-role="page-loading"]').hide();
+              }
+            })
+          });
+        }
+        else{
+          $container.html( template('no-data-tips-temp',{message:json.message}) );
+        }
+      },
+      fail:function(errorMsg){
+        $container.html( template('error-tips-temp',{message:errorMsg}) );
+      }
+    })
+});
+</script>

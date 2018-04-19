@@ -1,0 +1,332 @@
+<div data-role="type-content">
+	<div class="text-center"><i class="loading"></i></div>
+</div>
+
+<!--模板-->
+<script type="text/template" id="form-temp">
+	<form class="theform">
+		<div class="enroll_tab upload_head">
+			<h2>修改头像</h2>
+			<div class="upload_right clearfix">
+				{{if pictureURL}}
+					<img src="{{pictureURL | imgUrlFormat:[150,150]}}" alt="" dat-role="pic">
+				{{else}}
+					<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/temp/upload_p.png" alt="" dat-role="pic">
+				{{/if}}
+				<div class="upload_btn">
+					<div class="upl_wrap">
+					    <div class="upl_file btn btn-normal btn-gray border-radius" data-role="upload-btn">修改头像</div>
+					    <input type="text" name="pictureURL" value="{{pictureURL}}" style="display:none;">
+					</div>
+					<p>支持 .jpg/.gif/.png/.bmp格式图片，大小不能超过2M。</p>
+				</div>
+			</div>
+		</div>
+
+		<!--非院校模式 显示-->
+		{{if schoolModel==='0' || schoolModel==5 }}
+			<div class="enroll_tab">
+				<h2>基础信息</h2>
+				<table class="table-gray-th">
+			      <tbody>
+			      	  <tr>
+			            <th width="15%" class="text-right">姓名</th>
+			            <td width="35%">{{userName}}</td>
+			            <th width="15%" class="text-right">学号</th>
+			            <td width="35%">{{studentNo}}</td>
+			          </tr>
+			          <tr>
+			            <th class="text-right">性别</th>
+			            <td>
+			            	{{gender}}
+			            </td>
+			            <th class="text-right">证件类型</th>
+			            <td>{{!!certType?certType:'--'}}</td>
+			          </tr>
+			          <tr>
+			            <th class="text-right">证件号</th>
+			            <td>{{!!certNo?certNo:'--'}}</td>
+			            <th class="text-right">籍贯</th>
+			            <td>{{!!nativePlace?nativePlace:'--'}}</td>
+			          </tr>
+			          <tr>
+			            <th class="text-right">民族</th>
+			            <td>{{!!nation?nation:'--'}}</td>
+			            <th class="text-right">政治面貌</th>
+			            <td>{{!!politicsFace?politicsFace:'--'}}</td>
+			          </tr>
+			          <tr>
+			            <th class="text-right">婚姻状态</th>
+			            <td>
+			            	{{!!marryStatus?marryStatus:'--'}}
+			            </td>
+			            <th class="text-right">户口性质</th>
+			            <td>
+			            	{{!!householdNature?householdNature:'--'}}
+			           	</td>
+			          </tr>
+			          <tr>
+			            <th class="text-right">出生日期</th>
+			            <td>{{!!birthDate?birthDate:'--'}}</td>
+			            <th class="text-right">在职状况</th>
+			            <td>
+			            	{{if !!jobCondition}}
+			            		{{if jobCondition==='0'}}
+			            			无业
+			            		{{else if jobCondition==='1'}}
+			            			在职
+			            		{{/if}}
+			            	{{else}}
+			            		--
+			            	{{/if}}
+			            </td>
+			          </tr>
+			          <tr>
+			            <th class="text-right">户口所在地</th>
+			            <td>{{!!householdLocal?householdLocal:'--'}}</td>
+			            <th class="text-right"></th>
+			            <td></td>
+			          </tr>
+			        </tbody>
+			    </table>
+			</div>
+
+			<div class="enroll_tab">
+				<h2>通讯信息</h2>
+				 <table class="table-gray-th position-relative">
+			        <tbody>
+			          	<tr>
+			                <th width="15%" class="text-right">手机号码</th>
+			                <td width="35%">
+			                	<div class="valid-control">
+			                  		<input class="form-control form-control-block" type="text" value="{{mobile}}" placeholder="手机号码" datatype="m" nullmsg="请填写手机号码" errormsg="手机号码不对" name="mobile">
+			                  	</div>
+			                </td>
+			                <th width="15%" class="text-right">固定电话</th>
+			                <td width="35%">
+			                  <div class="valid-control">
+			                    <input class="form-control form-control-block" type="text" value="{{telephone}}" placeholder="固定电话" datatype="/(^(0[0-9]{2,3})-([2-9][0-9]{6,7})+(-[0-9]{1,4})?$)/" nullmsg="请填写固定电话" errormsg="固话正确格式：区号-电话-分机号" name="telephone" ignore="ignore">
+			                  </div>
+			                </td>
+			              </tr>
+			              <tr>
+			                <th class="text-right">邮箱</th>
+			                <td>
+			                  <div class="valid-control">
+			                    <input class="form-control form-control-block" type="text" value="{{email}}" placeholder="邮箱" datatype="e" nullmsg="请填写邮箱" errormsg="邮箱格式不对" name="email">
+			                  </div>
+			                </td>
+			                <th class="text-right">通信地址</th>
+			                <td>
+			                  <div class="valid-control">
+			                    <input class="form-control form-control-block" type="text" value="{{postalAddress}}" placeholder="通信地址" datatype="*" nullmsg="请填写通信地址" errormsg="请填写通信地址" name="postalAddress">
+			                  </div>
+			                </td>
+			              </tr>
+			              <tr>
+			                <th class="text-right">邮编</th>
+			                <td>
+			                  <div class="valid-control">
+			                    <input class="form-control form-control-block" type="text" value="{{postcode}}" placeholder="邮编" datatype="/^[0-9]{6}$/" nullmsg="请填写邮编" errormsg="邮编格式不对" name="postcode">
+			                  </div>
+			                </td>
+			                <th class="text-right">所在单位</th>
+			                <td>
+			                  <div class="valid-control">
+			                    <input class="form-control form-control-block" type="text" value="{{company}}" placeholder="所在单位" datatype="*" nullmsg="请填写所在单位" errormsg="请填写所在单位" name="company">
+			                  </div>
+			                </td>
+			              </tr>
+			              <tr>
+			                <th class="text-right">单位地址</th>
+			                <td>
+			                  <div class="valid-control">
+			                    <input class="form-control form-control-block" type="text" value="{{companyAddress}}" placeholder="单位地址" datatype="*" nullmsg="请填写单位地址" errormsg="请填写单位地址" name="companyAddress">
+			                  </div>              	
+			                </td>
+			                <th class="text-right">岗位职务</th>
+			                <td>
+			                  <div class="valid-control">
+			                    <input class="form-control form-control-block" type="text" value="{{jobPost}}" placeholder="岗位职务" datatype="*" nullmsg="请填写岗位职务" errormsg="请填写岗位职务" name="jobPost">
+			                  </div> 
+			                </td>
+			              </tr>
+			        </tbody>
+			    </table>
+				
+			</div>
+		{{else}}
+			<!--院校模式 显示-->
+			<div class="enroll_tab">
+				<h2>基础信息</h2>
+				<table class="table-gray-th">
+			      <tbody>
+			      	  <tr>
+			            <th width="15%" class="text-right">姓名</th>
+			            <td width="35%">{{userName}}</td>
+			            <th width="15%" class="text-right">学号</th>
+			            <td width="35%">{{studentNo}}</td>
+			          </tr>
+			          <tr>
+			            <th class="text-right">证件类型</th>
+			            <td>{{!!certType?certType:'--'}}</td>
+
+			            <th class="text-right">报读专业</th>
+			            <td>
+			            	{{specialty}}
+			            </td>
+			          </tr>
+			          <tr>
+			            <th class="text-right">证件号</th>
+			            <td>{{!!certNo?certNo:'--'}}</td>
+
+			            <th class="text-right">入学年级</th>
+			            <td>
+			            	{{yearName}}
+			            </td>
+			          </tr>
+			          <tr>
+			            <th class="text-right">专业层次</th>
+			            <td>
+			            	{{pyccName}}
+			            </td>
+			            <th class="text-right">教务班级</th>
+			            <td>
+			            	{{className}}
+			            </td>
+			          </tr>
+			          <tr>
+			            <th class="text-right">入学学期</th>
+			            <td>
+			            	{{gradeName}}
+			            </td>
+			            <th class="text-right">所属院校</th>
+			            <td>
+			            	{{orgName}}
+			           	</td>
+			          </tr>
+			          <tr>
+			            <th class="text-right">手机号码</th>
+			            <td>
+			            	<div class="valid-control">
+		                  		<input class="form-control form-control-block" type="text" value="{{mobile}}" placeholder="手机号码" datatype="m" nullmsg="请填写手机号码" errormsg="手机号码不对" name="mobile">
+		                  	</div>
+			            </td>
+			            <th class="text-right">邮箱</th>
+			            <td>
+			            	<div class="valid-control">
+			                    <input class="form-control form-control-block" type="text" value="{{email}}" placeholder="邮箱" datatype="e" nullmsg="请填写邮箱" errormsg="邮箱格式不对" name="email">
+			                </div>
+			            </td>
+			          </tr>
+			        </tbody>
+			    </table>
+			</div>
+		{{/if}}
+		<p class="user_data_btn margin_b25">
+			<button type="submit" class="btn btn-normal btn-green border-radius">修改</button>
+			<button type="button" class="btn btn-normal btn-gray border-radius">取消</button>
+		</p>
+		<input type="hidden" name="studentId" value="{{studentId}}">
+	</form>
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','Validform','common'], function ($,template) {
+	var $container=$('[data-role="type-content"]');
+
+	//初使化数据
+	;(function(){
+	    var xhr=$.get('/pcenter/gjtUser/edit',{schoolModel:((appJSON.schoolModel!=='0' && appJSON.schoolModel!=5)?true:false)})
+	      	.done(function(renderData){
+	          if(renderData.msgCode==200){
+	            if(renderData.data){
+	              var renderHtml = template('form-temp',
+	              						$.extend(
+		              						{}, 
+		              						renderData.data, 
+		              						{schoolModel:appJSON.schoolModel}
+	              						)
+	              					);
+	                $container.html(renderHtml);
+
+	                initValidForm(
+	                	$(".theform"),
+	                	function(){
+	                		var curform=this;
+	                		$container.append('<div class="overlay bg-center"></div>');
+
+					      	ajaxProcess({
+					      		url:'/pcenter/gjtUser/update',
+					      		type:'POST',
+					      		data:curform.serialize(),
+					      		success:function(data){
+							        if(data.msgCode==200){
+							        	$.when($.resultDialog(1,'修改成功'))
+							        	.done(function(){
+							        		var picUrl=$('[name="pictureURL"]',curform).val();
+							        		if(picUrl){
+							        			//更新头像
+							        			$('.user-img').attr('src',picUrl);
+
+							        			//更新缓存的学生数据
+							        			var studentBaseInfo=$('body').data('studentBaseInfo');
+							        			studentBaseInfo['pictureURL']=picUrl;
+							        		}
+				                		});
+							        }
+							        else{
+							        	$.resultDialog(2,data.message);
+							        }
+
+							        //强制“学籍信息”重新请求接口加载资料
+				                	appJSON.studentRecordInfo=false;
+					      		},
+					      		fail:function(errorMsg){
+					      			$.resultDialog(2,errorMsg,2000);
+					      		},
+					      		always:function(){
+					      			$container.children('.overlay').remove();
+					      		}
+					      	});
+	                	},
+	                	{
+	                		ignoreHidden:true
+	                	}
+	                );
+	            }
+	            else{
+	              $container.html(template('no-data-tips-temp'));
+	            }
+	          }
+	          else{
+	              $container.html(
+	              	template('no-data-tips-temp',{message:renderData.message})
+	              );
+	          }
+	      	})
+	      	.fail(function(XMLHttpRequest, textStatus, errorThrown){
+	            $container.html(
+	              	template('error-tips-2-temp',{message:(textStatus || errorThrown)})
+	            );
+	        });
+	    window['jqAjaxCollectors'].push(xhr);
+	})();
+
+	//上传图片窗口
+	$container.on('click','[data-role="upload-btn"]', function(event) {	
+		uploadFile({
+			ok:function(filelist){
+	            if(filelist){
+	            	if(filelist.length>0){
+	              		var src=filelist[0].SFileName;
+	              		$('[dat-role="pic"]',$container).attr('src',src+'?x-oss-process=image/resize,h_150,w_150/auto-orient,1');
+	              		$('[name="pictureURL"]',$container).val(src);
+	              	}	              
+	            }
+	            $.closeDialog(this);
+			}
+		});
+	});
+});
+</script>

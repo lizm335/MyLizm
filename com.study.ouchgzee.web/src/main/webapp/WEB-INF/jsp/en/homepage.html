@@ -1,0 +1,208 @@
+<div class="main-box">
+  <div class="wrap-box clearfix">
+    <div class="main">
+      <div class="bg-white border-e0e0e0 clearfix" data-id="remind">
+        <table width="100%" height="200">
+          <tr>
+            <td align="center" valign="middle">
+              <i class="loading"></i>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="main-box">
+  <div class="wrap-box clearfix">
+    <div class="main">
+      <div class="bg-white border-e0e0e0 clearfix">
+        {{if schoolModel!=2}}
+        <header class="mdl_head" data-schoolModel="{{schoolModel}}">
+            <ul class="tabs-list clearfix">
+              {{if schoolModel==0}}
+                {{each childPage}}
+                  <li data-hash="{{$value.hashPath}}" data-role="single-tab" data-label="{{$value.label}}" style="width:{{100/childPage.length}}%;margin-left:-2px;">
+                    <a href="{{$value.hashPath}}" >
+                      {{$value.name}}
+                    </a>
+                  </li>
+                {{/each}}
+              {{else if schoolModel==1}}
+                {{each childPage}}
+                  {{if $value.label!='zhibo'}}
+                    <li data-hash="{{$value.hashPath}}" data-role="single-tab" data-label="{{$value.label}}" style="width:{{100/(childPage.length-1)}}%;margin-left:-2px;">
+                      <a href="{{$value.hashPath}}" >
+                      {{if $value.label=='chengji'}}
+                        成绩查询
+                      {{else}}
+                        {{$value.name}}
+                      {{/if}}
+                      </a>
+                    </li>
+                  {{/if}}
+                {{/each}}
+              {{else if schoolModel==5}}
+                {{each childPage}}
+                  {{if $value.label!='zhibo'}}
+                    <li data-hash="{{$value.hashPath}}" data-role="single-tab" data-label="{{$value.label}}" style="width:{{100/(childPage.length-1)}}%;margin-left:-2px;">
+                      <a href="{{$value.hashPath}}" >
+                        {{$value.name}}
+                      </a>
+                    </li>
+                  {{/if}}
+                {{/each}}
+              {{/if}}          
+            </ul>
+        </header>
+        {{/if}}
+        <div class="tabs-content" id="tabs-content-box">
+          
+        </div>
+            
+      </div>
+      
+    </div>
+  </div>    
+</div>
+<!--班主任信息与提醒资料-->
+<script type="text/html" id="index-remind">
+  <div class="fr sidebar_b padding15 clearfix position-relative">
+    {#if BZR_TEACHER_COUNT>0#}
+      <div class="font18 padding_b10" style="padding-left: 95px;">学习支持服务</div>
+      <div class="typeset">              
+          <div class="fixed">
+            <img src="http://eefile.download.eenet.com//files2/xlims/file/a962be338c64b0d7d849a68a98e19e90.jpg?x-oss-process=image/resize,h_68,w_68/auto-orient,1" width="80" height="80" class="circle">
+          </div>
+          <div class="adaptive">
+            <p class="font_gray">“学习过程中遇到任何问题都可以通过下面的方式联系我们，我们将会竭诚为您提供及时有效的服务”</p>
+          </div>
+      </div>
+
+      <div class="position-absolute full-width" style="bottom:15px;left:0;">
+        {#if schoolModel==1 || schoolModel==2#}
+          <div class="margin_l15 margin_r15">
+            <a href="pop-ask-teacher.html" class="btn btn-md btn-green btn-block" data-role="ask-teacher">提问题</a>
+          </div>
+        {#else#}
+          <div class="clearfix margin_l15 margin_r15">
+            <a href="pop-ask-teacher.html" class="fl btn btn-md btn-green ask-btn" data-role="ask-teacher">提问题</a>
+            <a href="#" target="_blank" class="fr btn btn-md btn-gray ask-btn" data-role="ee-contact">在线咨询</a>
+          </div>
+        {#/if#}
+      </div>
+    {#/if#}
+  </div>
+  <div class="padding10 zy_box clearfix">
+    <img src="{# ZYFM | imgUrlFormat:[200,200] #}" alt="{#ZYMC#}" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/major-default.jpg'">
+    
+    <div class="zy_txt_right">
+      <h2 class="zy_txt_name" title="{#ZYMC#}">{#ZYMC#}</h2>
+      <p class="zy_txt_desc">{#BJMC#}</p>
+      <div class="zy_icon {#(schoolModel==1 || schoolModel==2)?'zy_icon_2':''#}">
+        <div class="fl num_icon" style="width:58%;width:50% !ie;">
+          <ul>
+            <li>
+              <a href="#/hdzhongxin">
+                {#READ_MESSAGE_COUNT | indexEmptyStr2Zero #}<p>活动通知</p>
+              </a>
+            </li>
+            {#if schoolModel!=1 && schoolModel!=2#}
+              <li>
+                <a href="#/bjhuodong">
+                  {#ACTIVITY_COUNT | indexEmptyStr2Zero #}<p>我的活动</p>
+                </a>
+              </li>
+            {#/if#}
+            <li>
+              <a href="#/bjdayi">
+                {#FEEDBACK_COUNT | indexEmptyStr2Zero #}<p>我的答疑</p>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="oh num_info">
+          <ul>
+            <li class="wdls_05" style="width:50%">
+              <a href="#/bjtongxunlu?id=0">
+                <i></i><p>我的老师</p><p>({#TEACHER_COUNT | NumberConvert #})</p>
+              </a>
+            </li>
+            <li class="wdtx_06" style="width:50%">
+              <a href="#/bjtongxunlu?id=1">
+                <i></i><p>我的同学</p><p>({#STUDENT_COUNT | NumberConvert #})</p>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+
+  template.helper('indexEmptyStr2Zero', function (orientVal) {
+      if($.isNumeric(orientVal)){
+        if(orientVal>0){
+          return '<i class="text-red">'+orientVal+'</i>';
+        }
+        else{
+          return '<i>'+orientVal+'</i>';
+        }
+      }
+      else{
+        return '--'
+      }
+  });
+
+  //通知统计项和班主任信息
+  ;(function(){
+      var $box=$('[data-id="remind"]');
+      var url='/pcenter/index/getHeadTeacher';
+      var xhr=$.get(url)
+      .done(function(renderData){
+          if(renderData.msgCode==200 && renderData.data){
+              var $tpl=$("#index-remind");
+
+              if($tpl.length>0){
+                var render = template.compile($tpl.html(),{openTag:'{#',closeTag:'#}',escape:false});
+                var renderHtml = render(
+                  $.extend(
+                    true, 
+                    renderData.data,
+                    {
+                      schoolModel:appJSON.schoolModel
+                    }
+                  )
+                  
+                  
+                );
+                $box.html(renderHtml);
+              }
+              /*
+                if(renderData.data.eeUrl && renderData.data.BZR_TEACHER_COUNT>0){
+                  $.cookie('eeUrl',renderData.data.eeUrl);
+                  //设置工具条里的ee链接地址
+                  $('.suspend_icon03').attr({
+                    'href':renderData.data.eeUrl,
+                    'target':'_blank'
+                  });
+                }
+              */
+              if(!$.cookie('BZR_ID') && renderData.data.BZR_ID){
+                  $.cookie('BZR_ID',renderData.data.BZR_ID);
+              }
+          }
+          else{
+              $box.html( template('error-tips-temp',{message:renderData.message}) );
+          }
+      })
+      .fail(function(XMLHttpRequest, textStatus){
+          $box.html( template('error-tips-temp',{message:textStatus}) );
+      });
+
+      //window['jqAjaxCollectors'].push(xhr);
+  })();
+});
+</script>

@@ -1,0 +1,344 @@
+<div class="margin-offset-lr20" data-role="list-wrapper">
+	<div class="bzr_subnav padding_t10">
+		<div class="subnav_btn fl" data-role="type-tab">
+			<a href="#/bjhuodong?id=0" class="active">进行中（<span data-role="tab-1">0</span>）</a>
+			<a href="#/bjhuodong?id=1">已结束（<span data-role="tab-2">0</span>）</a>
+		</div>
+		<div class="bzr_searchInput fr"><input class="form-control input-search" placeholder="请输入关键词搜索，回车搜索" style="width:250px;"></div>
+	</div>
+	<div class="qa_box" data-role="type-content">
+    	<div data-role="item-list-container" class="overlay-wrapper">
+    		<div class="text-center"><i class="loading"></i></div>
+    	</div>
+	</div>
+</div>
+
+<!--点击“报名参与”的弹出框的模板-->
+<script type="text/template" id="activity-pop-temp">
+	<table width="100%" height="100%">
+        <tr>
+          <td valgin="middle">
+          	<div class="center-block" style="width:82%;">
+	          	<h3 class="font24 text-no-bold text-646e7d margin_b25 text-center">{{ activityName }}</h3>
+	          	<table class="table-gray-th">
+	          		<tr>
+	          			<th width="28%" class="text-right">活动时间</th>
+	          			<td>{{ activityTime }}</td>
+	          		</tr>
+	          		<tr>
+	          			<th class="text-right">活动地点</th>
+	          			<td>{{ activityPlace }}</td>
+	          		</tr>
+	          		<tr>
+	          			<th class="text-right">剩余名额</th>
+	          			<td>{{ restNumber }}</td>
+	          		</tr>
+	          		<tr>
+	          			<th class="text-right">活动费用</th>
+	          			<td>{{ activityCost }}</td>
+	          		</tr>
+	          	</table>
+          	</div>
+          </td>
+        </tr>
+    </table>
+</script>
+
+<!--列表 模板-->
+<script type="text/template" id="list-render-temp">
+  {{if pageInfo.totalElements>0}}
+    <ul class="qa-list" dat-role="item-list">
+      	{{each pageInfo.content}}
+			<li class="item clearfix">
+				<img src="{{$value.publicityPicture | imgUrlFormat:[237,144]}}" alt="{{$value.activityTitle}}" class="bjhd_p" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/temp/bj+hf.jpg'">
+
+				<div class="qa_txt">
+					<h2><a href="#/bjhuodong/summary/{{$value.id}}?act_type={{dataType}}">{{$value.activityTitle}}</a></h2>
+					<div class="clearfix">
+						<div class="fr text-center">
+							<div>
+								<a href="#/bjhuodong/summary/{{$value.id}}?act_type={{dataType}}" class="btn btn-normal btn-gray border-radius margin_b15 min-width-120">查看详情</a>
+							</div>
+
+							{{if dataType=='ongoing'}}
+								{{if $value.isEnter==0}}
+									<button type="button" data-role="sign-up" class="btn btn-normal btn-orange border-radius min-width-120"
+										data-activity-id='{{$value.id}}'
+										data-activity-name='{{$value.activityTitle}}'
+										data-activity-time='{{$value.beginTime}}'
+										data-activity-place='{{$value.activityAddress}}'
+										data-rest-number='{{$value.ceilingNum-$value.joinNum}}'
+										data-activity-cost='
+											{{if $value.isFree==1}}
+												免费参与
+											  {{else if $value.isFree==2}}
+											  	{{if $value.chargeMoney!=null}}
+											  		￥{{$value.chargeMoney}}
+											  	{{else}}
+											  		0
+											  	{{/if}}
+											{{/if}}
+										'
+									>报名参与</button>
+								{{else if $value.isEnter==1}}
+									{{if $value.studentAuditStatus==0}}
+										<span class="text-orange">已报名，待审核通过</span>
+									{{else if $value.studentAuditStatus==1}}
+										<span class="text-green">已报名，已通过审核</span>
+									{{else if $value.studentAuditStatus==2}}
+										<span class="text-green">已报名，审核不通过</span>
+									{{/if}}
+								{{/if}}
+							{{else if dataType=='over'}}
+								<button type="button" class="btn btn-normal btn-orange border-radius min-width-120 disabled" disabled>活动已结束</button>
+							{{/if}}
+						</div>
+						<div class="badge_icon">
+							<table>
+								<tr>
+									<td><span><i class="icon icon-68x68"></i>{{$value.beginTime}}</span></td>
+									<td><span><i class="icon icon-92x68"></i>人数限制（{{$value.ceilingNum}}）</span></td>
+									<td><span><i class="icon icon-115x68"></i>报名人数（{{$value.joinNum}}）</span></td>
+								</tr>
+								<tr>
+									<td>
+										<span><i class="icon icon-138x68"></i>费用
+											{{if $value.isFree==1}}
+												（无）
+											  {{else if $value.isFree==2}}
+											  	{{if $value.chargeMoney!=null}}
+											  		（{{$value.chargeMoney}}）
+											  	{{else}}
+											  		（0）
+											  	{{/if}}
+											{{/if}}
+										</span>
+									</td>
+									<td><span><i class="icon icon-162x68"></i>评论（{{$value.commentNum}}）</span></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td colspan="3"><span><i class="icon icon-185x68"></i>{{$value.activityAddress}}</span></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</li>
+		{{/each}}
+    </ul>    
+  {{/if}}
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+	//template.config('cache', false)
+	var $wrapper=$('[data-role="list-wrapper"]');
+	var $container=$('[data-role="type-content"]');
+
+	var xhrUrl='/pcenter/headTeacherService/classActivity/list';
+
+	//分页ajax
+    function pageAjax(searchData){
+      var $box=$('[data-role="item-list-container"]');
+      $box.append('<div class="overlay bg-center"></div>');
+      //searchData json对象
+      	var xhr=ajaxProcess({
+	  		url:xhrUrl,
+	  		type:'GET',
+	  		data:{
+	          activityTitle:searchData?(searchData.activityTitle||''):'',
+	          type:searchData?(searchData.type||'ongoing'):'ongoing',
+	          pageSize:searchData?(searchData.pageSize||2):2,
+	          pageNumber:searchData?(searchData.pageNumber||1):1
+	      	},
+	  		success:function(renderData){
+	  			if(renderData.msgCode==200){
+					if(!renderData.data&&!renderData.data.pageInfo){
+		                $box.html(window['noDataTips']);
+		            }
+		            else{
+						$('[data-role="tab-1"]').text(renderData.data.ongoingCount);
+		          		$('[data-role="tab-2"]').text(renderData.data.overCount);
+						if(renderData.data.pageInfo.totalElements>0){
+							var renderHtml = template('list-render-temp',$.extend(true, renderData.data, {dataType:searchData.type})
+							 );
+							$box.html(renderHtml);
+						}
+						else{
+							if(searchData.activityTitle!=''){
+			                    $box.html(window['noDataTips']);
+			                }
+			                else{
+			                    var renderHtml = template('no-data-tips-temp',{
+			                                      message:(searchData.type=='ongoing'?'暂无进行中的班级活动':'暂无已结束的班级活动')
+			                                    });
+			                    $box.html(renderHtml);
+			                }
+						}
+					}
+				}
+				else{
+				  $box.html( renderData.message )
+				}
+	  		}
+  		});
+
+  		return xhr;
+    }
+
+    //创建html
+    function createHtml(filterType){
+      var keyJson=$('body').data('search');
+      var val=keyJson.activity.keywords;
+
+      var flag=true;
+      var def=pageAjax({
+        activityTitle:val,
+        type:(filterType?filterType:'ongoing'),
+        pageSize:5,
+        pageNumber:1
+      })
+      .done(function(renderData){
+      	if(renderData.data&&renderData.data.pageInfo){
+	        var pageInfo=renderData.data.pageInfo;
+	        flag=false;
+	        if(pageInfo.totalElements>0){
+	          var render=template.compile(window['paginationRenderTemp']);
+	          var html=render(pageInfo);
+	          if($('[data-role="page-box"]',$container).length<=0){
+	            $container.append(html);
+	          }
+	          else{
+	            $('[data-role="page-box"]',$container).replaceWith(html);
+	          }
+
+	          //生成分页
+	          createPagination({
+	            pageCount:pageInfo.totalElements,
+	            pageSize:pageInfo.size,
+	            currentPage:pageInfo.number-1
+	          },function (new_page_index, pagination_container) {
+	            if(flag){
+	              pageAjax({
+	                activityTitle:val,
+	                type:(filterType?filterType:'ongoing'),
+	                pageSize:pageInfo.size,
+	                pageNumber:new_page_index+1
+	              });
+	            }
+	            flag=true;
+	            return false;
+	          });
+	        }
+	        else{
+	          $('[data-role="page-box"]',$container).remove();
+	          //$box=$('[data-role="item-list-container"]',$container);
+	        }
+        }
+      });
+      return def;
+    }
+
+    //分页跳转
+    $wrapper.on('click', '[data-role="jump-page-btn"]', function(event) {
+      var $pageContainer=$("#page-render");
+      var jumpPageNum=$('[data-role="jump-page-input"]',$pageContainer.parent()).val()-1;
+      var pageCount=$pageContainer.data('pageCount');
+      var curPage=$pageContainer.data('current_page');
+      if( $.isNumeric(jumpPageNum) && pageCount && pageCount>1 && curPage!=jumpPageNum && jumpPageNum<pageCount){
+        $pageContainer.trigger('setPage', [jumpPageNum]);
+      }
+    });
+
+	//回车搜索
+    $(".input-search").on('keydown', function(event) {
+    	var self=this;
+        if(event.which==13){
+          $('body').data('search',{
+          	activity:{
+          		keywords:self.value
+          	}
+          });
+          createHtml(tabID==0?'ongoing':'over');
+        }
+    });
+
+    //点击“报名参与”
+    $container.on('click','[data-role="sign-up"]',function(event) {
+        var $btn=$(this);
+        var cost=$btn.data('activity-cost');
+        var popSureBtnLabel=parseFloat(cost);
+
+        //如果属性字符串是以数字开头，
+        //也就是该活动是需要付费的，那按钮就显示
+        //‘立即支付’，否则就显示‘立即参与’
+        //popSureBtnLabel=isNaN(popSureBtnLabel)?'立即参与':'立即支付活动费用';
+        popSureBtnLabel='立即参与';
+
+        var activityData={
+            activityName:$btn.data('activity-name'),
+            activityTime:$btn.data('activity-time'),
+            activityPlace:$btn.data('activity-place'),
+            restNumber:$btn.data('rest-number'),
+            activityCost:cost
+        };
+
+        var renderHtml = template('activity-pop-temp',activityData);
+
+        var $pop=$.alertDialog({
+        	title:'报名参与活动',
+			width:600,
+		    height:420,
+		    content:renderHtml,
+		    cancelCss:'btn btn-normal btn-gray min-width-100',
+		    okLabel:popSureBtnLabel,
+		    okCss:'btn btn-normal btn-orange margin_l15 min-width-100',
+		    ok:function(){
+		    	$('.u-panel',$pop).addClass('overlay-wrapper').append('<div class="overlay bg-center"></div>')
+		    	var url='/pcenter/headTeacherService/classActivity/applyAdd';
+
+		    	ajaxProcess({
+		      		url:url,
+		      		type:'POST',
+		      		data:{activityId:$btn.data('activity-id')},
+		      		success:function(data){
+		      			$.when(
+							$.resultDialog(
+								((data.msgCode==200&&data.busCode!=101)?1:0
+								),
+								((data.msgCode==200&&data.busCode!=101)?'报名成功':data.message),
+								1500
+							)
+						)
+                        .done(function(){
+                            $.closeDialog($pop);
+						    curRoute.app.refresh();
+                        });
+		      		}
+		      	});
+		    }
+		}); 
+    })
+
+    //选项卡效果(进行中/已结束)
+    var tabID=curRoute.params['id'];
+    tabID||(tabID=0);
+    
+    $('[data-role="type-tab"] a').eq(tabID).addClass('active').siblings().removeClass('active');
+
+    var keyJson=$('body').data('search');
+    if( !keyJson || !keyJson.activity ){
+    	$('body').data('search',{
+          	activity:{
+          		keywords:''
+          	}
+        });
+    }
+    else{
+    	$(".input-search").val(keyJson.activity.keywords);
+    }
+    //初始化页面
+    createHtml(tabID==0?'ongoing':'over');
+});
+</script>

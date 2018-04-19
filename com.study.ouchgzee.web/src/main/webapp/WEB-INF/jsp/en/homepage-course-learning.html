@@ -1,0 +1,2827 @@
+<div class="clearfix">
+    <div class="fr sidebar_top">
+        <div class="top_5">
+            <h2 class="text-no-bold"><span>学习排名top5</span></h2>
+            
+            <div data-id="index-top5">
+                <table width="100%">
+                    <tr>
+                        <td><div class="text-center"><i class="loading"></i></div></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="top_5 txtScroll-left">
+            <h2 class="text-no-bold position-relative">
+                <em class="fr hd" data-role="scroll-control"><i class="left prev"></i><span class="pageState" style="padding-left:0;"></span><i class="right next"></i></em>
+                <span data-id="online-count">在线学员(0)</span>
+            </h2>
+            <div class="bd" data-id="index-student-online">
+                <div class="text-center"><i class="loading"></i></div>
+                
+            </div>
+        </div>
+        <div class="top_5">
+            <h2 class="text-no-bold"><span>学习动态</span></h2>
+            <div data-id="index-study-status">
+                <div class="text-center"><i class="loading"></i></div>
+            </div>            
+        </div>
+    </div>
+    <div class="course_box per_center_main overlay-wrapper" data-id="study-course">
+        <div style="height:300px;"></div>
+        <div class="overlay bg-center"></div>
+    </div>
+</div>
+
+
+<!--在线学员 详情 弹窗-->
+<script type="text/html" id="pop-temp">
+    <div class="popup_box stu-online">
+      <div class="inner">
+        <div class="container clearfix">
+            {{if stuPic}}
+                <img src="{{stuPic | imgUrlFormat:[53,53]}}" alt="{{stuName}}" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png'">
+            {{else}}
+                <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png" alt="{{stuName}}">
+            {{/if}}
+            <p>
+                {{ stuName }}
+                <i class="icon icon-32x0"></i>
+                <span>{{ tipText }}</span>
+            </p>
+        </div>
+        {{if eeurl}}
+            <div class="popup_btn"> <a target="_blank" href="{{eeurl}}" class="ee_popup" style="width:100%;"><i></i>ee交流</a>
+            </div>
+        {{/if}}
+        <div class="triangle-down">
+            <i></i>
+            <em></em>
+        </div>
+      </div>
+    </div>
+</script>
+
+<!--在线学员-->
+<script type="text/html" id="index-student-online-temp">
+    {{if data && data.length>0}}
+        <ul class="picList xyzx_wrap">
+            {{each data}}
+            <li>
+                <div class="item">
+                    {{if $value.zp}}
+                        <img src="{{$value.zp | imgUrlFormat:[53,53]}}" alt="{{$value.xm}}" data-name="{{$value.xm}}" data-text="{{$value.status}}" data-eeurl="{{$value.eeurl}}" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png'">
+                    {{else}}
+                        <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png" alt="{{$value.xm}}" data-name="{{$value.xm}}" data-text="{{$value.status}}" data-eeurl="{{$value.eeurl}}">
+                    {{/if}}
+                    <p>{{$value.xm}}</p>
+                </div>
+            </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <div class="text-center">
+            <i class="alert-icon alert-icon-123x63"></i> 暂无在线学员
+        </div>
+    {{/if}}
+</script>
+
+<!--学习排名top5-->
+<script type="text/html" id="top5-temp">
+    <table width="100%">
+        {{if data && data.length>0 }}
+            <tr>
+                <th width="40">排名</th>
+                <th width="90">学员</th>
+                <th width="140">平均学习进度</th>
+            </tr>
+            {{each data}}
+            <tr>
+                <td>
+                    {{if $index<3 }}
+                        <em>{{$value.STD_RANK}}</em>
+                    {{else}}
+                        {{$value.STD_RANK}}
+                    {{/if}}
+                </td>
+                <td>{{$value.STD_NAME}}</td>
+                <td>{{$value.AVG_PROGRESS}}</td>
+            </tr>
+            {{/each}}
+        {{else}}
+            <tr>
+                <td>
+                    <div class="text-center">
+                        <i class="alert-icon alert-icon-123x63"></i> <span class="f14">暂无学习排名</span>
+                    </div>
+                </td>
+            </tr>    
+        {{/if}}
+    </table>
+</script>
+
+<!--学习动态-->
+<script type="text/html" id="index-study-status-temp">
+    {{if data && data.length>0 }}
+        {{each data}}
+            <ul class="zfxz_box">
+                <li><span>{{$value.xm}}</span><span>{{$value.dynamic}}</span>
+                </li>
+            </ul>
+        {{/each}}
+    {{else}}
+        <div class="text-center">
+            <i class="alert-icon alert-icon-123x63"></i> 暂无学习动态
+        </div>   
+    {{/if}}
+</script>
+
+<!--课程学习 总 模板-->
+<script type="text/html" id="course-study-temp">
+    <!--各学期课程学习情况的统计-->
+    <div class="learnCase" data-role="learn-case">
+        {{if TableData}}
+            {{include 'semester-course-tbl-temp' TableData}}
+        {{/if}}
+    </div>
+
+    <!--课程学习进度-->
+    {{if TermsTabs && TermsTabs.TERMS && TermsTabs.TERMS.length>0}}
+        <div class="clearfix course-progress margin_b25">
+            {{each TermsTabs.TERMS}}
+                <div class="course-semester {{$index<TermsCurIndex?'actived':''}} {{($value.COURSE_FLAG==1 && $index<TermsCurIndex)?'warning':''}}" >
+                    <div class="in">
+                        <span class="course-semester-name">第{{$value.KKXQ}}学期</span>
+                        <span class="u-arrow-box">
+                            <i></i>
+                            <em></em>
+                        </span>
+                        <i class="down_btn {{($index == TermsCurIndex-1)?'cur':''}}"></i>
+                    </div> 
+                </div>
+            {{/each}}
+            <div class="course-fin {{TermsTabs.XJZT==8?'on':''}}">
+                <div class="in">
+                    <i class="icon icon-0x68"></i>
+                    <i class="u-arrow"></i>
+                </div>
+            </div>
+        </div>
+    {{/if}}
+
+    <!--各学期的课程-->
+    <article class="c_ctn">
+        <div class="c_ctn_item">
+            {{include 'semester-course-temp' TermsList}}
+        </div>
+    </article>
+</script>
+
+<!--课程学习 总 模板（国开在线）-->
+<script type="text/html" id="course-study-temp2">
+    <!--课程学习进度-->
+    
+    <div class="border-e0e0e0 padding15 margin_b15">
+        <table width="100%">
+            <tr>
+                <td>
+                    <strong class="f16">我的选课列表</strong>
+                </td>
+                <td>
+                    <ol class="ol-decimal">
+                        <li>下列的课程是你当前学期需要学习的课程，请认真完成学习和考试</li>
+                        <li>若下列课程在本学期没有通过学习和考试，则需要在下学期进行重学，反之，则不用</li>
+                    </ol>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="learnCase" data-role="learn-case">
+        {{if TableData}}
+            {{include 'semester-course-tbl-temp' TableData}}
+        {{/if}}
+    </div>
+
+    <!--各学期的课程-->
+    <article class="c_ctn">
+        <div class="c_ctn_item">
+            {{include 'semester-course-temp' TermsList}}
+        </div>
+    </article>
+</script>
+
+    <!--各学期课程学习情况的统计 表格信息 模板-->
+    <script type="text/html" id="semester-course-tbl-temp">
+        <!--非院校模式-->
+        {{if schoolModel==='0'}}
+            <table width="100%">
+                <tbody>
+                    <tr>
+                        <td width="36%">
+                            <strong class="font16">
+                                {{KKXQ | kcxxSemesterConvert}}
+                                
+                            </strong>
+                            <div class="font12">
+                                <strong>开始时间：</strong>
+                                {{START_DATE}}
+                            </div>
+                            <div class="font12">
+                                <strong>结束时间：</strong>
+                                {{END_DATE}}
+                            </div>
+                        </td>
+                        <td width="20%" align="center">
+                            <span class="stat_num">{{PASSCOURSECOUNT | NumberConvert}}/{{TOTALCOURSE | NumberConvert}}</span>
+                            <br>通过数/课程总数
+                        </td>
+                        <td width="26%" align="center">
+                            <span class="stat_num">{{PASSCREDIT | NumberConvert}}/{{TOTALCREDIT | NumberConvert}}</span>
+                            <br>已获学分/总学分
+                        </td>
+                        <td width="18%" align="center">
+                            <span class="stat_num position-relative">
+                                {{if isCourseOpen}}
+                                    {{RANKING | NumberConvert}}
+                                    {{if jbrs}}
+                                        <em class="jump_tips down_status">
+                                            {{jbrs!=0?jbrs:''}}
+                                            <!--<i class="icon icon-71x93"></i>-->
+                                        </em>
+                                    {{/if}}
+                                {{else}}
+                                    --
+                                {{/if}}
+                            </span>
+                            <br>班级排名
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        <!--院校模式（有考试）-->
+        {{else if schoolModel==1}}
+            <table width="100%">
+                <tbody>
+                    <tr>
+                        <td width="20%" align="center">
+                            <span class="stat_num">{{PASSCOURSECOUNT | NumberConvert}}</span>
+                            <br>已通过课程
+                        </td>
+                        <td width="20%" align="center">
+                            <span class="stat_num">{{NO_PASSSCOUNT | NumberConvert}}</span>
+                            <br>未通过课程
+                        </td>
+                        <td width="20%" align="center">
+                            <span class="stat_num">{{LEARNINGCOUNT | NumberConvert}}</span>
+                            <br>学习中课程
+                        </td>
+                        <td width="20%" align="center">
+                            <span class="stat_num">{{TOTALCOURSE | NumberConvert}}</span>
+                            <br>课程总数
+                        </td>
+                        <td width="20%" align="center">
+                            <span class="stat_num position-relative">
+                                {{RANKING | NumberConvert}}
+                                {{if jbrs}}
+                                    <em class="jump_tips down_status">
+                                        {{jbrs!=0?jbrs:''}}
+                                        <!--<i class="icon icon-71x93"></i>-->
+                                    </em>
+                                {{/if}}
+                            </span>
+                            <br>班级排名
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        <!--院校模式（无考试）-->
+        {{else if schoolModel==2}}
+            <table width="100%">
+                <tbody>
+                    <tr>
+                        <td width="20%" align="center">
+                            <span class="stat_num">{{YTG_COUNT | NumberConvert}}</span>
+                            <br>已通过课程
+                        </td>
+                        <td width="20%" align="center">
+                            <span class="stat_num">{{WXI_COUNT | NumberConvert}}</span>
+                            <br>未学习课程
+                        </td>
+                        <td width="20%" align="center">
+                            <span class="stat_num">{{XXZ_COUNT | NumberConvert}}</span>
+                            <br>学习中课程
+                        </td>
+                        <td width="20%" align="center">
+                            <span class="stat_num">{{COURSE_COUNT | NumberConvert}}</span>
+                            <br>课程总数
+                        </td>
+                        <td width="20%" align="center">
+                            <span class="stat_num position-relative">
+                                {{RANKING | NumberConvert}}
+                                {{if jbrs}}
+                                    <em class="jump_tips down_status">
+                                        {{jbrs!=0?jbrs:''}}
+                                        <!--<i class="icon icon-71x93"></i>-->
+                                    </em>
+                                {{/if}}
+                            </span>
+                            <br>班级排名
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        <!--国开在线-->
+        {{else if schoolModel==5}}
+            <table width="100%">
+                <tbody>
+                    <tr>
+                        <td width="30%">
+                            {{if TermsTabs && TermsTabs.TERMS && TermsTabs.TERMS.length>0}}
+                                <span class="dropdown position-relative inline-block">
+                                    <div class="as-link dropdown-trigger">
+                                        <strong class="font16">{{TermsTabs.TERMS[searchTermIndex].KKXQ | kcxxSemesterConvert}}</strong>
+                                        <i class="toggle-icon"></i>
+                                    </div>
+                                    <div class="dropdown-menu pop" style="top:100%;border-top: 1px #d1d1d1 solid;">
+                                        <ul class="perInfo_nav text-center" data-role="course-semester-menu">
+                                            {{each TermsTabs.TERMS}}
+                                                {{if TermsTabs.TERMS.length-1-$index <= TermsCurIndex}}
+                                                    <li class="{{(TermsTabs.TERMS.length-1-$index == searchTermIndex)?'cur':''}}">
+                                                        <a href="#" class="padding_l5 padding_r5">
+                                                            {{if TermsTabs.TERMS.length-1-$index==TermsCurIndex}}
+                                                                [当期]
+                                                            {{else}}
+                                                                [往期]
+                                                            {{/if}}
+                                                            {{TermsTabs.TERMS[TermsTabs.TERMS.length-1-$index].KKXQ | kcxxSemesterConvert}}
+                                                        </a>
+                                                    </li>
+                                                {{/if}}
+                                            {{/each}}
+                                        </ul>
+                                    </div>
+                                </span>
+                            {{/if}}
+                            
+                            <div class="font12">
+                                <strong>开始时间：</strong>{{START_DATE}}
+                            </div>
+                            <div class="font12">
+                                <strong>结束时间：</strong>{{END_DATE}}
+                            </div>
+                        </td>
+                        <td width="13%" align="center">
+                            <span class="stat_num">{{TOTALCOURSE | NumberConvert}}</span>
+                            <br>课程总数
+                        </td>
+                        <td width="13%" align="center">
+                            <span class="stat_num">{{PASSCOURSECOUNT | NumberConvert}}</span>
+                            <br>已通过课程
+                        </td>
+                        <td width="13%" align="center">
+                            <span class="stat_num">{{TOTALCREDIT | NumberConvert}}</span>
+                            <br>总学分
+                        </td>
+                        <td width="13%" align="center">
+                            <span class="stat_num">{{PASSCREDIT | NumberConvert}}</span>
+                            <br>已获学分
+                        </td>
+                        <td width="18%" align="center" class="no-pad-left">
+                            <span class="stat_num position-relative">
+                                {{if isCourseOpen}}
+                                    {{RANKING | NumberConvert}}
+                                    {{if jbrs}}
+                                        <em class="jump_tips down_status">
+                                            {{jbrs!=0?jbrs:''}}
+                                        </em>
+                                    {{/if}}
+                                {{else}}
+                                    --
+                                {{/if}}
+                            </span>
+                            <br>班级排名
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        {{/if}}
+    </script>
+
+    <!--各学期的课程 模板--> 
+    <script type="text/html" id="semester-course-temp">
+        {{if PLANLIST && PLANLIST.length>0}}         
+            {{each PLANLIST}}             
+                <div class="course_box" data-teach-plan-id="{{$value.TEACH_PLAN_ID}}">
+                    <div class="kc_box bg_png clearfix padding10">
+                        <div class="kc_l">
+                            <img src="{{$value.KCFM | alyImgUrlFormat:['resize,h_188,w_4000','auto-orient,1','crop,x_0,y_10,w_188,h_188,g_ne']}}" alt="{{$value.COURSE_NAME}}" data-id="course-pic" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/course-default.jpg'">
+                            <p><i></i><em class="font16" data-role="count-online">{{$value.COUNTCOURSE?$value.COUNTCOURSE:0}}</em>人正在学此课程</p>
+                        </div>
+                        <div class="kc_r">
+                            <div class="score_div clearfix">
+                                
+                                <h2>
+                                    {{$value.COURSE_NAME}}
+                                    {{if $value.WSJXZK==='0' && $value.SOURCE_KCMC}}
+                                        <small class="f16 gray">（原课程：{{$value.SOURCE_KCMC}}）</small>
+                                    {{/if}}
+                                </h2>
+                                <div class="kc_tag">
+                                    {{if $value.COURSE_STYLE}}
+                                        <span class="label label-warning">{{$value.COURSE_STYLE}}</span>
+                                    {{/if}}
+
+                                    <!--非院校模式显示-->
+                                    {{if $value.CREDIT && ($value.schoolModel==='0' || $value.schoolModel==5)}}
+                                        <span class="label label-default">{{$value.CREDIT}}学分</span>
+                                    {{/if}}
+
+                                    {{if $value.WSJXZK==='0'}}
+                                        <span class="label label-success">面授</span>
+                                    {{/if}}
+                                </div>
+                                <p class="{{$value.IS_ONLINE=='Y'?'messager':''}}" style="min-height:25px;">
+                                    <!--国开学习网课程
+                                        LEARNING_STYLE 学习方式；0：国开在线，1：国开学习网
+                                    -->
+                                    {{if $value.LEARNING_STYLE!=1}}
+                                        <i class="icon {{$value.IS_ONLINE=='Y'?'icon-126x31':'icon-107x31'}}"></i>辅导老师：{{$value.COUNSELOR?$value.COUNSELOR:'--'}}
+                                    {{/if}}
+                                </p>
+                            </div>
+                            <div class="kc_tab">
+                                {{include 'semester-course-other-info-temp' $value}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        {{else}}
+            <div class="text-center margin-t30">
+              <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/qa_null.png" alt="">
+              <p class="font24 margin_b10" style="color:#b2b2b2;">本学期暂未发布课程教学计划</p>
+            </div>
+        {{/if}}
+    </script>
+
+        <!--学习课程 相关统计信息 模板-->
+        <script type="text/html" id="semester-course-other-info-temp">
+            {{if schoolModel==='0' || schoolModel==1}}
+                <!--面授课程 -->
+                {{if WSJXZK==='0'}}
+                    <!--非院校模式-->
+                    {{if schoolModel==='0'}}
+                        <!--该学期已开放-->
+                        {{if isCourseOpen===true}}
+                            <button type="button" class="btn btn-md btn-orange" data-role="view-cert" data-json='{
+                                "TEACH_PLAN_ID":"{{TEACH_PLAN_ID}}"
+                            }'>查看学习凭证</button>
+                        {{else isCourseOpen===false}}
+                            <button type="button" class="btn btn-md btn-gray disabled" disabled>暂未开放学习</button>
+                        {{/if}}
+                    {{/if}}
+                <!--国开学习网课程
+                    LEARNING_STYLE 学习方式；0：国开在线，1：国开学习网
+                -->
+
+                <!--课程类型：0-普通课程；1-社会实践；2-毕业论文-->
+                {{else if COURSE_CATEGORY==1}}
+                    <a class="btn btn-md btn-gray" href="#/shsjxiezuo"><span>申请社会实践写作</span></a>
+                {{else if COURSE_CATEGORY==2}}
+                    <a class="btn btn-md btn-gray" href="#/lwxiezuo"><span>申请论文写作</span></a>
+                    
+                {{else if LEARNING_STYLE==1 && schoolModel==='0'}}
+                    <!--
+                        本学期课程教学周期开始：判断该课程是已经开课，是已启用状态、正式学员，显示“进入学习”按钮，可以进入学习，未开课未启用状态课程以及非“正式学员”显示“暂未开放学习”按钮
+                    -->
+                    {{if TERMCOURSE_ID_STATUS==1 && LEARN_STATUS==1}}
+                        {{if EXAM_STATE==='0' || EXAM_STATE==1}}
+                            <button data-role="gkxxw-study" type="button" class="btn btn-md btn-orange"
+                                    data-json='{
+                                        "GUIDE_PATH":"{{GUIDE_PATH}}"
+                                    }'>进入学习</button>
+                        {{else}}
+                            {{if isCourseOpen===true && (IS_COURSE_STARTDATE==1 || IS_COURSE_STARTDATE==2) && USER_TYPE==11}}
+                                <button data-role="gkxxw-study" type="button" class="btn btn-md btn-orange"
+                                    data-json='{
+                                        "GUIDE_PATH":"{{GUIDE_PATH}}"
+                                    }'>进入学习</button>
+                            {{else}}
+                                <button type="button" class="btn btn-md btn-gray disabled" disabled>暂未开放学习</button>
+                            {{/if}}
+                        {{/if}}
+                    {{else}}
+                        <button type="button" class="btn btn-md btn-gray disabled" disabled>暂未开放学习</button>
+                    {{/if}}
+
+                {{else}}
+                    <!--院校(有考试)--><!--或--><!--过去已经进行过的学期-->
+                    {{if schoolModel==1 || (schoolModel==='0' && isCourseOpen===true && isCurrentTerm===0)}}
+                        <!--课程已经开课，已启用状态;LEARN_STATUS 是否启用，1 启用,其它值 为 停用-->
+                        {{if TERMCOURSE_ID_STATUS==1 && LEARN_STATUS==1}}
+                            <!--未通过-->
+                            {{if EXAM_STATE==='0'}}
+                                <a class="btn btn-md btn-orange" href="javascript:" data-role="course-unpass" 
+                                    data-json='{
+                                        "action_url":"action={{action}}&formMap.USER_INFO={{USER_INFO}}",
+                                        "study_score":"{{EXAM_SCORE}}",
+                                        "exam_score":"{{EXAM_SCORE1}}",
+                                        "total_score":"{{EXAM_SCORE2}}",
+                                        "study_score_proportion":"{{KCXXBZ}}",
+                                        "exam_score_proportion":"{{KCKSBZ}}",
+                                        "teach_plan_id":"{{TEACH_PLAN_ID}}",
+                                        "choose_id":"{{CHOOSE_ID}}",
+                                        "course_name":"{{COURSE_NAME}}",
+                                        "course_code":"{{COURSE_CODE}}"
+                                    }'
+                                ><span>重修课程</span></a>
+                            <!--已通过-->
+                            {{else if EXAM_STATE==1}}
+                                <a class="btn btn-md btn-green" href="javascript:" data-role="course-pass" 
+                                    data-json='{
+                                        "action_url":"action={{action}}&formMap.USER_INFO={{USER_INFO}}",
+                                        "study_score":"{{EXAM_SCORE}}",
+                                        "exam_score":"{{EXAM_SCORE1}}",
+                                        "total_score":"{{EXAM_SCORE2}}",
+                                        "study_score_proportion":"{{KCXXBZ}}",
+                                        "exam_score_proportion":"{{KCKSBZ}}",
+                                        "teach_plan_id":"{{TEACH_PLAN_ID}}",
+                                        "choose_id":"{{CHOOSE_ID}}",
+                                        "course_name":"{{COURSE_NAME}}",
+                                        "course_code":"{{COURSE_CODE}}"
+                                    }'
+                                ><span>进入复习</span></a>
+                            <!--学习中-->
+                            {{else if EXAM_STATE==2}}
+                                <a target="gostudy" href="form-jump.html?action={{action}}&formMap.USER_INFO={{USER_INFO}}" class="btn btn-md btn-orange">进入学习</a>
+                            <!--登记中-->
+                            {{else if EXAM_STATE==3}}
+                                <a class="btn btn-md btn-orange" href="javascript:" data-role="signing" data-json="action={{action}}&formMap.USER_INFO={{USER_INFO}}"><span>进入复习</span></a>
+                            {{/if}}
+                        {{else}}
+                            <button type="button" class="btn btn-md btn-gray disabled" disabled>暂未开放学习</button>
+                        {{/if}}
+                    <!--普通模式--> <!--且--> <!--当前学期或未进行的学期-->
+                    {{else}}
+                        <!--该学期是当前学期-->
+                        {{if isCurrentTerm==1}}
+                            <!--本学期课程教学周期未开始-->
+                            {{if IS_COURSE_STARTDATE==='0'}}
+                                <!--课程已经开课，已启用状态-->
+                                {{if TERMCOURSE_ID_STATUS==1 && LEARN_STATUS==1}}
+                                    <a class="btn btn-md btn-orange" href="javascript:" data-role="course-preview" 
+                                        data-json='{
+                                            "action_url":"action={{action}}&formMap.USER_INFO={{USER_INFO}}",
+                                            "COURSE_START_DATE":"{{COURSE_START_DATE}}",
+                                            "COURSE_END_DATE":"{{COURSE_END_DATE}}"
+                                        }'
+                                    ><span>进入预习</span></a>
+                                {{else}}
+                                    <button type="button" class="btn btn-md btn-gray disabled" disabled>暂未开放学习</button>
+                                {{/if}}
+                            {{else}}
+                                <!--课程已经开课，已启用状态-->
+                                {{if TERMCOURSE_ID_STATUS==1 && LEARN_STATUS==1}}
+                                    <!--未通过-->
+                                    {{if EXAM_STATE==='0'}}
+                                        <a class="btn btn-md btn-orange" href="javascript:" data-role="course-unpass" 
+                                            data-json='{
+                                                "action_url":"action={{action}}&formMap.USER_INFO={{USER_INFO}}",
+                                                "study_score":"{{EXAM_SCORE}}",
+                                                "exam_score":"{{EXAM_SCORE1}}",
+                                                "total_score":"{{EXAM_SCORE2}}",
+                                                "study_score_proportion":"{{KCXXBZ}}",
+                                                "exam_score_proportion":"{{KCKSBZ}}",
+                                                "teach_plan_id":"{{TEACH_PLAN_ID}}",
+                                                "choose_id":"{{CHOOSE_ID}}",
+                                                "course_name":"{{COURSE_NAME}}",
+                                                "course_code":"{{COURSE_CODE}}"
+                                            }'
+                                        ><span>重修课程</span></a>
+                                    <!--已通过-->
+                                    {{else if EXAM_STATE==1}}
+                                        <a class="btn btn-md btn-green" href="javascript:" data-role="course-pass" 
+                                            data-json='{
+                                                "action_url":"action={{action}}&formMap.USER_INFO={{USER_INFO}}",
+                                                "study_score":"{{EXAM_SCORE}}",
+                                                "exam_score":"{{EXAM_SCORE1}}",
+                                                "total_score":"{{EXAM_SCORE2}}",
+                                                "study_score_proportion":"{{KCXXBZ}}",
+                                                "exam_score_proportion":"{{KCKSBZ}}",
+                                                "teach_plan_id":"{{TEACH_PLAN_ID}}",
+                                                "choose_id":"{{CHOOSE_ID}}",
+                                                "course_name":"{{COURSE_NAME}}",
+                                                "course_code":"{{COURSE_CODE}}"
+                                            }'
+                                        ><span>进入复习</span></a>
+                                    <!--学习中-->
+                                    {{else if EXAM_STATE==2}}
+                                        <a target="gostudy" href="form-jump.html?action={{action}}&formMap.USER_INFO={{USER_INFO}}" class="btn btn-md btn-orange">进入学习</a>
+                                    <!--登记中-->
+                                    {{else if EXAM_STATE==3}}
+                                        <a class="btn btn-md btn-orange" href="javascript:" data-role="signing" data-json="action={{action}}&formMap.USER_INFO={{USER_INFO}}"><span>进入复习</span></a>
+                                    {{/if}}
+                                {{else}}
+                                    <button type="button" class="btn btn-md btn-gray disabled" disabled>暂未开放学习</button>
+                                {{/if}}
+                            {{/if}}
+
+                        <!--非当前学期，即未开始学期-->
+                        {{else}}
+                            {{if TERMCOURSE_ID_STATUS==1 && LEARN_STATUS==1}}
+                                <!--未通过-->
+                                {{if EXAM_STATE==='0'}}
+                                    <a class="btn btn-md btn-orange" href="javascript:" data-role="course-unpass" 
+                                        data-json='{
+                                            "action_url":"action={{action}}&formMap.USER_INFO={{USER_INFO}}",
+                                            "study_score":"{{EXAM_SCORE}}",
+                                            "exam_score":"{{EXAM_SCORE1}}",
+                                            "total_score":"{{EXAM_SCORE2}}",
+                                            "study_score_proportion":"{{KCXXBZ}}",
+                                            "exam_score_proportion":"{{KCKSBZ}}",
+                                            "teach_plan_id":"{{TEACH_PLAN_ID}}",
+                                            "choose_id":"{{CHOOSE_ID}}",
+                                            "course_name":"{{COURSE_NAME}}",
+                                            "course_code":"{{COURSE_CODE}}"
+                                        }'
+                                    ><span>重修课程</span></a>
+                                <!--已通过-->
+                                {{else if EXAM_STATE==1}}
+                                    <a class="btn btn-md btn-green" href="javascript:" data-role="course-pass" 
+                                        data-json='{
+                                            "action_url":"action={{action}}&formMap.USER_INFO={{USER_INFO}}",
+                                            "study_score":"{{EXAM_SCORE}}",
+                                            "exam_score":"{{EXAM_SCORE1}}",
+                                            "total_score":"{{EXAM_SCORE2}}",
+                                            "study_score_proportion":"{{KCXXBZ}}",
+                                            "exam_score_proportion":"{{KCKSBZ}}",
+                                            "teach_plan_id":"{{TEACH_PLAN_ID}}",
+                                            "choose_id":"{{CHOOSE_ID}}",
+                                            "course_name":"{{COURSE_NAME}}",
+                                            "course_code":"{{COURSE_CODE}}"
+                                        }'
+                                    ><span>进入复习</span></a>
+                                {{else}}
+                                    <!--
+                                        当前要查询的学期是否结束 IS_END: 0 已结束  1 未结束
+                                        上一个学期是否结束 PREV_END：0 已结束  1 未结束 2 没有上一个学期
+                                    -->
+                                    {{if PREV_END==='0' || SCHEDULE>0}}
+                                        <a class="btn btn-md btn-orange" href="javascript:" data-role="course-preview" 
+                                                data-json='{
+                                                    "action_url":"action={{action}}&formMap.USER_INFO={{USER_INFO}}",
+                                                    "COURSE_START_DATE":"{{COURSE_START_DATE}}",
+                                                    "COURSE_END_DATE":"{{COURSE_END_DATE}}"
+                                                }'
+                                            ><span>进入预习</span></a>
+                                    {{else}}
+                                        <button type="button" class="btn btn-md btn-gray disabled" disabled>暂未开放学习</button>
+                                    {{/if}}
+                                {{/if}}
+                            {{else}}
+                                <button type="button" class="btn btn-md btn-gray disabled" disabled>暂未开放学习</button>
+                            {{/if}}
+                        {{/if}}
+                    {{/if}}
+                {{/if}}
+
+                <!--是否通过 的图标-->
+                {{if EXAM_STATE==='0'}}
+                    <i class="notacross_icon"></i>
+                {{else if EXAM_STATE==1}}
+                    <i class="across_icon"></i>
+                {{/if}}
+
+                <!--该学期还未开放-->
+                {{if isCourseOpen===false}}
+                    <table>
+                        <tr>
+                            <!--“面授”课程 不显示 学习进度-->
+                            {{if WSJXZK==1 && LEARNING_STYLE==0}}
+                                <td class="td1">
+                                    <p>
+                                        <!--增明 增加的需求-->
+                                        {{if SCHEDULE!='0.1'}}
+                                            <em>{{ SCHEDULE | kcxxScoreByUnit:'%'}}</em>
+                                        {{else}}
+                                            <em>--</em>
+                                        {{/if}}
+                                    </p>
+                                    <p class="results">学习进度</p>
+                                </td>
+                            {{/if}}
+                            <td class="td1">
+                                <p>
+                                    <em>{{EXAM_SCORE | kcxxScoreConvert}}</em>
+                                </p>
+                                <div class="results">
+                                    学习成绩
+                                    {{if LEARNING_STYLE==1}}
+                                        <a href="javascript:void(0);" class="link-tip">
+                                            <span class="alert-icon alert-icon-126x94"></span>
+                                            <div class="tooltip yellow_tip t_arrow text-left text-wrap" style="width: 400px;left:0;">
+                                                <ul style="line-height: 1.4;">
+                                                    <li>1.本课程需要到国家开放大学学习网上完成形考任务，获得学习成绩。</li>
+                                                    <li class="margin_t5">2.学习成绩至少达到60分</li>
+                                                    <li class="margin_t5">3.本课程需要预约考试，考试后，学期末才会将学习成绩更新到本学习平台(建议哪一个学期学习，哪一个学期预约考试。)</li>
+                                                </ul>
+                                              <span class="t_arrow"><em class="arrow" style="left: 115px;"></em><em class="arrow arrow_inner" style="left: 115px;"></em></span>
+                                            </div>
+                                        </a>
+                                    {{/if}}
+                                </div>
+                            </td>
+                            <td class="td1">
+                                <p>
+                                    {{if EXAM_STATE==='0' || EXAM_STATE==1}}
+                                        <em>{{EXAM_SCORE1 | kcxxScoreConvert}}</em>
+                                    {{else}}
+                                        <em>--</em>
+                                    {{/if}}
+                                </p>
+                                <p class="results">考试成绩</p>
+                            </td>
+                            <td class="td1" style="border-right:0 none;">
+                                <p>
+                                    {{if EXAM_STATE==='0' || EXAM_STATE==1}}
+                                        <em>{{EXAM_SCORE2 | kcxxScoreConvert}}</em>
+                                    {{else}}
+                                        <em>--</em>
+                                    {{/if}}
+                                </p>
+                                <p class="results">总成绩</p>
+                            </td>
+                        </tr>
+                    </table>
+                {{else}}
+                    <table>
+                        <tr>
+                            <!--“面授”课程 不显示 学习进度-->
+                            {{if WSJXZK==1 && LEARNING_STYLE==0}}
+                                <td class="td1">
+                                    <p>
+                                        <!--增明 增加的需求-->
+                                        {{if SCHEDULE!='0.1'}}
+                                            <em>{{ SCHEDULE | kcxxScoreByUnit:'%'}}</em>
+                                        {{else}}
+                                            <em>--</em>
+                                        {{/if}}
+                                    </p>
+                                    <p class="results">学习进度</p>
+                                </td>
+                            {{/if}}
+                            <td class="td1">
+                                <p>
+                                    <em>{{EXAM_SCORE | kcxxScoreConvert}}</em>
+                                </p>
+                                <div class="results">
+                                    学习成绩
+                                    {{if LEARNING_STYLE==1}}
+                                        <a href="javascript:void(0);" class="link-tip">
+                                            <span class="alert-icon alert-icon-126x94"></span>
+                                            <div class="tooltip yellow_tip t_arrow text-left text-wrap" style="width: 400px;left:0;">
+                                                <ul style="line-height: 1.4;">
+                                                    <li>1.本课程需要到国家开放大学学习网上完成形考任务，获得学习成绩。</li>
+                                                    <li class="margin_t5">2.学习成绩至少达到60分</li>
+                                                    <li class="margin_t5">3.本课程需要预约考试，考试后，学期末才会将学习成绩更新到本学习平台(建议哪一个学期学习，哪一个学期预约考试。)</li>
+                                                </ul>
+                                              <span class="t_arrow"><em class="arrow" style="left: 115px;"></em><em class="arrow arrow_inner" style="left: 115px;"></em></span>
+                                            </div>
+                                        </a>
+                                    {{/if}}
+                                </div>
+                            </td>
+                            <td class="td1">
+                                <p>
+                                    <em>{{EXAM_SCORE1 | kcxxScoreConvert:EXAM_STATE}}</em>
+                                </p>
+                                <p class="results">考试成绩</p>
+                            </td>
+                            <td class="td1" style="border-right:0 none;">
+                                <p>
+                                    <em>
+                                        <!--未通过-->
+                                        {{if EXAM_STATE==='0'}}
+                                            {{EXAM_SCORE2 | kcxxScoreConvert}}
+                                        <!--已通过-->
+                                        {{else if EXAM_STATE==='1'}}
+                                            {{EXAM_SCORE2 | kcxxScoreConvert}}
+                                        <!--学习中-->
+                                        {{else if EXAM_STATE==='2'}}
+                                            学习中
+                                        <!--登记中-->
+                                        {{else if EXAM_STATE==='3'}}
+                                             登记中
+                                        {{else if EXAM_STATE===''}}
+                                            --
+                                        {{/if}}
+                                        
+                                    </em>
+                                </p>
+                                <p class="results">总成绩</p>
+                            </td>
+                        </tr>
+                    </table>
+                {{/if}}
+
+            <!--国开在线 模式-->
+            {{else if schoolModel==5}}
+                <!--面授课程 -->
+                {{if WSJXZK==='0'}}
+                    <!--该学期已开放-->
+                    {{if isCourseOpen===true}}
+                        <button type="button" class="btn btn-md btn-orange" data-role="view-cert" data-json='{
+                            "TEACH_PLAN_ID":"{{TEACH_PLAN_ID}}"
+                        }'>查看学习凭证</button>
+                    {{else isCourseOpen===false}}
+                        <button type="button" class="btn btn-md btn-gray disabled" disabled>暂未开放学习</button>
+                    {{/if}}
+                <!--国开学习网课程
+                    LEARNING_STYLE 学习方式；0：国开在线，1：国开学习网
+                -->
+
+                <!--课程类型：0-普通课程；1-社会实践；2-毕业论文-->
+                {{else if COURSE_CATEGORY==1}}
+                    <a class="btn btn-md btn-gray" href="#/shsjxiezuo"><span>申请社会实践写作</span></a>
+                {{else if COURSE_CATEGORY==2}}
+                    <a class="btn btn-md btn-gray" href="#/lwxiezuo"><span>申请论文写作</span></a>
+                    
+                {{else if LEARNING_STYLE==1}}
+                    <!--
+                        本学期课程教学周期开始：判断该课程是已经开课，是已启用状态、正式学员，显示“进入学习”按钮，可以进入学习，未开课未启用状态课程以及非“正式学员”显示“暂未开放学习”按钮
+                    -->
+                    {{if (IS_COURSE_STARTDATE==1 || IS_COURSE_STARTDATE==2) && TERMCOURSE_ID_STATUS==1 && LEARN_STATUS==1 && USER_TYPE==11}}
+
+                        {{if isCourseOpen===false}}
+                            <button type="button" class="btn btn-md btn-gray disabled" disabled>暂未开放学习</button>
+                        {{else if isCourseOpen===true && isCurrentTerm==0}}
+                            <a href='{{XXW_URL | kcxxEncodeURI}}' target="gkxxw-study" class="btn btn-md btn-orange" data-role="gkzx-study">进入复习</a>
+                        {{else if isCurrentTerm==1}}
+                            <a href='{{XXW_URL | kcxxEncodeURI}}' target="gkxxw-study" class="btn btn-md btn-orange" data-role="gkzx-study">进入学习</a>
+                        {{/if}}
+                    {{else}}
+                        <!--未开始学期与当前期 才显示-->
+                        {{if isCourseOpen===false || isCurrentTerm==1}}
+                            <button type="button" class="btn btn-md btn-gray disabled" disabled>暂未开放学习</button>
+                        {{/if}}
+                    {{/if}}
+
+                {{else}}
+                    <!--往期学期-->
+                    {{if isCourseOpen===true && isCurrentTerm===0}}
+                        <a class="btn btn-md btn-gray" href="javascript:" data-role="re-study" data-json="action={{action}}&formMap.USER_INFO={{USER_INFO}}"><span>进入复习</span></a>
+                    <!--普通模式--> <!--且--> <!--当前学期或未进行的学期-->
+                    {{else}}
+                        <!--当前学期-->
+                        {{if isCurrentTerm==1}}
+                            <!--本学期课程教学周期未开始-->
+                            {{if IS_COURSE_STARTDATE==='0'}}
+                                <!--课程已经开课，已启用状态-->
+                                {{if TERMCOURSE_ID_STATUS==1 && LEARN_STATUS==1}}
+                                    <a class="btn btn-md btn-orange" href="javascript:" data-role="course-preview" 
+                                        data-json='{
+                                            "action_url":"action={{action}}&formMap.USER_INFO={{USER_INFO}}",
+                                            "COURSE_START_DATE":"{{COURSE_START_DATE}}",
+                                            "COURSE_END_DATE":"{{COURSE_END_DATE}}"
+                                        }'
+                                    ><span>进入预习</span></a>
+                                {{else}}
+                                    <button type="button" class="btn btn-md btn-gray disabled" disabled>暂未开放学习</button>
+                                {{/if}}
+                            {{else}}
+                                <!--课程已经开课，已启用状态-->
+                                {{if TERMCOURSE_ID_STATUS==1 && LEARN_STATUS==1}}
+                                    <!--已通过 / 未通过-->
+                                    {{if EXAM_STATE==1 || EXAM_STATE==='0'}} 
+                                        <a class="btn btn-md btn-orange" href="javascript:" data-role="re-study" data-json="action={{action}}&formMap.USER_INFO={{USER_INFO}}"><span>进入复习</span></a>
+                                    <!--学习中-->
+                                    {{else if EXAM_STATE==2}}
+                                        <a target="gostudy" href="form-jump.html?action={{action}}&formMap.USER_INFO={{USER_INFO}}" class="btn btn-md btn-orange">进入学习</a>
+                                    <!--登记中-->
+                                    {{else if EXAM_STATE==3}}
+                                        <a class="btn btn-md btn-orange" href="javascript:" data-role="signing" data-json="action={{action}}&formMap.USER_INFO={{USER_INFO}}"><span>进入复习</span></a>
+                                    {{/if}}
+                                {{else}}
+                                    <button type="button" class="btn btn-md btn-gray disabled" disabled>暂未开放学习</button>
+                                {{/if}}
+                            {{/if}}
+
+                        <!--非当前学期，即未开始学期-->
+                        {{else}}
+                            {{if TERMCOURSE_ID_STATUS==1 && LEARN_STATUS==1}}
+                                <!--
+                                    当前要查询的学期是否结束 IS_END: 0 已结束  1 未结束
+                                    上一个学期是否结束 PREV_END：0 已结束  1 未结束 2 没有上一个学期
+                                -->
+                                {{if PREV_END==='0' || SCHEDULE>0}}
+                                    <a class="btn btn-md btn-orange" href="javascript:" data-role="course-preview" 
+                                            data-json='{
+                                                "action_url":"action={{action}}&formMap.USER_INFO={{USER_INFO}}",
+                                                "COURSE_START_DATE":"{{COURSE_START_DATE}}",
+                                                "COURSE_END_DATE":"{{COURSE_END_DATE}}"
+                                            }'
+                                        ><span>进入预习</span></a>
+                                {{else}}
+                                    <button type="button" class="btn btn-md btn-gray disabled" disabled>暂未开放学习</button>
+                                {{/if}}
+                            {{else}}
+                                <button type="button" class="btn btn-md btn-gray disabled" disabled>暂未开放学习</button>
+                            {{/if}}
+                        {{/if}}
+                    {{/if}}
+                {{/if}}
+
+                <!--该学期还未开放-->
+                {{if isCourseOpen===false}}
+                    <table>
+                        <tr>
+                            <!--“面授”课程 不显示 学习进度-->
+                            {{if WSJXZK==1 && LEARNING_STYLE==0}}
+                                <td class="td1">
+                                    <p>
+                                        <!--增明 增加的需求-->
+                                        {{if SCHEDULE!='0.1'}}
+                                            <em>{{ SCHEDULE | kcxxScoreByUnit:'%'}}</em>
+                                        {{else}}
+                                            <em>--</em>
+                                        {{/if}}
+                                    </p>
+                                    <p class="results">学习进度</p>
+                                </td>
+                            {{/if}}
+                            <td class="td1">
+                                <p>
+                                    <em>{{EXAM_SCORE | kcxxScoreConvert}}</em>
+                                </p>
+                                <div class="results">
+                                    学习成绩
+                                    {{if LEARNING_STYLE==1}}
+                                        <a href="javascript:void(0);" class="link-tip">
+                                            <span class="alert-icon alert-icon-126x94"></span>
+                                            <div class="tooltip yellow_tip t_arrow text-left text-wrap" style="width: 400px;left:0;">
+                                                <ul style="line-height: 1.4;">
+                                                    <li>1.本课程需要到国家开放大学学习网上完成形考任务，获得学习成绩。</li>
+                                                    <li class="margin_t5">2.学习成绩至少达到60分</li>
+                                                    <li class="margin_t5">3.本课程需要预约考试，考试后，学期末才会将学习成绩更新到本学习平台(建议哪一个学期学习，哪一个学期预约考试。)</li>
+                                                </ul>
+                                              <span class="t_arrow"><em class="arrow" style="left: 115px;"></em><em class="arrow arrow_inner" style="left: 115px;"></em></span>
+                                            </div>
+                                        </a>
+                                    {{/if}}
+                                </div>
+                            </td>
+                            <td class="td1">
+                                <p>
+                                    <em>--</em>
+                                </p>
+                                <p class="results">考试成绩</p>
+                            </td>
+                            <td class="td1" style="border-right:0 none;">
+                                <p>
+                                    <em>
+                                        --
+                                    </em>
+                                </p>
+                                <p class="results">总成绩</p>
+                            </td>
+                        </tr>
+                    </table>
+                {{else}}
+                    {{if EXAM_STATE==1}}
+                        <i class="across_icon"></i>
+                    {{else}}
+                        {{if isCourseOpen===true && isCurrentTerm==0}}
+                            <i class="notacross_icon"></i>
+                        {{else if isCurrentTerm==1}}
+                            {{if EXAM_STATE==='0'}}
+                                <i class="notacross_icon"></i>
+                            {{/if}}
+                        {{/if}}
+                    {{/if}}
+
+                    <table>
+                        <tr>
+                            <!--“面授”课程 不显示 学习进度-->
+                            {{if WSJXZK==1 && LEARNING_STYLE==0}}
+                                <td class="td1">
+                                    <p>
+                                        <!--增明 增加的需求-->
+                                        {{if SCHEDULE!='0.1'}}
+                                            <em>{{ SCHEDULE | kcxxScoreByUnit:'%'}}</em>
+                                        {{else}}
+                                            <em>--</em>
+                                        {{/if}}
+                                    </p>
+                                    <p class="results">学习进度</p>
+                                </td>
+                            {{/if}}
+                            <td class="td1">
+                                <p>
+                                    <em>{{EXAM_SCORE | kcxxScoreConvert}}</em>
+                                </p>
+                                <div class="results">
+                                    学习成绩
+                                    {{if LEARNING_STYLE==1}}
+                                        <a href="javascript:void(0);" class="link-tip">
+                                            <span class="alert-icon alert-icon-126x94"></span>
+                                            <div class="tooltip yellow_tip t_arrow text-left text-wrap" style="width: 400px;left:0;">
+                                                <ul style="line-height: 1.4;">
+                                                    <li>1.本课程需要到国家开放大学学习网上完成形考任务，获得学习成绩。</li>
+                                                    <li class="margin_t5">2.学习成绩至少达到60分</li>
+                                                    <li class="margin_t5">3.本课程需要预约考试，考试后，学期末才会将学习成绩更新到本学习平台(建议哪一个学期学习，哪一个学期预约考试。)</li>
+                                                </ul>
+                                              <span class="t_arrow"><em class="arrow" style="left: 115px;"></em><em class="arrow arrow_inner" style="left: 115px;"></em></span>
+                                            </div>
+                                        </a>
+                                    {{/if}}
+                                </div>
+                            </td>
+                            <td class="td1">
+                                <p>
+                                    <em>{{EXAM_SCORE1 | kcxxScoreConvert:EXAM_STATE}}</em>
+                                </p>
+                                <p class="results">考试成绩</p>
+                            </td>
+                            <td class="td1" style="border-right:0 none;">
+                                <p>
+                                    <em>
+                                        {{if isCurrentTerm==1}}
+                                            <!--未通过-->
+                                            {{if EXAM_STATE==='0'}}
+                                                {{EXAM_SCORE2 | kcxxScoreConvert}}
+                                            <!--已通过-->
+                                            {{else if EXAM_STATE==='1'}}
+                                                {{EXAM_SCORE2 | kcxxScoreConvert}}
+                                            <!--学习中-->
+                                            {{else if EXAM_STATE==='2'}}
+                                                学习中
+                                            <!--登记中-->
+                                            {{else if EXAM_STATE==='3'}}
+                                                 登记中
+                                            {{else if EXAM_STATE===''}}
+                                                --
+                                            {{/if}}
+                                        {{else if isCourseOpen===true && isCurrentTerm==0}}
+                                            <!--未通过 / 已通过-->
+                                            {{if EXAM_STATE==='0' || EXAM_STATE==='1'}}
+                                                {{EXAM_SCORE2 | kcxxScoreConvert}}
+                                            {{else}}
+                                                --
+                                            {{/if}}
+                                        {{/if}}
+                                    </em>
+                                </p>
+                                <p class="results">总成绩</p>
+                            </td>
+                        </tr>
+                    </table>
+                {{/if}}
+            <!--院校模式（无考试）-->
+            {{else}}
+                <!--4：未开放学习；其它：开发学习-->
+                {{if LEARN_STATE!=4}}
+                    <!--学习状态 (1,2,3)：学习中，4：已通过，0/'--'：未学习-->
+                    {{if STATE==4}}
+                        <a class="btn btn-md btn-green" target="gostudy"  href="form-jump.html?action={{action}}&formMap.USER_INFO={{USER_INFO}}"><span>进入复习</span></a>
+                    {{else}}
+                        <a target="gostudy" href="form-jump.html?action={{action}}&formMap.USER_INFO={{USER_INFO}}" class="btn btn-md btn-orange">进入学习</a>
+                    {{/if}}
+                {{else}}
+                    <button type="button" class="btn btn-md btn-gray disabled" disabled>暂未开放学习</button>
+                {{/if}}
+
+                {{if LEARN_STATE==4}}
+                    <table>
+                        <tr>
+                            <td class="td1" style="width:33.33%;">
+                                <p>
+                                    <em>--</em>
+                                </p>
+                                <p class="results">学习进度</p>
+                            </td>
+                            <td class="td1" style="width:33.33%;">
+                                <p>
+                                    <em>--</em>
+                                </p>
+                                <p class="results">学习成绩</p>
+                            </td>
+                            <td class="td1" style="width:33.33%;border-right:0 none;">
+                                <p>
+                                    <em>
+                                        --
+                                    </em>
+                                </p>
+                                <p class="results">学习状态</p>
+                            </td>
+                        </tr>
+                    </table>
+                {{else}}
+                    <table>
+                        <tr>
+                            <td class="td1">
+                                <p>
+                                    <em>{{SCHEDULE | kcxxScoreByUnit:'%'}}</em>
+                                </p>
+                                <p class="results">学习进度</p>
+                            </td>
+                            <td class="td1">
+                                <p>
+                                    <em>{{EXAM_SCORE | kcxxScoreConvert}}</em>
+                                </p>
+                                <p class="results">学习成绩</p>
+                            </td>
+                            <td class="td1" style="border-right:0 none;">
+                                <p>
+                                    <em>
+                                        <!--已通过-->
+                                        {{if STATE==4}}
+                                            <span class="text-green">已通过</span>
+                                        <!--已通过-->
+                                        {{else if STATE==1 || STATE==2 || STATE==3}}
+                                            学习中
+                                        {{else if STATE==='0' || STATE=='--'}}
+                                            未学习
+                                        {{/if}}
+                                        
+                                    </em>
+                                </p>
+                                <p class="results">学习状态</p>
+                            </td>
+                        </tr>
+                    </table>
+                {{/if}}
+            {{/if}}
+        </script>
+
+<!--进入预习 模板-->
+<script id="preview-course-tip-temp" type="text/html">
+    <table width="100%" height="100%">
+        <tr>
+            <td valign="middle">
+                <div class="margin_l20 margin_r20">
+                    <h4 class="text-orange text-center">
+                        <i class="alert-icon alert-icon-0x0 margin_r10"></i>
+                        
+                        进入课程预学习须知
+                    </h4>
+                    <div class="margin_t25 text-left">
+                        本学期开始前，你可以提前对课程进行预学习，但预习过程中暂不提供学习辅导服务，
+                        本学期开课时间为：<u>{{COURSE_START_DATE}}~{{COURSE_END_DATE}}</u>，届时将为您提供学习辅导服务！
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</script>
+
+<!--成绩登记中 模板-->
+<script id="score-result-temp-signing" type="text/html">
+    <table width="100%" height="100%">
+        <tr>
+            <td valign="middle">
+                <div class="margin-l30 margin-r30">
+                    <h4 class="text-orange text-center">
+                        <i class="alert-icon alert-icon-0x0 margin_r10"></i>
+                        
+                        成绩登记中
+                    </h4>
+                    <div class="margin_t25">
+                        注：成绩登记过程中，你可以复习本课程，复习过程中产生的课程分数变化将不会被再次登记，最终总成绩计算以登记前的成绩为准
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</script>
+
+<!--课程考核未通过 模板-->
+<script id="score-result-temp-unpass" type="text/html">
+    <table width="100%" height="100%">
+        <tr>
+            <td valign="middle">
+                <div class="padding20" style="line-height: 1.33;">
+                    <h4 class="text-red text-center">
+                        <i class="alert-icon alert-icon-150x63 margin_r10"></i>
+                        
+                        课程考核未通过
+                    </h4>
+                    <div class="margin_b20 margin_t25 f14">本次登记的成绩明细如下：</div>
+
+                    <div class="text-center">
+                        <div class="inline-block text-center vertical-middle">
+                            <div class="font22">{{XCX_SCORE | kcxxScoreByUnit:'分'}}</div>
+                            <div class="top5 font_gray_per60">
+                                形成性成绩<br>
+                                （占总成绩{{StudyScoreProportion | kcxxScoreByUnit:'%'}}）
+                            </div>
+                        </div>
+                        <div class="inline-block vertical-middle">
+                            <img class="vertical-middle margin_r10" src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/plus.png">
+                        </div>
+                        <div class="inline-block text-center vertical-middle">
+                            <div class="font22">{{ZJX_SCORE | kcxxScoreByUnit:'分'}}</div>
+                            <div class="top5 font_gray_per60">
+                                终结性成绩<br>
+                                （占总成绩{{ExamScoreProportion | kcxxScoreByUnit:'%'}}）
+                            </div>
+                        </div>
+                        <div class="inline-block vertical-middle">
+                            <img class="vertical-middle margin_r10" src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/equal.png">
+                        </div>
+                        <div class="inline-block text-center vertical-middle">
+                            <div class="font22">{{ZCJ_SCORE | kcxxScoreByUnit:'分'}}</div>
+                            <div class="top5 font_gray_per60">
+                                总成绩
+                            </div>
+                        </div>
+                    </div>
+                    <div class="f14 margin_t25" style="line-height:1.5">
+                        注：本课程考核不通过，你需要对本门课程进行重修，选择重修后课程成绩将延续之前的记录，考试需要在下次进行重考。本次的成绩数据将会被归档，事后可在成绩与学分功能中查看
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</script>
+
+<!--课程考核已通过 模板-->
+<script id="score-result-temp-pass" type="text/html">
+    <table width="100%" height="100%">
+        <tr>
+            <td valign="middle">
+                <div class="margin-l30 margin-r30" style="line-height: 1.33;">
+                    <h4 class="font_green text-center">
+                        <i class="alert-icon alert-icon-56x0 margin_r10"></i>
+                        
+                        课程考核已通过
+                    </h4>
+                    <div class="margin_b15 margin_t15 f14">本次登记的成绩明细如下：</div>
+
+                    <div class="text-center">
+                        <div class="inline-block text-center vertical-middle">
+                            <div class="font22">{{XCX_SCORE | kcxxScoreByUnit:'分'}}</div>
+                            <div class="top5 font_gray_per60">
+                                形成性成绩<br>
+                                （占总成绩{{StudyScoreProportion | kcxxScoreByUnit:'%'}}）
+                            </div>
+                        </div>
+                        <div class="inline-block vertical-middle">
+                            <img class="vertical-middle margin_r10" src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/plus.png">
+                        </div>
+                        <div class="inline-block text-center vertical-middle">
+                            <div class="font22">{{ZJX_SCORE | kcxxScoreByUnit:'分'}}</div>
+                            <div class="top5 font_gray_per60">
+                                终结性成绩<br>
+                                （占总成绩{{ExamScoreProportion | kcxxScoreByUnit:'%'}}）
+                            </div>
+                        </div>
+                        <div class="inline-block vertical-middle">
+                            <img class="vertical-middle margin_r10" src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/equal.png">
+                        </div>
+                        <div class="inline-block text-center vertical-middle">
+                            <div class="font22">{{ZCJ_SCORE | kcxxScoreByUnit:'分'}}</div>
+                            <div class="top5 font_gray_per60">
+                                总成绩
+                            </div>
+                        </div>
+                    </div>
+
+                    <table width="100%" class="margin_t25">
+                        <tr>
+                            <td width="50%" valign="top" class="padding_r20">
+                                <div>
+                                    <a href="{{action_url}}" target="gostudy" class="btn btn-md btn-orange min-width-120" data-role="go-restudy">进入复习</a>
+                                </div>
+                                <div class="font_gray font12 margin_t15 text-left">
+                                    注：本课程已经考核通过，你可以复习本课程，复习过程中产生的课程分数变化将不会被再次登记，最终总成绩通过时的成绩为准
+                                </div>
+                            </td>
+
+                            <td width="1" valign="top" style="background:#ccc;">
+                                <div style="width:1px;"></div>
+                            </td>
+
+                            <td width="50%" valign="top" class="padding_l20">
+                                <div>
+                                    <button type="button" class="btn btn-md btn-gray min-width-120" data-role="study-again">重修课程</button>
+                                </div>
+                                <div class="font_gray font12 margin_t15 text-left">
+                                    注：本课程已经考核通过，你可以重修本课程；确认重修后学习成绩可沿用之前学习记录和得分，考试成绩和总成绩将会重置，需要重新参加考试以及缴纳考试费用
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+</script>
+    <!--课程考核已通过 但选择 重修课程 模板-->
+    <script id="study-again-temp-pass" type="text/html">
+        <table width="100%" height="100%">
+            <tr>
+                <td valign="middle">
+                    <div class="margin-l30 margin-r30">
+                        <h4 class="text-orange text-center">
+                            <i class="alert-icon alert-icon-0x0 margin_r10"></i>
+                            
+                            你确定重修此门课程？
+                        </h4>
+
+                        <div class="font16 margin_t15">
+                            课程：《{{COURSE_NAME}}》
+                        </div>
+                        <div class="margin_t25">
+                            <input class="form-control" type="text" placeholder="请输入手机验证码" style="width:200px;" data-id="yz">
+
+                            <button type="button" class="btn btn-normal btn-orange margin_l5" data-role="get-ver-code">获取验证码</button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </script>
+
+<!--“国开学习网”=“进入学习” 弹窗 模板-->
+<script id="gkxxw-study-temp" type="text/html">
+
+    <div class="margin-l30 margin-r30">
+        <h4 class="text-orange text-center">
+            <i class="alert-icon alert-icon-0x0 margin_r10"></i>
+            学习指引
+        </h4>
+        <ol class="ol-decimal margin_t25 text-left" style="line-height: 1.4;">
+            <li class="text-red">
+                本课程需要到国家开放大学学习网上完成形考任务，获得学习成绩。
+            </li>
+            <li class="margin_t10">
+                请点击“进入学习”按钮，直接进入国家开放大学学习网--点击“学生登录”--输入“账号”“密码”--进入“学生个人空间”。账号为13位学号，密码为出身年月日（8位）。
+            </li>
+            <li class="margin_t10">
+                进入学生个人空间后，点击“在学课程”--“进入课程”；若在“在学课程”里找不到该课程时，请及时联系学习平台上的“学习支持服务”，提供姓名和学号进行课程选课后才能选择课程学习。
+            </li>
+            {{if GUIDE_PATH}}
+                <li class="margin_t10">
+                    本课程完成形考任务的操作指引：<a href="{{GUIDE_PATH}}" class="text-blue" target="_blank"><u>点击下载操作指引</u></a>。
+                </li>
+            {{/if}}
+        </ol>
+    </div>
+</script>
+
+<!--进入复习 提示模板（国开在线 模板）-->
+<script id="re-study-tip-tpl" type="text/html">
+    <table width="100%" height="100%">
+        <tr>
+            <td valign="middle">
+                <div class="margin-l30 margin-r30">
+                    <h4 class="text-orange text-center">
+                        <i class="alert-icon alert-icon-0x0 margin_r10"></i>
+                        
+                        复习课程须知
+                    </h4>
+                    <div class="margin_t25">
+                        注：你可以对本课程进行复习，但复习过程中产生的课程分数变化将不会被再次登记，最终总成绩以登记时的成绩为准
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+    template.helper('kcxxScoreConvert', function (orientVal,arg) {
+        if(arg==2){
+            return '--';
+        }
+        else{
+            return $.isNumeric(orientVal)?(orientVal+'分'):(orientVal!=''?orientVal:'--');
+        }
+    });
+
+    //分数+单位
+    template.helper('kcxxScoreByUnit', function (orientVal,unit) {
+        return $.isNumeric(orientVal)?(orientVal+unit):(orientVal!=''?orientVal:'--');
+    });
+
+    //学期转换
+    template.helper('kcxxSemesterConvert', function (orientVal) {
+        var r=orientVal;
+        orientVal=orientVal-0;
+        switch(orientVal){
+            case 1:
+                r='第一学期';
+                break;
+            case 2:
+                r='第二学期';
+                break;
+            case 3:
+                r='第三学期';
+                break;
+            case 4:
+                r='第四学期';
+                break;
+            case 5:
+                r='第五学期';
+                break;
+            case 6:
+                r='第六学期';
+                break;
+            default:
+                break;
+        }
+
+        return r;
+    });
+
+    //链接地址转换
+    template.helper('kcxxEncodeURI', function (orientVal) {
+        if(!orientVal){
+            return '';
+        }
+        else{
+            return encodeURI(orientVal);
+        }
+    });
+
+    //‘在线学员’结点代码预处理
+    function studentOnline(){
+
+        var $liItems=$('.picList li'),
+            totalNum=$liItems.length;
+        if(totalNum<=0) return;
+
+        var pageSize=6,//分页大小
+            pageCount=totalNum%pageSize==0?(totalNum/pageSize):(Math.floor(totalNum/pageSize)+1);//总页数
+        //临时存放需要处理的结点容器
+        var $tempContainer=$('<ul/>');
+        for (var i = 0; i < pageCount; i++) {
+            var $liTemp=$('<li/>');
+            $tempContainer.append($liTemp);
+
+            for (var j = 0; j < pageSize; j++) {
+                var k=j+i*pageSize;
+                if(k==$liItems.length) break;
+                $liTemp.append($liItems.eq(k).children().clone());
+            };
+        };
+
+        $('.picList').html($tempContainer.html());
+
+        //加载轮播插件
+        require(['jquery','jquery.SuperSlide'],function($){
+            $(".txtScroll-left").slide({
+                mainCell:".bd .picList",
+                effect:"left",
+                autoPlay:true,
+                vis:1,
+                pnLoop:false
+            });
+        });
+    };
+
+    //学员提示框
+    function studentTips(){
+
+        var $popContainer=$('[data-role="pop-container"]');
+        if($popContainer.length<=0){
+            $popContainer=$('<div data-role="pop-container"></div>')
+            $('body').append($popContainer);
+        }
+        else{
+            $popContainer.empty()
+        }
+
+        var $stuImg=$(".picList img");
+        $stuImg.each(function(index, el) {
+            var self=this;
+            var renderData={
+                stuPic:self.src,
+                stuName:$(self).attr('data-name'),
+                tipText:$(self).attr('data-text'),
+                eeurl:$(self).attr('data-eeurl')
+            };
+
+            var renderHtml = template('pop-temp',renderData);
+
+            $popContainer.append(renderHtml);
+        }).hover(
+            function(){
+                var index=$stuImg.index(this);
+                var $pop=$('.popup_box',$('[data-role="pop-container"]')).eq(index);
+                $pop.show().css({
+                  'top':$(this).offset().top-$pop.outerHeight()+5,
+                  'left':$(this).offset().left-$pop.outerWidth()/2+26-5
+                });
+            },
+            function(){
+                var index=$stuImg.index(this);
+                var $pop=$('.popup_box',$('[data-role="pop-container"]')).eq(index);
+                $pop.hide();
+            }
+        );
+
+        $('.popup_box',$popContainer).hover(function() {
+            $(this).stop().show();
+            $(".picList").trigger('mouseover');
+        }, function() {
+            $(this).stop().hide();
+            $(".picList").trigger('mouseleave');
+        });
+    };
+
+    //在线学员
+    ;(function(){
+        var $box=$('[data-id="index-student-online"]');
+        var url='/pcenter/index/onlineStudent';
+        var xhr=$.post(url)
+        .done(function(renderData){            
+            if(renderData.msgCode==200){               
+                var renderHtml = template('index-student-online-temp',renderData);
+                $box.html(renderHtml);                
+
+                if(renderData.data && renderData.data.length>0){
+                    studentOnline();
+                    studentTips();
+
+                    $('[data-id="online-count"]').text('在线学员('+renderData.data.length+')');
+                }
+                else{
+                    $('[data-role="scroll-control"]').hide();
+                }
+            }
+            else{
+                $box.html( template('error-tips-temp',{message:renderData.message}) );
+            }
+        })
+        .fail(function(XMLHttpRequest, textStatus){
+            $box.html( template('error-tips-temp',{message:textStatus}) );
+        });
+        window['jqAjaxCollectors'].push(xhr);
+    })();
+    
+    //TOP5
+    function studyRankTop5(TERM_ID){
+        var $box=$('[data-id="index-top5"]');
+        var postData={};
+        if(TERM_ID){
+            postData.TERM_ID=TERM_ID;
+        }
+
+        ajaxProcess({
+            url:'/pcenter/course/studyRank',
+            type:'POST',
+            data:postData,
+            success:function(renderData){
+                if(renderData.msgCode==200){                
+                    var renderHtml = template('top5-temp',renderData);
+                    $box.html(renderHtml);
+                }
+                else{
+                    $box.html( template('error-tips-temp',{message:renderData.message}) );
+
+                }
+            },
+            fail:function(errorMessage){
+                $box.html( template('error-tips-temp',{message:errorMessage}) );
+            }
+        });
+    };
+    studyRankTop5();
+
+    //学习动态
+    ;(function(){
+        var $box=$('[data-id="index-study-status"]');
+
+        ajaxProcess({
+            url:'/pcenter/index/studentDynamic',
+            type:'POST',
+            success:function(renderData){
+                if(renderData.msgCode==200){                
+                    var renderHtml = template('index-study-status-temp',renderData);
+                    $box.html(renderHtml);
+                }
+                else{
+                    $box.html( template('error-tips-temp',{message:renderData.message}) );
+                }
+            },
+            fail:function(errorMessage){
+                $box.html( template('error-tips-temp',{message:errorMessage}) );
+            }
+        });
+    })();
+    
+    //课程学习
+    ;(function(){
+        //课程学习 接口地址
+        var url='/pcenter/course/courseLearning';
+        //查询学期列表 接口地址
+        var url2='/pcenter/course/learningByTerm';
+        var $box=$('[data-id="study-course"]');
+        
+        //非院校模式
+        if(appJSON.schoolModel==='0'){
+            var xhr=$.get(url2)
+            .done(function(renderData){
+                if(renderData.msgCode==200){
+                    var rData=renderData.data;
+                    if( $.isNumeric(rData.APPOINTMENT_COUNT) && rData.APPOINTMENT_COUNT>0 ){
+                        var $count=$('.mdl_head [data-label="kaoshi"]').find('[data-role="count"]');
+                        if($count.length<=0){
+                            $('.mdl_head [data-label="kaoshi"]').children('a').append('<span class="badge bg-red margin_l5" data-role="count">'+rData.APPOINTMENT_COUNT+'</span>');
+                        }
+                        else{
+                            $count.text(rData.APPOINTMENT_COUNT);
+                        }
+                    }
+                    if(rData.TERMS && rData.TERMS.length>0 && rData.TERMINDEX>0){
+
+                        if(rData.TERMINDEX<=rData.TERMS.length){
+                            var currentTerm=rData.TERMS[rData.TERMINDEX-1];
+
+                            var xhr=$.get(url,{
+                                TERM_ID:currentTerm.TERM_ID
+                            })
+                            .done(function(data){
+                                if(data.msgCode==200 && data.data){
+                                    if(data.data.RESULT==2){
+                                        $box.html( template('error-tips-temp',{message:data.data.MSG}) );
+                                    }
+                                    else{
+                                        //查询课程学习结果
+                                        if(data.data.PLANLIST && data.data.PLANLIST.length>0){
+                                            $.each(data.data.PLANLIST, function(index, node) {
+                                                node.schoolModel=appJSON.schoolModel;
+                                                node.IS_NEWSTU=rData.IS_NEWSTU;
+                                                node.isCourseOpen=true;
+                                                node.isCurrentTerm=1;
+                                                node.PREV_END=currentTerm.PREV_END;
+                                                node.USER_TYPE=data.data.USER_TYPE;
+                                            });
+
+                                        }
+
+                                        var html = template('course-study-temp', {
+                                                        TermsList:data.data,
+                                                        TermsTabs:rData,
+                                                        TermsCurIndex:rData.TERMINDEX,
+                                                        TableData:( 
+                                                            $.extend(
+                                                                true,
+                                                                rData.TERMS[rData.TERMINDEX-1],
+                                                                data.data,
+                                                                {
+                                                                    isCourseOpen:true,
+                                                                    schoolModel:appJSON.schoolModel
+                                                                }
+                                                            )
+                                                        )
+                                                    });
+                                        $box.html(html);
+
+                                        //缓存数据处理
+                                        $('.course_box .btn',$box).each(function(index, el) {
+                                            if($(this).attr('data-json')){
+                                                var oldJson=$(this).data('json');
+                                                $(this).removeAttr('data-json').data('json',oldJson);
+                                            }
+                                        });
+
+                                        //学期选项卡
+                                        var couresItems=$('.course-semester',$box);
+                                        
+                                        //学期 选项卡分组
+                                        var len=couresItems.length;
+                                        if(len>0){
+                                            var step=2;//2个学期为一组
+                                            var round=( len%step==0?(len/step):(Math.floor(len/step)+1) );//分组总数
+                                            //创建html缓存容器
+                                            var $tempContainer=$('<div/>');
+                                            var $t='';//学期分组容器
+                                            for(var i=0;i<round;i++){
+                                                if(i>2) break;//最多3组，即6个学期
+
+                                                $t=$('<div class="course-year-group"><span class="order">'+(i+1)+'</span></div>');
+                                                for(var j=0;j<step;j++){
+                                                    var k=j+i*step;
+                                                    if(k==len) break;
+                                                    $t.append(couresItems.eq(k).clone());
+                                                    if(couresItems.eq(k).hasClass('actived')){
+                                                        $t.addClass('on');
+                                                    }
+                                                }
+                                                $tempContainer.append($t);
+                                            }
+
+                                            //清除初始化时生成的学期html以便重新生成新的结构代码
+                                            $('.course-progress',$box).find('.course-semester').remove();
+
+                                            $('.course-progress',$box).prepend($tempContainer.html());
+
+                                            $('.course-progress',$box).addClass('cp-divide-'+len);
+
+                                            //学期基础数据缓存和状态显示
+                                            $('.course-semester',$box).each(function(i, e) {
+                                                $(this).data('course',rData.TERMS[i]);
+
+                                                //是否为当前学期
+                                                $(this).data('isCurrentTerm',(rData.TERMINDEX-1)==i?1:0);
+
+                                                $(this).data('IS_NEWSTU',rData.IS_NEWSTU);
+
+                                                if(i==0) $(this).addClass('first');
+
+                                                if(i==len-1) $(this).addClass('last');
+                                            });
+                                        }
+
+                                        //查询课程学习结果
+                                        
+                                        if(data.data.PLANLIST && data.data.PLANLIST.length>0){
+                                            var teachPlanIds=[],classIds=[];
+                                            $.each(data.data.PLANLIST, function(index, node) {
+                                                teachPlanIds.push(node.TEACH_PLAN_ID);
+                                                classIds.push(node.CLASS_ID);
+                                            });
+
+                                            //getCourseResult(currentTerm.TERM_ID,teachPlanIds.join(','),classIds.join(','),rData.TERMINDEX);
+
+                                            ajaxProcess({
+                                                url:'/pcenter/course/getCourseResult',
+                                                type:'POST',
+                                                data:{
+                                                    TERM_ID:currentTerm.TERM_ID,
+                                                    teachPlanIds:teachPlanIds.join(',')
+                                                }
+                                            });
+                                        }     
+                                        
+                                    }
+                                }
+                                else{
+                                    $box.html( template('error-tips-temp',{message:renderData.message}) );
+                                }
+
+                            })
+                            .fail(function(XMLHttpRequest, textStatus){
+                                $box.html( template('error-tips-temp',{message:textStatus}) );
+                            });
+
+                            window['jqAjaxCollectors'].push(xhr);
+                        }
+                        else{
+                            $box.html( template('error-tips-temp',{message:'数据异常'}) );
+                        }
+                    }
+                    else{
+                        $box.html( template('no-data-tips-temp',{message:'暂无学习课程'}) );
+                    }
+                }
+                else{
+                    $box.html( template('error-tips-temp',{message:renderData.message}) );
+                }
+            })
+            .fail(function(XMLHttpRequest, textStatus, errorThrown) {
+                $box.html( template('error-tips-temp',{message:(textStatus || errorThrown)}) );
+            });
+            window['jqAjaxCollectors'].push(xhr);
+        }
+        //院校模式(有考试)
+        else if(appJSON.schoolModel==1){
+            ajaxProcess({
+                //接口 4.3 课程学习(院校模式)
+                url:'/pcenter/course/acadeMyLearnCourse',
+                type:'GET',
+                success:function(renderData){
+                    if(renderData.msgCode==200){
+                        var rData=renderData.data;
+                        if(rData && rData.PLANLIST && rData.PLANLIST.length>0){
+                            //查询课程学习结果
+                            var teachPlanIds=[],classIds=[];
+                            $.each(rData.PLANLIST, function(index, node) {
+                                teachPlanIds.push(node.TEACH_PLAN_ID);
+                                classIds.push(node.CLASS_ID);
+                                node.schoolModel=appJSON.schoolModel;
+                            });
+
+                            var html = template('course-study-temp', {
+                                            TermsList:{
+                                                PLANLIST:rData.PLANLIST
+                                            },
+                                            TableData: $.extend(true, rData, {schoolModel:appJSON.schoolModel})
+                                             
+                                        });
+
+                            //待考试科目统计
+                            if( $.isNumeric(rData.APPOINTMENT_COUNT) && rData.APPOINTMENT_COUNT>0 ){
+                                var $count=$('.mdl_head [data-label="kaoshi"]').find('[data-role="count"]');
+                                if($count.length<=0){
+                                    $('.mdl_head [data-label="kaoshi"]').children('a').append('<span class="badge bg-red margin_l5" data-role="count">'+rData.APPOINTMENT_COUNT+'</span>');
+                                }
+                                else{
+                                    $count.text(rData.APPOINTMENT_COUNT);
+                                }
+                            }
+
+                            //初步渲染数据
+                            $box.html( html );
+
+                            //查询课程学习结果
+                            //getCourseResult('',teachPlanIds.join(','),classIds.join(','));
+                            ajaxProcess({
+                                url:'/pcenter/course/getCourseResult',
+                                type:'POST',
+                                data:{
+                                    TERM_ID:'',
+                                    teachPlanIds:teachPlanIds.join(',')
+                                }
+                            });
+                        }
+                        else{
+                            $box.html( template('no-data-tips-temp',{message:'暂无学习课程'}) );
+                        }
+                    }
+                    else{
+                        $box.html( template('error-tips-temp',{message:renderData.message}) );
+                    }           
+                },
+                fail:function(errorMessage){
+                    $box.html( template('error-tips-temp',{message:errorMessage}) );
+                }
+            });
+        }
+        //院校模式(无考试)
+        else if(appJSON.schoolModel==2){
+            ajaxProcess({
+                //接口 3.8 课程学习(无考试模式)
+                url:'/pcenter/course/acadeMyLearningByNotExam',
+                type:'GET',
+                success:function(renderData){
+                    if(renderData.msgCode==200){
+                        var rData=renderData.data;
+                        if(rData && rData.PLANLIST && rData.PLANLIST.length>0){
+
+                            //查询课程学习结果
+                            var teachPlanIds=[],classIds=[];
+                            $.each(rData.PLANLIST, function(index, node) {
+                                teachPlanIds.push(node.TEACH_PLAN_ID);
+                                classIds.push(node.CLASS_ID);
+                                node.schoolModel=appJSON.schoolModel;
+                            });
+
+                            var html = template('course-study-temp', {
+                                            TermsList:{
+                                                PLANLIST:rData.PLANLIST
+                                            },
+                                            TableData: $.extend(true, rData, {schoolModel:appJSON.schoolModel})
+                                             
+                                        });
+
+                            //初步渲染数据
+                            $box.html( html );
+                            
+                            //查询课程学习结果
+                            //getCourseResult('',teachPlanIds.join(','),classIds.join(','),false,1);
+                        }
+                        else{
+                            $box.html( template('no-data-tips-temp',{message:'暂无学习课程'}) );
+                        }
+                    }
+                    else{
+                        $box.html( template('error-tips-temp',{message:renderData.message}) );
+                    }           
+                },
+                fail:function(errorMessage){
+                    $box.html( template('error-tips-temp',{message:errorMessage}) );
+                }
+            });
+        }
+        //国开在线
+        else if(appJSON.schoolModel==5){
+            ajaxProcess({
+                url:url2,
+                type:'GET',
+                success:function(renderData){
+                    if(renderData.msgCode==200){
+                        var rData=renderData.data;
+                        if( rData.APPOINTMENT_COUNT>0 ){
+                            var $count=$('.mdl_head [data-label="kaoshi"]').find('[data-role="count"]');
+                            if($count.length<=0){
+                                $('.mdl_head [data-label="kaoshi"]').children('a').append('<span class="badge bg-red margin_l5" data-role="count">'+rData.APPOINTMENT_COUNT+'</span>');
+                            }
+                            else{
+                                $count.text(rData.APPOINTMENT_COUNT);
+                            }
+                        }
+                        if(rData.TERMS && rData.TERMS.length>0 && rData.TERMINDEX>0){
+
+                            if(rData.TERMINDEX<=rData.TERMS.length){
+                                var currentTerm=rData.TERMS[rData.TERMINDEX-1];
+
+                                var xhr=$.get(url,{
+                                    TERM_ID:currentTerm.TERM_ID
+                                })
+                                .done(function(data){
+                                    if(data.msgCode==200 && data.data){
+                                        if(data.data.RESULT==2){
+                                            $box.html( template('error-tips-temp',{message:data.data.MSG}) );
+                                        }
+                                        else{
+                                            //查询课程学习结果
+                                            if(data.data.PLANLIST && data.data.PLANLIST.length>0){
+                                                $.each(data.data.PLANLIST, function(index, node) {
+                                                    node.schoolModel=appJSON.schoolModel;
+                                                    node.IS_NEWSTU=rData.IS_NEWSTU;
+                                                    node.isCourseOpen=true;
+                                                    node.isCurrentTerm=1;
+                                                    node.PREV_END=currentTerm.PREV_END;
+                                                    node.USER_TYPE=data.data.USER_TYPE;
+                                                });
+
+                                            }
+
+                                            var html = template('course-study-temp2', {
+                                                            TermsList:data.data,
+                                                            TableData:( 
+                                                                $.extend(
+                                                                    true,
+                                                                    rData.TERMS[rData.TERMINDEX-1],
+                                                                    data.data,
+                                                                    {
+                                                                        TermsCurIndex:rData.TERMINDEX-1,
+                                                                        searchTermIndex:rData.TERMINDEX-1,
+                                                                        isCourseOpen:true,
+                                                                        schoolModel:appJSON.schoolModel
+                                                                    },
+                                                                    {TermsTabs:rData}
+                                                                )
+                                                            )
+                                                        });
+                                            $box.html(html);
+
+                                            //缓存学期数据
+                                            $box.data('terms-data',rData);
+
+                                            //查询课程学习结果
+                                            
+                                            if(data.data.PLANLIST && data.data.PLANLIST.length>0){
+                                                var teachPlanIds=[],classIds=[];
+                                                $.each(data.data.PLANLIST, function(index, node) {
+                                                    teachPlanIds.push(node.TEACH_PLAN_ID);
+                                                    classIds.push(node.CLASS_ID);
+                                                });
+
+                                                ajaxProcess({
+                                                    url:'/pcenter/course/getCourseResult',
+                                                    type:'POST',
+                                                    data:{
+                                                        TERM_ID:currentTerm.TERM_ID,
+                                                        teachPlanIds:teachPlanIds.join(',')
+                                                    }
+                                                });
+                                            }     
+                                            
+                                        }
+                                    }
+                                    else{
+                                        $box.html( template('error-tips-temp',{message:renderData.message}) );
+                                    }
+
+                                })
+                                .fail(function(XMLHttpRequest, textStatus){
+                                    $box.html( template('error-tips-temp',{message:textStatus}) );
+                                });
+
+                                window['jqAjaxCollectors'].push(xhr);
+                            }
+                            else{
+                                $box.html( template('error-tips-temp',{message:'数据异常'}) );
+                            }
+                        }
+                        else{
+                            $box.html( template('no-data-tips-temp',{message:'暂无学习课程'}) );
+                        }
+                    }
+                    else{
+                        $box.html( template('error-tips-temp',{message:renderData.message}) );
+                    }
+                },
+                fail:function(errorMessage){
+                    $box.html( template('error-tips-temp',{message:errorMessage}) );
+                }
+            });
+        }
+
+        //查询课程学习结果
+        function getCourseResult(TERM_ID,teachPlanIds,classIds,CurTermIndex,queryType){
+            var $p=$('[data-teach-plan-id]',$box);
+            var jqxhr;
+
+            //非“无考试模式”
+            if(queryType!=1){
+                if($box.children('.overlay').length<=0){
+                    $box.append('<div class="overlay"></div>');
+                }
+
+                jqxhr=ajaxProcess({
+                    url:'/pcenter/course/getCourseResult',
+                    type:'POST',
+                    data:{
+                        TERM_ID:TERM_ID,
+                        teachPlanIds:teachPlanIds
+                    },
+                    success:function(data){
+                        var isCourseOpen=false;//是否开放进入学习
+                        var $TermsTabs=$('.course-semester',$box);
+
+                        if(CurTermIndex && CurTermIndex>0){
+                            if($TermsTabs.eq(CurTermIndex-1).hasClass('actived')){
+                                isCourseOpen=true;
+                            }
+                        }
+                        else{
+                            isCourseOpen=true;
+                        }
+
+                        if(data.msgCode==200 && data.data && data.data.COURSELIST && data.data.COURSELIST.length>0){
+                            
+                            $.each(data.data.COURSELIST, function(index, node) {
+                                var pId=node.TEACH_PLAN_ID;
+                                var $item=$p.filter('[data-teach-plan-id="'+pId+'"]');
+
+                                if( $item.length>0 ){
+                                    var renderHtml=template(
+                                        'semester-course-other-info-temp', 
+                                        $.extend(true, 
+                                            node, 
+                                            {isCourseOpen:isCourseOpen},
+                                            {schoolModel:appJSON.schoolModel}
+                                        )
+                                    );
+                                    $item.find('.kc_tab').html( renderHtml );
+                                }
+
+                            });
+                            
+                        }
+                    }
+                })
+                .always(function(){
+                    $('[data-role="course-unpass"],[data-role="course-pass"]',$box).each(function(index, el) {
+                        var oldData=$(this).data('json');
+                        $(this).removeAttr('data-json').data('json',oldData);
+                    });
+
+                    $box.children('.overlay').remove();
+                });
+            }
+
+            /*
+            //统计在学课程人数
+            var jqxhr2=ajaxProcess({
+                url:'/pcenter/course/getPersonalCountByCourse',
+                type:'POST',
+                data:{
+                    teachPlanIds:teachPlanIds,
+                    classIds:classIds
+                },
+                success:function(data){
+                    if(data.msgCode==200 && data.data && $.isArray(data.data.TEACH_LIST) && data.data.TEACH_LIST.length>0){
+
+                        $.each(data.data.TEACH_LIST, function(index, node) {
+                            var pId=node.TEACH_PLAN_ID;
+                            var $item=$p.filter('[data-teach-plan-id="'+pId+'"]');
+
+                            if( $item.length>0 ){
+                                $item.find('[data-role="count-online"]').html( node.COUNTCOURSE );
+                            }
+
+                        });
+                        
+                    }
+                }
+            });
+            //非“无考试模式”
+            if(queryType!=1){
+                $.when(jqxhr,jqxhr2)
+                .always(function(){
+                    
+                    $box.children('.overlay').remove();
+                });
+            }
+            else{
+                $.when(jqxhr2)
+                .always(function(){
+                    $box.children('.overlay').remove();
+                });
+            }
+            */
+        }
+
+        //学期学习情况
+        $box.on('click','.course-semester',function(event) {
+            var $table=$('[data-role="learn-case"]',$box);
+            var $tabs=$('.course-semester',$box);
+            var $items=$('.c_ctn_item',$box);
+            var index=$tabs.index(this);
+            var _this=this;
+
+            var objData=$(this).data('course');
+            var isCurrentTerm=$(this).data('isCurrentTerm');
+            var IS_NEWSTU=$(this).data('IS_NEWSTU');
+
+            $box.append('<div class="overlay"></div>');
+
+            $tabs.find('.down_btn').removeClass('cur');
+
+            $('.down_btn',this).addClass('cur');
+
+            ajaxProcess({
+                url:url,
+                type:'GET',
+                data:{
+                    TERM_ID:objData.TERM_ID,
+                    KKXQ:objData.KKXQ
+                },
+                success:function(data){
+                    var html = '',isCourseOpen=$(_this).hasClass('actived');
+                    if(data.data && data.data.PLANLIST && data.data.PLANLIST.length>0){
+                        data.data.PLANLIST=$.map(data.data.PLANLIST, function(item, index) {
+                            return  $.extend(true, item, {
+                                        isCourseOpen:isCourseOpen,
+                                        schoolModel:appJSON.schoolModel,
+                                        isCurrentTerm:isCurrentTerm,
+                                        IS_NEWSTU:IS_NEWSTU,
+                                        PREV_END:objData.PREV_END,
+                                        USER_TYPE:data.data.USER_TYPE
+                                    });
+                        });
+
+                        html = template('semester-course-temp', data.data );
+                    }
+                    else{
+                        html = template('semester-course-temp', false );
+                    }
+
+                    var html2 = template( 'semester-course-tbl-temp', 
+                        $.extend(true, data.data, objData,{isCourseOpen:isCourseOpen},{schoolModel:appJSON.schoolModel})
+                    ); 
+                    $table.html(html2);
+                    $items.html(html);
+
+                    //缓存数据处理
+                    $('.course_box .btn',$box).each(function(index, el) {
+                        if($(this).attr('data-json')){
+                            var oldJson=$(this).data('json');
+                            $(this).removeAttr('data-json').data('json',oldJson);
+                        }
+                    });
+
+                    $box.children('.overlay').remove();
+
+                    //查询课程学习结果
+                    if(data.data.PLANLIST && data.data.PLANLIST.length>0){
+                        var teachPlanIds=[],classIds=[];
+                        $.each(data.data.PLANLIST, function(index, node) {
+                            teachPlanIds.push(node.TEACH_PLAN_ID);
+                            classIds.push(node.CLASS_ID);
+                        });
+
+                        //getCourseResult(objData.TERM_ID,teachPlanIds.join(','),classIds.join(','),index+1);
+                        ajaxProcess({
+                            url:'/pcenter/course/getCourseResult',
+                            type:'POST',
+                            data:{
+                                TERM_ID:objData.TERM_ID,
+                                teachPlanIds:teachPlanIds.join(',')
+                            }
+                        });
+                    } 
+                    
+                },
+                fail:function(textStatus){
+                    $table.html(textStatus);
+                    $items.html(textStatus);
+                    $box.children('.overlay').remove();
+                }
+            });
+
+            //查询对应学期的学习排名
+            studyRankTop5(objData.TERM_ID);
+        })
+        .on('click', '[data-role="course-semester-menu"] > li', function(event,res) {
+            event.preventDefault();
+            var termsData=$box.data('terms-data');
+            var $items=$('.c_ctn_item',$box);
+            var $table=$('[data-role="learn-case"]',$box);
+            var total=$(this).parent().children().length;
+            var index=$(this).index();
+            var _this=this;
+
+            index=total-1-index;
+
+            var objData=termsData.TERMS[index];
+            var isCurrentTerm=termsData.TERMINDEX-1-index==0?1:0;
+
+            $('.dropdown-menu',$box).hide();
+
+            $box.append('<div class="overlay"></div>');
+
+            ajaxProcess({
+                url:url,
+                type:'GET',
+                data:{
+                    TERM_ID:objData.TERM_ID,
+                    KKXQ:objData.KKXQ
+                },
+                success:function(data){
+                    var teachPlanIds=[],classIds=[];
+                    var html = '',isCourseOpen=index<=termsData.TERMINDEX-1;
+                    if(data.data && data.data.PLANLIST && data.data.PLANLIST.length>0){
+
+                        $.each(data.data.PLANLIST, function(i, item) {
+                            $.extend(item, {
+                                isCourseOpen:isCourseOpen,
+                                schoolModel:appJSON.schoolModel,
+                                isCurrentTerm:isCurrentTerm,
+                                PREV_END:objData.PREV_END,
+                                USER_TYPE:data.data.USER_TYPE
+                            });
+
+                            teachPlanIds.push(item.TEACH_PLAN_ID);
+                            classIds.push(item.CLASS_ID);
+                        });
+
+
+                        html = template('semester-course-temp', data.data );
+                    }
+                    else{
+                        html = template('semester-course-temp', false );
+                    }
+
+                    var html2 = template( 'semester-course-tbl-temp', 
+                        $.extend(true, objData,
+                            data.data,
+                            {
+                                TermsCurIndex:termsData.TERMINDEX-1,
+                                searchTermIndex:index,
+                                isCourseOpen:isCourseOpen,
+                                schoolModel:appJSON.schoolModel
+                            },
+                            {TermsTabs:termsData}
+                        )
+                    ); 
+                    $table.html(html2);
+                    $items.html(html);
+
+                    $box.children('.overlay').remove();
+
+                    //查询课程学习结果
+                    if(teachPlanIds.length>0){
+                        ajaxProcess({
+                            url:'/pcenter/course/getCourseResult',
+                            type:'POST',
+                            data:{
+                                TERM_ID:objData.TERM_ID,
+                                teachPlanIds:teachPlanIds.join(',')
+                            }
+                        });
+                    }
+                    
+                },
+                fail:function(textStatus){
+                    $table.html(textStatus);
+                    $items.html(textStatus);
+                    $box.children('.overlay').remove();
+                }
+            });
+
+            if(res!==1){
+                //查询对应学期的学习排名
+                studyRankTop5(objData.TERM_ID);
+            }
+        })
+        //国开在线 课程学习地址跳转控制
+        .on('click', '[data-role="gkzx-study"]', function(event) {
+            $('[data-role="course-semester-menu"] > li.cur',$box).trigger('click',1);
+        });
+
+        //加载更多课程
+        $box
+        //成绩为‘登记中’时弹出
+        .on('click', '[data-role="signing"]', function(event) {
+            event.preventDefault();
+            
+            var self=this;
+            var renderHtml = template('score-result-temp-signing',{});
+
+            var pop=$.mydialog({
+                id : 'signing',
+                width : 500,
+                height : 350,
+                zIndex : 1110,
+                html : true,
+                htmlConfig:{
+                  title: '提示',
+                  button:[
+                    {
+                        name: '进入复习',
+                        btnClass:'btn btn-normal btn-orange min-width-100 btn-sure',
+                        callback:function(ev){
+                            
+                        }
+                    }       
+                  ]
+                },
+                content: renderHtml,
+                onLoad:function(){
+                    var $w=this.wrapper;
+                    var path='form-jump.html?'+$(self).data('json')
+
+                    $('.u-panel-body',$w).addClass('scroll-box').height(this.height-36-$(".u-panel-footer",$w).height());
+
+                    $('.btn-sure',$w).replaceWith('<a href="{0}" target="gostudy" class="btn btn-normal btn-orange min-width-100 btn-sure">进入复习</a>'.format(path));
+                    
+                    $('.btn-sure',$w).click(function(event) {
+                        refreshCurTermCourse();
+                        $.closeDialog($w);
+                    });
+                }
+            });
+        })
+        //进入复习（国开在线模式）弹出
+        .on('click', '[data-role="re-study"]', function(event) {
+            event.preventDefault();
+            
+            var self=this;
+            var renderHtml = template('re-study-tip-tpl',{});
+
+            var pop=$.mydialog({
+                id : 'signing',
+                width : 500,
+                height : 350,
+                zIndex : 1110,
+                html : true,
+                htmlConfig:{
+                  title: '提示',
+                  button:[
+                    {
+                        name: '进入复习',
+                        btnClass:'btn btn-normal btn-orange min-width-100 btn-sure',
+                        callback:function(ev){
+                            
+                        }
+                    }       
+                  ]
+                },
+                content: renderHtml,
+                onLoad:function(){
+                    var $w=this.wrapper;
+                    var path='form-jump.html?'+$(self).data('json')
+
+                    $('.u-panel-body',$w).addClass('scroll-box').height(this.height-36-$(".u-panel-footer",$w).height());
+
+                    $('.btn-sure',$w).replaceWith('<a href="{0}" target="gostudy" class="btn btn-normal btn-orange min-width-100 btn-sure">进入复习</a>'.format(path));
+                    
+                    $('.btn-sure',$w).click(function(event) {
+                        refreshCurTermCourse();
+                        $.closeDialog($w);
+                    });
+                }
+            });
+        })
+        
+        //成绩为‘未通过’时弹出
+        .on('click', '[data-role="course-unpass"]', function(event) {
+            event.preventDefault();
+            
+            var self=this;
+            var json=$(this).data('json');
+            var data={
+                    XCX_SCORE:json.study_score,
+                    StudyScoreProportion:json.study_score_proportion,
+                    ZJX_SCORE:json.exam_score,
+                    ExamScoreProportion:json.exam_score_proportion,
+                    ZCJ_SCORE:json.total_score,
+                    TEACH_PLAN_ID:json.teach_plan_id,
+                    CHOOSE_ID:json.choose_id,
+                    COURSE_NAME:json.course_name,
+                    COURSE_CODE:json.course_code
+                }
+            var renderHtml = template('score-result-temp-unpass',data);
+
+            var pop=$.mydialog({
+                id : 'unpass',
+                width : 550,
+                height : 410,
+                zIndex : 1110,
+                html : true,
+                htmlConfig:{
+                  title: '提示',
+                  button:[
+                    {
+                        name: '确认重修',
+                        btnClass:'btn btn-normal btn-orange min-width-100',
+                        callback:function(ev){
+                            $('.u-panel',pop).addClass('overlay-wrapper').append('<div class="overlay bg-center"></div>')
+                            
+                            var xhr=$.post('/pcenter/course/learningRepair', data)
+                            .done(function(renderData){
+
+                                $('.u-panel',pop).children('.overlay').remove();
+
+                                var path='form-jump.html?'+json.action_url;
+
+                                //由于360和火狐等一些浏览器会屏蔽window.open生成的窗口，因此必须用户点击的方式才能正常打开
+                                $.tipsDialog({width:300,height:100,
+                                    content:[
+                                        '<table width="100%" height="100" class="vertical-middle">',
+                                        '<tr>',
+                                        '<td class="padding_l10 padding_r10">',
+                                        '<a href="'+path+'" target="gostudy" class="btn btn-md btn-orange min-width-120" data-role="study">进入学习</a>',
+                                        '</td>',
+                                        '</tr>',
+                                        '</table>'
+                                    ].join(''),
+                                    init:function(){
+                                        var $box=this.wrapper;
+                                        $('[data-role="study"]',$box).click(function(event) {
+                                            refreshCurTermCourse();
+                                            $.closeDialog($box);
+                                            $.closeDialog(pop);
+                                        });
+                                    }
+                                })
+                            });
+
+                            window['jqAjaxCollectors'].push(xhr);
+
+                        }
+                    }       
+                  ]
+                },
+                content: renderHtml,
+                onLoad:function(){
+                  $('.u-panel-body',this.wrapper).addClass('scroll-box').height(this.height-36-$(".u-panel-footer",pop).height());
+                  
+                }
+            });
+        })
+        //成绩为‘通过’时弹出
+        .on('click', '[data-role="course-pass"]', function(event) {
+            event.preventDefault();
+
+            var self=this;
+            var json=$(this).data('json');
+            var data={
+                    XCX_SCORE:json.study_score,
+                    StudyScoreProportion:json.study_score_proportion,
+                    ZJX_SCORE:json.exam_score,
+                    ExamScoreProportion:json.exam_score_proportion,
+                    ZCJ_SCORE:json.total_score,
+                    TEACH_PLAN_ID:json.teach_plan_id,
+                    CHOOSE_ID:json.choose_id,
+                    COURSE_NAME:json.course_name,
+                    COURSE_CODE:json.course_code,
+                    action_url:'form-jump.html?'+json.action_url
+                }
+            var renderHtml = template('score-result-temp-pass',data);
+
+            /*
+            var pop=$.mydialog({
+                id : 'pass',
+                width : 550,
+                height : 390,
+                zIndex : 1110,
+                html : true,
+                htmlConfig:{
+                  title: '提示',
+                  button:[
+                    {
+                        name: '进入复习',
+                        btnClass:'btn btn-normal btn-orange min-width-100 btn-sure',
+                        callback:function(ev){
+
+                            
+                        }
+                    }       
+                  ]
+                },
+                content: renderHtml,
+                onLoad:function(){
+                    var $w=this.wrapper;
+                    var path='form-jump.html?'+json.action_url
+
+                    $('.u-panel-body',$w).addClass('scroll-box').height(this.height-36-$(".u-panel-footer",$w).height());
+
+                    $('.btn-sure',$w).replaceWith('<a href="{0}" target="gostudy" class="btn btn-normal btn-orange min-width-100 btn-sure">进入复习</a>'.format(path));
+                    
+                    $('.btn-sure',$w).click(function(event) {
+                        refreshCurTermCourse();
+                        $.closeDialog($w);
+                    });
+                  
+                }
+            });
+            */
+            var $pop=$.alertDialog({
+                id : 'pass',
+                title:'提示',
+                width:650,
+                height:400,
+                zIndex : 1110,
+                content:renderHtml,
+                cancel:false,
+                ok:false 
+            });
+
+            //进入复习
+            $pop.on('click', '[data-role="go-restudy"]', function(event) {
+                $.closeDialog($pop);
+            })
+            //重修课程
+            .on('click','[data-role="study-again"]',function(event) {
+                $.closeDialog($pop);
+                
+                var renderHtml2 = template('study-again-temp-pass',data);
+                var $alert=$.alertDialog({
+                    id : 'study-again-pass',
+                    title:'提示',
+                    width:500,
+                    height:320,
+                    zIndex : 1110,
+                    content:renderHtml2,
+                    cancelCss:'btn btn-normal btn-gray min-width-100',
+                    okCss:'btn btn-normal btn-orange min-width-100 margin_l15 confirm-restudy-btn',
+                    ok:function(){
+                        var _this=this;
+                        var $yz=$('[data-id="yz"]',$alert);
+                        var yzm=$.trim($yz.val());
+                        var $mark=$('.u-panel',$alert).children('.overlay');
+                        if( yzm=='' ){
+                            $.resultDialog(0,'请输入手机验证码')
+                        }
+                        else{
+                            $mark.show();
+                            
+                            //2.7.3 重修课程-校验短信
+                            ajaxProcess({
+                                url:'/pcenter/course/doSmsValidateCode',
+                                type:'POST',
+                                data:{code:yzm},
+                                success:function(renderData){
+                                    if(renderData.msgCode==200){
+                                        //2.7.1 重修课程
+                                        ajaxProcess({
+                                            url:'/pcenter/course/learningRepair',
+                                            type:'POST',
+                                            data:data,
+                                            always:function(){
+                                                $.closeDialog(_this);
+                                                refreshCurTermCourse();
+                                            }
+                                        });
+                                    }
+                                    else{
+                                        $.resultDialog(0,renderData.message);
+                                        $mark.hide();
+                                    }
+                                },
+                                fail:function(errorMsg){
+                                    $.resultDialog(2,'验证出错：'+errorMsg);
+                                    $mark.hide();
+                                },
+                                always:function(){
+                                    $mark.hide();
+                                }
+                            });
+                            
+                        }
+                    },
+                    close:function(){
+                        if($alert.data('timer')){
+                            clearInterval($alert.data('timer'));
+                        }
+                    }
+                });
+
+                $('.u-panel',$alert).addClass('overlay-wrapper').append('<div class="overlay bg-center" style="display:none"></div>');
+
+                //获取验证码
+                $alert.on('click', '[data-role="get-ver-code"]', function(event) {
+                    event.preventDefault();
+                    var that=$(this);
+
+                    //2.7.2 重修课程-发送短信
+                    ajaxProcess({
+                        url:'/pcenter/course/sendSmsCode',
+                        type:'POST',
+                        success:function(renderData){
+                            if(renderData.msgCode==200){
+                                $.resultDialog(1,'验证码发送成功');
+                            }
+                            else{
+                                $.resultDialog(0,'验证码发送失败：'+renderData.message);
+                            }
+                        },
+                        fail:function(errorMsg){
+                            $.resultDialog(2,'验证码发送失败：'+errorMsg);
+                        }
+                    });
+                    
+
+                    if(!that.hasClass("disabled")){
+                        that.addClass("disabled").prop('disabled', true).html('重新获取<span class="count-down2">(60s)</span>');
+
+                        var timer,i = 60;
+                        var fn = function () {
+                            if(i<=0){
+                              that.removeClass("disabled").prop('disabled', false).find(".count-down2").html("");
+                              clearInterval(timer);
+                            }
+                            else{
+                              that.find(".count-down2").html("("+i+"s)");
+                              i --;
+                            }
+                        };
+                        timer = setInterval(fn, 1000);
+                        fn();
+
+                        $alert.data('timer',timer);
+                        window['timerCollectors'].push(timer);
+                    }
+                });
+            });
+        })
+        //查看学习凭证
+        .on('click', '[data-role="view-cert"]', function(event) {
+            var h=500,_this=this;
+            var $pop=$.alertDialog({
+                title:'查看学习凭证',
+                width:800,
+                height:h,
+                content:'<i class="loading"></i>',
+                cancel:false,
+                okLabel:'关闭',
+                okCss:'btn btn-normal btn-gray min-width-100'
+            });
+
+            var $pbody=$('.u-panel-body',$pop).height(h-88).addClass('scroll-box')
+
+            ajaxProcess({
+                //接口 4.3 查看授课计划
+                url:'/pcenter/course/getGrantCoursePlan',
+                type:'POST',
+                data:{
+                    TEACH_PLAN_ID:$(_this).data('json').TEACH_PLAN_ID
+                },
+                success:function(renderData){
+                    if(renderData.msgCode==200){
+                        if(renderData.data && renderData.data.grantList && renderData.data.grantList.length>0){
+                            $pbody.html(
+                                template('view-cert-temp',renderData.data)
+                            );
+                        }
+                        else{
+                            $pbody.html( template('error-tips-temp',{message:'暂无学习凭证'}) );
+                        }
+                        
+                    }
+                    else{
+                        $pbody.html( template('error-tips-temp',{message:renderData.message}) );
+                    }
+                },
+                fail:function(errorMessage){
+                    $pbody.html( template('error-tips-temp',{message:'数据出错'}) );
+                    console.log('接口"/pcenter/course/getGrantCoursePlan"错误：'+errorMessage);
+                }
+            });            
+
+            //查看凭证详情
+            $pop.on('click','[data-role="view-more-cert"]',function(event){
+                event.preventDefault();
+                var _this=this;
+                $.mydialog({
+                  id:'view-more-cert',
+                  width:700,
+                  zIndex:1200,
+                  height:500,
+                  urlData:{
+                    GRANT_ID:$(_this).data('grant-id'),
+                    COURSE_THEME:$(_this).data('course-theme')
+                  },
+                  content: 'pop-view-more-cert.html'
+                });
+            })
+        })
+        //进入预习
+        .on('click', '[data-role="course-preview"]', function(event) {
+            event.preventDefault();
+            var json=$(this).data('json');
+            
+            var renderHtml = template('preview-course-tip-temp',json);
+
+            var $w=$.alertDialog({
+                width:580,
+                height:390,
+                content:renderHtml,
+                okLabel:'开始预学习',
+                okCss:'btn btn-normal btn-orange min-width-100 btn-sure',
+                ok:function(){},
+                cancelLabel:'关闭',
+                cancelCss:'btn btn-normal btn-gray min-width-100 margin_r10'
+            });
+
+            var path='form-jump.html?'+json.action_url;
+            $('.btn-sure',$w).replaceWith('<a href="{0}" target="gostudy" class="btn btn-normal btn-orange min-width-100 btn-sure">开始预学习</a>'.format(path));
+            $('.btn-sure',$w).click(function(event) {
+                refreshCurTermCourse();
+                $.closeDialog($w);
+            });
+        })
+        //国开学习网-进入学习
+        .on('click', '[data-role="gkxxw-study"]', function(event) {
+            event.preventDefault();
+            var json=$(this).data('json');
+            $.alertDialog({
+                width:620,
+                height:420,
+                cancelCss:'btn btn-normal btn-gray min-width-100',
+                okCss:'btn btn-normal btn-orange margin_l15 min-width-100',
+                okLabel:'进入学习',
+                ok:function(){
+                    window.open('http://www.ouchn.cn');
+                    $.closeDialog(this);
+                },
+                content:template('gkxxw-study-temp',{GUIDE_PATH:json.GUIDE_PATH})
+            });
+        })
+        //学期下拉菜单
+        .on('mouseenter', '.dropdown', function(event) {
+            $(this).children('.dropdown-menu').stop(true,true).slideDown();
+        })
+        .on('mouseleave', '.dropdown', function(event) {
+            $(this).children('.dropdown-menu').stop(true,true).slideUp();
+        });
+
+        //刷新当前学期课程内容
+        function refreshCurTermCourse(){
+            var $item=$('.course-semester',$box).filter(function(index) {
+                return $(this).find('.down_btn.cur').length>0;
+            });
+            if($item.length>0){
+                $item.trigger('click');
+            }
+        }
+    })();
+
+
+});
+</script>
+
+<!--查看学习凭证 模板-->
+<script type="text/template" id="view-cert-temp">
+    <div class="padding15">
+        <table class="table-gray-th text-center f12">
+            <thead>
+                <tr>
+                    <th>课程主题</th>
+                    <th width="19%">学习地点</th>
+                    <th width="19%">学习时间</th>
+                    <th width="13%">授课老师</th>
+                    <th width="15%">学习凭证状态</th>
+                    <th width="12%">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{each grantList}}
+                    <tr>
+                        <td>{{$value.COURSE_THEME}}</td>
+                        <td>{{$value.ADDR}}</td>
+                        <td>
+                            {{$value.START_DATE}} <br>
+                            ~ <br>
+                            {{$value.ENT_DATE}}
+                        </td>
+                        <td>{{$value.TEACHER}}</td>
+                        <td>
+                            {{if $value.CERTIFICATE_STATUS==1}}
+                                <span class="text-orange">上传中</span>
+                            {{else if $value.CERTIFICATE_STATUS==2}}
+                                <span class="text-green">已上传</span>
+                            {{else}}
+                                <span class="gray">未上传</span>
+                            {{/if}}
+                        </td>
+                        <td>
+                            <a href="#" data-grant-id="{{$value.GRANT_ID}}" data-course-theme="{{$value.COURSE_THEME}}" class="text-blue" data-role="view-more-cert">查看详情</a>
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</script>

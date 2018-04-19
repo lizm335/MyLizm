@@ -1,0 +1,250 @@
+﻿<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+</head>
+<body class="body-pop">
+<div class="u-panel">
+  <form class="theform">
+    <div class="u-panel-head">
+      添加学历
+      <span class="pop-close" data-role="pop-close"></span>
+    </div>
+    <div class="u-panel-body">
+      <div class="padding20">
+        <div class="slim-scroll" style="height:258px;">
+          <div class="text-red">
+            温馨提示：自高中（或相当于高中）阶段依时间顺序填写
+          </div>
+            <table class="form custom-tbl" width="100%">
+              <tr>
+                <td width="40" class="font16">时间</td>
+                <td>
+                  <table width="100%">
+                    <tr>
+                      <td width="49%" class="nopadding valid-control">
+                        <input id="d4311" type="text" class="form-control form-control-block" onclick="WdatePicker({dateFmt:'yyyy-MM',maxDate:'#F{$dp.$D(\'d4312\')}'})" style="width:85% !ie;" placeholder="请填写起始时间" datatype="/\d{4}-\d{1,2}$/" nullmsg="请填写起始时间" errormsg="日期格式不对" name="beginTime">
+                      </td>
+                      <td width="2%">至</td>
+                      <td width="49%" class="nopadding valid-control">
+                        <input id="d4312" type="text" class="form-control form-control-block" onclick="WdatePicker({dateFmt:'yyyy-MM',minDate:'#F{$dp.$D(\'d4311\')}'})" style="width:85% !ie;" placeholder="请填写结束时间" datatype="/\d{4}-\d{1,2}$/" nullmsg="请填写结束时间" errormsg="日期格式不对" name="endTime">
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td class="font16">学历</td>
+                <td class="valid-control">
+                  <select class="form-control form-control-block" datatype="*" nullmsg="请选择学历" name="degree">
+                    <option value=''>请选择学历</option>
+                    <option>大学</option>
+                    <option>中专</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td class="font16">学校</td>
+                <td class="valid-control">
+                  <input class="form-control form-control-block" placeholder="请输入学校名称"  datatype="*" nullmsg="请输入学校名称" name="school">
+                </td>
+              </tr>
+              <tr>
+                <td class="font16">地区</td>
+                <td>
+                  <div class="col-offset-5 clearfix" data-role="city-select">
+                      <div class="col-custom-3 valid-control" style="width:50%;width:45% !ie;">
+                          <select class="form-control form-control-block prov" datatype="*" nullmsg="请选择省份" name="prov">
+                          </select>
+                      </div>
+                      <div class="col-custom-3 valid-control" style="width:50%;width:45% !ie;">
+                          <select class="form-control form-control-block city" datatype="*" nullmsg="请选择城市" name="city">
+                          </select>
+                      </div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+        </div>
+      </div>
+    </div>
+    <div class="u-panel-footer">
+      <div class="in" align="right">
+        <button class="btn btn-md btn-gray margin_r10" data-role="pop-close" style="width:100px;">取消</button>
+        <button type="submit" class="btn btn-md btn-orange" style="width:100px;">确认</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script type="text/template" id="main-record-tr">
+  <tr data-tr-id="{0}">
+    <td>
+      {1}
+      <input type="hidden" name="eduLiveList[{0}].beginTime" value="{1}">
+      至
+      {2}
+      <input type="hidden" name="eduLiveList[{0}].endTime" value="{2}">
+    </td>
+    <td>
+      {3}
+      <input type="hidden" name="eduLiveList[{0}].school" value="{3}">
+    </td>
+    <td>
+      {4}
+      <input type="hidden" name="eduLiveList[{0}].degree" value="{4}">
+    </td>
+    <td>
+      {5}
+      <input type="hidden" name="eduLiveList[{0}].region" value="{5}">
+    </td>
+    <td>
+      <input type="hidden" name="eduLiveList[{0}].eduId" value="{6}">
+      <input type="hidden" name="eduLiveList[{0}].status" value="{7}">
+      <a href="#" class="font_blue" data-role="record" data-oper="edit">编辑</a>
+      <a href="#" class="text-red margin_l10" data-role="delete">删除</a>
+    </td>
+  </tr>
+</script>
+
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+<script>
+require(['jquery','My97DatePicker','common'], function ($) {
+  var operType=frameElement.data.operType;
+  var contentJson;
+
+  var $beginTime=$('[name="beginTime"]');
+  var $endTime=$('[name="endTime"]');
+  var $school=$('[name="school"]');
+  var $degree=$('[name="degree"]');
+  var $prov=$('[name="prov"]');
+  var $city=$('[name="city"]');
+
+  if( operType=='edit' ){
+    contentJson=frameElement.data.content;
+    $beginTime.val( contentJson.beginTime );
+    $endTime.val( contentJson.endTime );
+    $school.val( contentJson.school );
+    $degree.val( contentJson.degree );
+  }
+
+  // 省市县三级联动
+  require(['cityselect'],function(){
+    $('[data-role="city-select"]').cxSelect({
+        selects: ['prov', 'city'],
+        data: cityJSON,
+        emptyStyle:"none"
+    });
+  });
+
+  //“x”关闭窗口
+  $('[data-role="pop-close"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  //表单验证
+  require(['Validform'],function(){
+    JPlaceHolder.init();
+
+    $('.valid-control').append([
+      '<div class="tooltip yellow_tip t_arrow tooltip-valid">',
+        '<div class="tooltip-in"></div>',
+        '<span class="t_arrow"><i class="arrow"></i><i class="arrow arrow_inner"></i></span>',
+      '</div>'
+    ].join(''));
+
+    $('[data-role="city-select"] select').change(function(event) {
+      $('[data-role="city-select"] select').each(function(index, el) {
+          var g=$(this).closest('.valid-control').siblings();
+          g.each(function(index, el) {
+            $(this).find('.form-control').removeClass('Validform_error');
+            $(this).find('.tooltip').hide().children('.tooltip-in').empty();
+          });
+      });
+    });
+
+    $.Tipmsg.r='';
+    $(".theform").Validform({
+      //showAllError:true,
+      ajaxPost:true,
+      ignoreHidden:true,
+      tiptype:function(msg,o,cssctl){
+        if(!o.obj.is("form")){
+          var objtip=o.obj.closest('.valid-control').find(".tooltip");
+          switch(o.type){
+              case 3:
+                objtip.children('.tooltip-in').text(msg).parent().show();
+                break;
+              default:
+                objtip.children('.tooltip-in').text('').parent().hide();
+                break;
+            }
+        }
+      },
+      beforeSubmit:function(curform){
+        var $container=top.$('[data-role="main-record"] tbody');
+
+        var htmlTemp=$('#main-record-tr').html();
+
+        if( operType=='edit' ){
+          htmlTemp=htmlTemp.format(
+            contentJson.order,
+            $beginTime.val(),
+            $endTime.val(),
+            $school.val(),
+            $degree.val(),
+            $prov.val()+$city.val(),
+            contentJson.eduId,
+            contentJson.status
+          );
+
+          $container.children('tr.active').replaceWith(htmlTemp);
+        }
+        else{
+          htmlTemp=htmlTemp.format(
+            $container.children('tr').length,
+            $beginTime.val(),
+            $endTime.val(),
+            $school.val(),
+            $degree.val(),
+            $prov.val()+$city.val(),
+            '',
+            0
+          );
+
+          $container.append(htmlTemp);
+        }
+        parent.$.closeDialog(frameElement.api);
+        return false;
+      },
+      callback:function(data){
+        //data 后台返回的数据对象结果
+        
+      }
+    });
+  });
+
+});
+</script>
+</body>
+</html>

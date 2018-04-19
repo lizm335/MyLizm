@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html class="reset">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>AdminLTE 2 | Dashboard</title>
+<!-- Tell the browser to be responsive to screen width -->
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<!-- Bootstrap 3.3.5 -->
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="font-awesome/4.4.0/css/font-awesome.min.css">
+<!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+<link rel="stylesheet" href="dist/css/skins/skin-blue.min.css">
+<!-- Theme style -->
+<link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+<link rel="stylesheet" href="dist/css/reset.css">
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="hold-transition fixed skin-blue sidebar-mini">
+<div class="wrapper"> 
+  
+  <!-- Left side column. contains the logo and sidebar -->
+  <header class="main-header"> 
+  	<a href="#" class="logo">
+	    <span class="logo-mini"><i class="fa fa-fw fa-tv"></i></span>
+	    <span class="logo-lg"><i class="fa fa-fw fa-tv"></i>教学教务组织平台</span>
+	</a>
+    <nav class="navbar navbar-static-top" role="navigation"> <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"> <span class="sr-only">首页</span> </a>
+		<div class="navbar-custom-menu">
+			<ul class="nav navbar-nav">
+			  <!-- Notifications: style can be found in dropdown.less --> 
+			  <!-- Messages: style can be found in dropdown.less-->
+			  <li class="first-level-wrap">
+				<div class="dropdown operion-more-menu"> <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 更多 <i class="fa fa-fw fa-caret-down"></i> </a>
+				  <ul class="dropdown-menu">
+					<li> <a role="menuitem" href="homepage.html">首页</a>
+					  <ul class="menu-temp hide">
+						<li class="header">首页</li>
+						<li class="treeview"> <a href="homepage.html"> <i class="fa fa-home"></i> <span>首页</span></a>
+						</li>
+						<li class="treeview"> <a href="通知公告.html"> <i class="fa fa-volume-up"></i> <span>通知公告</span></a>
+						</li>
+						<li class="treeview"> <a href="规则设置.html"> <i class="fa fa-rule-set"></i> <span>规则设置</span></a>
+						</li>
+						<li class="treeview"> <a href="文章管理.html"> <i class="fa fa-article-manage"></i> <span>文章管理</span></a>
+						</li>
+					  </ul>
+					</li>
+					<li> <a role="menuitem" href="#">机构管理</a>
+					  <ul class="menu-temp hide">
+						<li class="header">机构管理</li>
+						<li class="treeview"> <a href="院校管理.html"> <i class="fa fa-yx-manage"></i> <span>院校管理</span></a>
+						</li>
+						<li class="treeview"> <a href="分校管理.html"> <i class="fa fa-fx-manage"></i> <span>分校管理</span></a>
+						</li>
+						<li class="treeview"> <a href="学习中心.html"> <i class="fa fa-xxzx-manage"></i> <span>学习中心</span></a>
+
+						</li>
+					  </ul>
+					</li>
+					<li> <a role="menuitem" href="#">招生管理</a>
+					  <ul class="menu-temp hide">
+						<li class="header">招生管理</li>
+						<li class="treeview"> <a href="招生计划.html"> <i class="fa fa-zsjh"></i> <span>招生计划</span></a>
+						</li>
+						<li class="treeview"> <a href="报读信息.html"> <i class="fa fa-bdxx"></i> <span>报读信息</span></a>
+						</li>
+						<li class="treeview"> <a href="缴费管理.html"> <i class="fa fa-jfgl"></i> <span>缴费管理</span></a>
+						</li>
+					  </ul>
+					</li>
+					<li> <a role="menuitem" href="#">学籍管理</a>
+					  <ul class="menu-temp hide">
+						<li class="header">学籍管理</li>
+						<li class="treeview"> <a href="学籍资料.html"> <i class="fa fa-xjzl"></i> <span>学籍资料</span></a>
+						</li>
+						<li class="treeview"> <a href="学籍信息.html"> <i class="fa fa-xjxx"></i> <span>学籍信息</span></a>
+						</li>
+						<li class="treeview"> <a href="学籍异动.html"> <i class="fa fa-xjyd"></i> <span>学籍异动</span></a>
+						</li>
+						<li class="treeview"> <a href="学籍统计.html"> <i class="fa fa-pie-chart"></i> <span>学籍统计</span></a>
+						</li>
+					  </ul>
+					</li>
+					<li> <a role="menuitem" href="#">教材管理</a>
+						<ul class="menu-temp hide">
+							<li class="header">教材管理</li>
+							<li class="treeview"> <a href="教材管理.html"> <i class="fa fa-jc-manage"></i> <span>教材管理</span> </a>
+							</li>
+							<li class="treeview"> <a href="库存管理.html"> <i class="fa fa-stock-manage"></i> <span>库存管理</span></a>
+							</li>
+							<li class="treeview"> <a href="教材发放.html"> <i class="fa fa-jq-distribute"></i> <span>教材发放</span></a>
+							</li>
+							<li class="treeview"> <a href="学员反馈.html"> <i class="fa fa-commenting"></i> <span>学员反馈</span></a>
+							</li>
+						</ul>
+					</li>
+					<li> <a role="menuitem" href="#">毕业管理</a>
+						<ul class="menu-temp hide">
+							<li class="header">毕业管理</li>
+							<li class="treeview"> <a href="毕业批次.html"> <i class="fa fa-graduate-1"></i> <span>毕业批次</span> </a>
+							</li>
+							<li class="treeview"> <a href="毕业安排.html"> <i class="fa fa-graduate-2"></i> <span>毕业安排</span> </a>
+							</li>
+							<li class="treeview"> <a href="毕业学员.html"> <i class="fa fa-graduate-3"></i> <span>毕业学员</span> </a>
+							</li>
+							<li class="treeview"> <a href="毕业学员管理.html"> <i class="fa fa-graduate-3"></i> <span>毕业学员管理</span> </a>
+							</li>
+							<li class="treeview"> <a href="毕业老师.html"> <i class="fa fa-graduate-4"></i> <span>毕业老师</span> </a>
+							</li>
+						</ul>
+					</li>
+					<li> <a role="menuitem" href="#">论文管理</a>
+					  <ul class="menu-temp hide">
+						<li class="header">论文管理</li>
+						<li class="treeview"> <a href="我的指导.html"> <i class="fa fa-hand-o-right"></i> <span>我的指导</span></a>
+						</li>
+						<li class="treeview"> <a href="我的学员.html"> <i class="fa fa-user-md"></i> <span>我的学员</span></a>
+						</li>
+					  </ul>
+					</li>
+					<li> <a role="menuitem" href="#">教学管理</a>
+					  <ul class="menu-temp hide">
+						<li class="header">教学管理</li>
+						<li class="treeview"> <a href="课程管理.html"> <i class="fa fa-kcgl"></i> <span>课程管理</span></a>
+						</li>
+						<li class="treeview"> <a href="专业管理.html"> <i class="fa fa-article-manage"></i> <span>专业管理</span></a>
+						</li>
+						<li class="treeview"> <a href="开课管理.html"> <i class="fa fa-kkgl"></i> <span>开课管理</span></a>
+						</li>
+						<li class="treeview"> <a href="课程班级.html"> <i class="fa fa-users"></i> <span>课程班级</span></a>
+						</li>
+						<li class="treeview"> <a href="学年度管理.html"> <i class="fa fa-xndgl"></i> <span>学年度管理</span></a>
+						</li>
+					  </ul>
+					</li>
+					<li> <a role="menuitem" href="#">教务管理</a>
+					  <ul class="menu-temp hide">
+						<li class="header">教务管理</li>
+						<li class="treeview"> <a href="年级管理.html"> <i class="fa fa-njgl"></i> <span>年级管理</span></a>
+						</li>
+						<li class="treeview"> <a href="开设专业.html"> <i class="fa fa-kszj"></i> <span>开设专业</span></a>
+						</li>
+						<li class="treeview"> <a href="教学班级.html"> <i class="fa fa-jxbj"></i> <span>教学班级</span></a>
+						</li>
+						<li class="treeview"> <a href="教职人员.html"> <i class="fa fa-user"></i> <span>教职人员</span></a>
+						</li>
+					  </ul>
+					</li>
+					<li> <a role="menuitem" href="#">考试管理</a>
+					  <ul class="menu-temp hide">
+						<li class="header">考试管理</li>
+						<li class="treeview"> <a href="考试科目.html"> <i class="fa fa-kskm"></i> <span>考试科目</span></a>
+						</li>
+						<li class="treeview"> <a href="考试批次.html"> <i class="fa fa-clone"></i> <span>考试批次</span></a>
+						</li>
+						<li class="treeview"> <a href="考试计划.html"> <i class="fa fa-calendar-check-o"></i> <span>考试计划</span></a>
+						</li>
+						<li class="treeview"> <a href="考试预约.html"> <i class="fa fa-ksyy"></i> <span>考试预约</span></a>
+						</li>
+						<li class="treeview"> <a href="补考缴费.html"> <i class="fa fa-bkjf"></i> <span>补考缴费</span></a>
+						</li>
+						<li class="treeview"> <a href="考点管理.html"> <i class="fa fa-map-marker"></i> <span>考点管理</span></a>
+						</li>
+						<li class="treeview"> <a href="考场管理.html"> <i class="fa fa-user-md"></i> <span>考场管理</span></a>
+						</li>
+						<li class="treeview"> <a href="场次安排.html"> <i class="fa fa-ccap"></i> <span>场次安排</span></a>
+						</li>
+						<li class="treeview"> <a href="排考安排.html"> <i class="fa fa-pkap"></i> <span>排考安排</span></a>
+						</li>
+						<li class="treeview"> <a href="考试成绩.html"> <i class="fa fa-kscj"></i> <span>考试成绩</span></a>
+						</li>
+					  </ul>
+					</li>
+					
+					<li> <a role="menuitem" href="#">学习管理</a>
+						<ul class="menu-temp hide">
+							<li class="header">学习管理</li>
+							<li class="treeview"> <a href="成绩查询.html"> <i class="fa fa-view-more"></i> <span>成绩查询</span></a>
+							</li>
+							<li class="treeview"> <a href="学情分析.html"> <i class="fa fa-bar-chart-o"></i> <span>学情分析</span></a>
+							</li>
+							<li class="treeview"> <a href="考勤分析.html"> <i class="fa fa-calendar-check-o"></i> <span>考勤分析</span></a>
+							</li>
+						</ul>
+					</li>
+
+					<li> <a role="menuitem" href="#">系统管理</a>
+						<ul class="menu-temp hide">
+							<li class="header">系统管理</li>
+							<li class="treeview"> <a href="用户管理.html"> <i class="fa fa-group-person"></i> <span>用户管理</span></a>
+							</li>
+							<li class="treeview"> <a href="角色管理.html"> <i class="fa fa-jsgl"></i> <span>角色管理</span></a>
+							</li>
+							<li class="treeview"> <a href="模块管理.html"> <i class="fa fa-th-large"></i> <span>模块管理</span></a>
+							</li>
+							<li class="treeview"> <a href="操作管理.html"> <i class="fa fa-cjgl"></i> <span>操作管理</span></a>
+							</li>
+						</ul>
+					</li>
+					
+				  </ul>
+				</div>
+			  </li>
+			  
+			  <li class="dropdown user user-menu"><a href="#"
+							class="dropdown-toggle" data-toggle="dropdown"> <img
+								src="/static/dist/img/user2-160x160.jpg"
+								class="user-image" alt="User Image"> <span class="hidden-xs"> boss </span> </a>
+				<ul class="dropdown-menu">
+				  <!-- User image -->
+				  <li class="user-header"><img
+									src="/static/dist/img/user2-160x160.jpg"
+									class="img-circle" alt="User Image">
+					<p> XXXX
+					  - Web Developer <small>Member since Nov. 2012</small> </p>
+				  </li>
+				  <!-- Menu Footer-->
+				  <li class="user-footer">
+					<div class="pull-left"> <a href="#" class="btn btn-default btn-flat">我的资料</a> </div>
+					<div class="pull-right"> <a href="${ctx }/logout" class="btn btn-default btn-flat">退出</a> </div>
+				  </li>
+				</ul>
+			  </li>
+			</ul>
+		</div>
+		<ul class="first-level-menu">
+		<!--
+		  <li data-id="1" data-url="homepage.html">首页</li>
+		  <li data-id="3" data-url="院校管理.html">机构管理</li>
+		  <li data-id="4">用户管理</li>
+		  <li data-id="5">教学管理</li>
+		  <li data-id="6">教务管理</li>
+		  <li data-id="7">考务管理</li>
+		  <li data-id="8" data-url="毕业批次.html">毕业管理</li>
+		  <li data-id="9">学习管理</li>
+		  <li data-id="10">招生管理</li>
+		  <li data-id="11" data-url="教材管理.html">教材管理</li>
+		-->
+		</ul>
+	</nav>
+  </header>
+  <aside class="main-sidebar">
+    <section class="sidebar">
+
+      <ul class="sidebar-menu"></ul>
+    </section>
+    <!-- /.sidebar --> 
+  </aside>
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper pos-rel">
+    <div class="overlay-wrapper loading" style="display: block;"><div class="overlay"><i class="fa fa-refresh fa-spin" style="top:200px !important"></i></div></div>
+    <!-- <div class="page-tabs-box">
+      <div class="page-tabs-content clearfix">
+        <div class="dropdown page-group-control yahei"> <a class="dropdown-toggle" data-toggle="dropdown" href="#"> 关闭操作 <span class="caret"></span> </a>
+          <ul class="dropdown-menu">
+            <li role="presentation" class="close-all-tabs"><a role="menuitem" tabindex="-1" href="#">关闭全部选项卡</a></li>
+            <li role="presentation" class="close-other-tabs"><a role="menuitem" tabindex="-1" href="#">关闭其他选项卡</a></li>
+          </ul>
+        </div>
+        <div class="page-tabs-div clearfix">
+          <div class="page-left-btn"><i class="fa fa-fw fa-angle-left"></i></div>
+          <div class="page-right-btn"><i class="fa fa-fw fa-angle-right"></i></div>
+          <div class="page-tabs">
+            <ul class="clearfix">
+              <li class="home-tab" data-id="0"><a href="#">首页</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div> -->
+    <div class="page" data-id="0" style="min-height:300px;">
+        <iframe src="homepage.html" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
+    </div>
+  </div>
+</div>
+<!-- ./wrapper --> 
+
+
+<!-- IE8及以下的浏览器弹出提示窗口 -->
+<div id="dialog-message" title="温馨提示" style="display:none">
+  <p style="padding:20px 10px;margin:0;"> 本管理系统支持IE9以上版本浏览器，为了获取更好的体验，建议
+    使用Firefox、Chrome、Opera等浏览器。 </p>
+</div>
+<!-- jQuery 2.1.4 --> 
+<!--[if gte IE 9]>
+	<script src="plugins/jQuery/jQuery-2.1.4.min.js"></script>
+	<![endif]--> 
+
+<!--[if !IE]><!--> 
+<script src="plugins/jQuery/jQuery-2.1.4.min.js"></script> 
+<!--<![endif]--> 
+
+<!--[if lt IE 9]>
+	<script src="plugins/jQuery/jquery-1.12.4.min.js"></script>
+<![endif]--> 
+
+<!--[if lt IE 9]>
+//custom-model
+<script src="plugins/custom-model/custom-model.js"></script>
+<script>
+$(function() {
+	$.mydialog({
+	  id:'noteice',
+	  width:420,
+	  height:256,
+	  zIndex:11000,
+	  content: [
+	    '<div class="box no-border no-shadow margin-bottom-none">',
+	      	'<div class="box-header with-border">',
+		      '<h3 class="box-title">温馨提示</h3>',
+		    '</div>',
+		    '<div class="box-body">',
+		        '<div class="f16" style="padding:30px;">',
+		          '本管理系统支持IE9以上版本浏览器，为了获取更好的体验，建议使用Firefox、Chrome、Opera等浏览器。',
+		        '</div>',
+		    '</div>',
+		    '<div class="box-footer text-right">',
+		      '<button type="button" class="btn btn-default min-width-90px" data-role="close">我知道了</button>',
+		    '</div>',
+	    '</div>'
+	  ].join(''),
+	  onLoaded:function(){
+	    var $box=$("[data-id='noteice']");
+	    //取消
+	    $('[data-role="close"]',$box).click(function(event) {
+	      $.closeDialog($box);
+	    });
+	  }
+	});
+});
+</script>
+<![endif]--> 
+
+<script src="bootstrap/js/bootstrap.min.js"></script> 
+<!-- SlimScroll 1.3.0 --> 
+<script src="plugins/slimScroll/jquery.slimscroll.min.js"></script> 
+ 
+<!-- AdminLTE App --> 
+<script src="dist/js/app.min.js"></script>  
+<!-- common js --> 
+<script src="dist/js/common.js"></script>
+<script src="dist/js/index.js"></script>
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

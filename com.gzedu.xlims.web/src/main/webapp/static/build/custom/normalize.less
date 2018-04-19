@@ -1,0 +1,152 @@
+/*
+ *common css
+*/
+
+/* float */
+.fl{float:left;}
+.fr{float:right;}
+.no-float{float:none !important;}
+/* position */
+.pos-rel,
+.position-relative{
+	position:relative;
+}
+.position-absolute{
+	position:absolute !important;
+}
+/* color */
+.gray{color:#333 !important}
+.gray6{color:#666 !important}
+.gray9{color:#999 !important;}
+.gray-b2{color: #b2b2b2 !important;}
+.text-white{color: #fff !important;}
+
+/* font size */
+.f12{font-size:12px !important;}
+.f14{font-size:14px !important;}
+.f16{font-size:16px !important;}
+.f18{font-size:18px !important;}
+.f24{font-size:24px !important;}
+/* font style */
+.text-no-bold{font-weight:normal !important}
+.text-left2{text-align:left !important;}
+
+/* padding */
+.pad-l5{padding-left:5px !important;}
+.pad-l15{padding-left:15px !important;}
+.pad-l20{padding-left:20px !important;}
+.pad-r15{padding-right:15px !important;}
+.pad-r20{padding-right:20px !important;}
+.pad-t5{padding-top:5px;}
+.pad-t10{padding-top:10px;}
+.pad-t15{padding-top:15px;}
+.pad-b5{padding-bottom:5px;}
+.pad-b10{padding-bottom:10px;}
+.pad-b30{padding-bottom:30px !important;}
+.pad10{padding:10px !important;}
+.pad15{padding:15px !important;}
+.pad20{padding:20px !important;}
+.pad-t30{padding-top: 30px;}
+.no-pad-left{padding-left:0 !important}
+.no-pad-right{padding-right:0 !important}
+.no-pad-top{padding-top:0 !important}
+.no-pad-bottom{padding-bottom:0 !important}
+
+/* margin */
+.margin_l5{margin-left: 5px;}
+.left10,.margin_l10{margin-left:10px;}
+.margin_l15{margin-left: 15px;}
+.margin_r5{margin-right:5px !important;}
+.margin_r10{margin-right:10px !important;}
+.margin_r15{margin-right:15px;}
+.margin_b10{margin-bottom:10px !important;}
+.margin_b15{margin-bottom:15px !important;}
+.margin_b20{margin-bottom:20px !important;}
+.margin_t5{margin-top:5px;}
+.margin_t10{margin-top:10px !important;}
+.margin_t15{margin-top:15px !important;}
+.margin_t20{margin-top:20px !important;}
+.margin_t30{margin-top:30px !important;}
+.offset-margin-tb-15{
+	margin-top: -5px;
+	margin-bottom: -5px;
+}
+.row-offset-3px{
+	margin-left:-3px !important;
+	margin-right:-3px !important;
+	& > div{
+		padding-left:3px !important;
+		padding-right:3px !important;
+	}
+}
+
+/* width */
+.full-width{width:100% !important;}
+.full-height{height:100% !important;}
+.min-width-90px{min-width:90px;}
+.min-width-60px{min-width:60px;}
+
+/* others */
+.hide-block{
+	display: none;
+}
+.inlineblock,
+.inline-block{
+	display:inline-block !important;
+}
+.oh{overflow:hidden;}
+
+/* background */
+.nobg,
+.no-bg{
+	background:none !important;
+}
+.bg-f2f2f2{
+	background-color: #f2f2f2;
+}
+.bg-fafafa{
+	background-color: #fafafa;
+}
+
+/* vertical */
+.vertical-mid,
+.vertical-middle{
+	vertical-align:middle;
+	th,td{
+		vertical-align: middle !important;
+	}
+}
+
+/* border */
+.border-top{
+	border-top: 1px solid transparent;
+}
+.border-bottom-none{
+	border-bottom: 0 none !important;
+}
+.border-right-dedede{
+	border-right: 1px solid #DEDEDE;
+}
+/* 去除input:number在-webkit内核下显示有上下箭头 */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+    -webkit-appearance: none !important;
+    margin: 0; 
+}
+input[type="number"]{-moz-appearance:textfield;}
+/* scrollbar reset */
+::-webkit-scrollbar-track{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+::-webkit-scrollbar{width: 8px;height:8px;background-color: #F5F5F5;}
+::-webkit-scrollbar-thumb{background-color: #666;}
+
+/* 布局 */
+@media (min-width: 768px) {
+	//五列布局
+	.col-sm-2_5{
+		float: left;
+		width:20%;
+	}
+}

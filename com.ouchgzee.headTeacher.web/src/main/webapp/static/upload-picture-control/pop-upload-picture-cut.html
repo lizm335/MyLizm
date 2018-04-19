@@ -1,0 +1,319 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+</head>
+<body class="body-pop">
+<div class="u-panel overlay-wrapper">
+  
+    <div class="u-panel-head">
+      <span data-role="title">上传图片</span>
+      <span class="pop-close" data-role="pop-close"></span>
+    </div>
+    <div class="u-panel-body scroll-box">
+        <div class="center-block clearfix padding_t25 upload-grid">
+          <div class="upload-grid-main">
+            <div class="img-process-container">
+                <!--<img class="process-image">-->
+            </div>
+            <div class="img-preview"></div>
+            <div class="upload-img-helper margin_t10">
+              <div class="fr">
+                <!--<i class="icon icon-99x117 as-link margin_l10" title="缩小" onclick="$('.process-image').cropper('zoom', -0.1);"></i>
+
+                <i class="icon icon-64x117 as-link margin_l10" title="放大" onclick="$('.process-image').cropper('zoom', 0.1);"></i>
+                -->
+
+                <i class="icon icon-166x93 as-link margin_l10" title="重置" onclick="$('.process-image').cropper('reset');"></i>
+
+                <i class="icon icon-30x119 as-link margin_l10 margin_r10" title="向右旋转" onclick="$('.process-image').cropper('rotate', 45);"></i>
+              </div>
+              <!--<button type="button" class="btn btn-normal btn-gray border-radius" data-role="upload-btn">选择本地文件</button>-->
+
+              <!--
+                利用些方法获取相关裁取和翻转信息
+                $('.process-image').cropper('getData');
+
+                //使用阿里云的以下方式生成新图
+                http://image-demo.oss-cn-hangzhou.aliyuncs.com/example.jpg?x-oss-process=image/rotate,45/crop,x_171,y_84,w_166,h_251
+              -->
+            </div>
+          </div>
+          <div class="upload-grid-side">
+            <table width="100%" height="100%">
+              <tr>
+                <td>
+                  <div class="clearfix upload-sample-box">
+                  </div>
+                  <div class="alert-panel margin_t10 padding10 font12 font_gray">
+                  1.上传的照片必须保证清晰、完整，不能缺少信息<br>
+                   
+                  2.请确保照片中证件周边干净，可使用白色A4纸作为背景拍摄<br>
+                   
+                  3.可参照标准示例，对照片进行裁切操作
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+    </div>
+    <div class="u-panel-footer">
+      <div class="in" align="right">
+        <button class="btn btn-md btn-gray margin_r10" data-role="close" style="width:100px;">取消</button>
+        <button class="btn btn-md btn-orange" data-role="sure" style="width:100px;">确定</button>
+      </div>
+    </div>
+    <div class="overlay bg-center hide"></div>
+  
+</div>
+
+<script type="text/template" id="item-temp">
+  <table width="100%" class="text-center">
+    <tr>
+    {{each sampleImg}}
+      <td>
+        <span class="p-win-cert">
+          <img class="vertical-middle" src="{{$value.smImg}}">
+          <a href="{{$value.lgImg}}" class="light-box" data-role="img-fancybox"><span>点击放大</span></a>
+        </span>
+        <p class="f14 margin_t5">
+          {{$value.title}}
+        </p>
+      <td>
+    {{/each}}
+      </tr>
+  </table>
+</script>
+
+<script type="text/template" id="ie-tips">
+    <div class="text-center margin_l15 margin_r15" style="border-bottom:#ebebeb 1px solid;padding:20px 20px 30px;">
+      <img src="http://css.gzedu.com/ouchgzee_com/person_center/v2.1/images/tips-fail.png">
+      <div class="text-orange f18 margin_t10">
+        您的浏览器版本过低<br>
+        无法使用图片上传功能，请更换以下浏览器
+      </div>
+    </div>
+    <div style="padding:15px 30px 20px">
+      <h3 class="gray6 f14 text-bold">请您更换以下浏览器（点击图标可下载）</h3>
+      <table width="100%" class="text-center margin_t15">
+        <tr>
+          <td>
+            <a href="http://download.pchome.net/internet/browser/browser/detail-141810.html" target="_blank">
+              <img src="http://css.gzedu.com/ouchgzee_com/person_center/v2.1/images/google-browser.jpg">
+              <p class="margin_t5 gray6">谷歌浏览器</p>
+            </a>
+          </td>
+          <td>
+            <a href="http://dl.pconline.com.cn/download/60835.html" target="_blank">
+              <img src="http://css.gzedu.com/ouchgzee_com/person_center/v2.1/images/ie-browser.jpg">
+              <p class="margin_t5 gray6">IE9+浏览器</p>
+            </a>
+          </td>
+          <td>
+            <a href="http://browser.qq.com/" target="_blank">
+              <img src="http://css.gzedu.com/ouchgzee_com/person_center/v2.1/images/qq-browser.jpg">
+              <p class="margin_t5 gray6">QQ浏览器</p>
+            </a>
+          </td>
+          <td>
+            <a href="http://ie.sogou.com/" target="_blank">
+              <img src="http://css.gzedu.com/ouchgzee_com/person_center/v2.1/images/sougo-browser.jpg">
+              <p class="margin_t5 gray6">搜狗浏览器</p>
+            </a>
+          </td>
+          <td>
+            <a href="http://se.360.cn/" target="_blank">
+              <img src="http://css.gzedu.com/ouchgzee_com/person_center/v2.1/images/360-browser.jpg">
+              <p class="margin_t5 gray6">360浏览器</p>
+            </a>
+          </td>
+        </tr>
+      </table>
+    </div>
+</script>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+<script type="text/javascript">
+require(['jquery','artTemplate','common','cropper'], function ($,template) {
+  var jsonData=frameElement.data;
+  $('[data-role="title"]').text(jsonData.title);
+  $('.upload-sample-box').html( template('item-temp',jsonData) );
+
+  //“x”关闭窗口
+  $('[data-role="pop-close"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  //关闭
+  $('[data-role="close"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  var $comfirmBtn=$('[data-role="sure"]');
+
+  var $processImage=parent.$('.cert-box.actived .img-val');
+  var imgURL=$processImage.val();
+
+  if(imgURL && imgURL!=''){
+    $('.img-process-container').append('<img class="process-image" src="'+imgURL+'">')
+    imgCropper();
+  }
+
+  //图片裁切方法
+  function imgCropper(){
+    var $img=$('.process-image');
+    if($img.length<=0 && !$img.attr('src')) return;
+
+    var $preview=$('.img-preview');
+    $img.cropper({
+      //aspectRatio: 16 / 9,
+      preview: '.img-preview',
+      crop: function(data) {
+        // 出来裁切后的图片数据.
+      },
+      built: function () {
+        $img.on('dragstart.cropper', function(event) {
+          $preview.stop(true,true).show();
+        }).on('dragend.cropper', function(event) {
+          $preview.stop(true,true).delay(200).fadeOut('fast');
+        }).on('zoomin.cropper zoomout.cropper', function(event) {
+          $preview.show().stop(true,true).delay(1000).fadeOut('fast');
+        });
+      }
+    });
+  };
+
+  //上传图片
+  $('[data-role="upload-btn"]').on('click', function(event) {
+    var $pop=uploadFile({
+      ok:function(filelist){
+        if(filelist){
+          if(filelist.length>0){
+            var src=filelist[0].SFileName;
+            $('.overlay',$pop).show();
+
+            if($('.img-process-container > img').length<=0){
+              $('.img-process-container').append('<img class="process-image" src="'+src+'?x-oss-process=image/resize,h_4000,w_4000/auto-orient,1">');
+              imgCropper();
+            }
+            else{
+
+              $('.process-image').attr('src',src).cropper('replace',src+'?x-oss-process=image/resize,h_4000,w_4000/auto-orient,1');
+            }
+
+            setTimeout(function(){
+              $('.overlay',$pop).hide();
+              $.closeDialog($pop);
+            },500);
+          }
+        }
+      }
+    });
+
+    $('.u-panel',$pop)
+    .addClass('.overlay-wrapper')
+    .append('<div class="overlay bg-center hide"></div>');
+    
+  });
+
+  //查看大图
+  /* top.require(['jquery.fancybox'],function(){
+    $('[data-role="img-fancybox"]').click(function(event) {
+      event.preventDefault();
+      var self=this;
+      top.$.fancybox({
+        'padding'   : 0,
+        'href'      : $(self).attr('href')
+      });
+    });
+  }); */
+
+  //确定
+  $comfirmBtn.on('click', function(event) {
+    event.preventDefault();
+    var $img=$('.process-image');
+
+    if($img.length>0 && $img.attr('src')){
+      var href=$img.attr('src');
+      var data=$img.cropper('getData');
+      var imgUrl=href+'{5}/rotate,{0}/crop,x_{1},y_{2},w_{3},h_{4}{6}';
+      
+      imgUrl=imgUrl.format(
+        Math.round(data.rotate),
+        Math.round(data.x),
+        Math.round(data.y),
+        Math.round(data.width),
+        Math.round(data.height),
+        (imgUrl.indexOf('?x-oss-process=image')==-1?'?x-oss-process=image':''),
+        ( href.indexOf('/resize,h_4000,w_4000/auto-orient,1')==-1?'/resize,h_4000,w_4000/auto-orient,1':'' )
+      );
+
+      $(this).addClass('disabled').prop('disabled',true).text('图片处理中');
+
+      var $box=parent.$('.cert-box.actived');
+      var $pic=$box.find('.info-img');
+      if($pic.length<=0){
+        $box.find('.info-img-box').prepend('<img src="{0}" class="info-img">'.format(imgUrl));
+        $pic=parent.$('.cert-box.actived').find('.info-img');
+      }
+      else{
+        $pic.attr('src',imgUrl);
+      }
+
+      $box.addClass('has-upload')
+      .find('[data-role="img-fancybox"]').show().attr('href',imgUrl)
+      .next().val(imgUrl);
+
+      $box.next('.tooltip').hide().children('.tooltip-in').empty();
+
+      $box.find('[data-role="upload-img"] span').text('重新上传')
+
+      $pic.get(0).onload=function(){
+        parent.$.closeDialog(frameElement.api);
+      };
+    }
+    else{
+      parent.$.closeDialog(frameElement.api);
+    }
+    
+  });
+
+  if($(frameElement).height()>0){
+    $('.scroll-box').height($(frameElement).height()-90);
+  }
+
+  $('html,body').height('100%');
+
+  //ie8及以下
+  if('\v'=='v'){
+    $.alertDialog({
+        width:540,
+        height:440,
+        content:$('#ie-tips').html()
+    });
+  }
+});
+</script>
+</body>
+</html>

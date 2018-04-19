@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+    http://www.springframework.org/schema/context   
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
+	default-lazy-init="true">
+
+	<description>Shiro安全配置</description>
+	<bean id="study_shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		<property name="loginUrl" value="/login" />
+		<property name="successUrl" value="/pcenter/main" />
+		<property name="unauthorizedUrl" value="/denied.jsp" />
+		<property name="filterChainDefinitions">
+			<value>
+				/**/teacher/login = anon
+                /pcenter/qrcode/** = anon
+                /pcenter/exam-guide/** = anon<!-- 考试指引 -->
+				/pcenter/** = authc
+				/static/** = anon
+				/eefileupload/** = anon
+				/vCode = anon
+				/login = authc
+				/loginForSessionTimeOut = anon
+				/loginForNotLogged = anon
+				/404/** = anon
+				/logout = logout
+				/api/** = anon
+				/exam/** = anon
+                /pay/** = anon
+				/sso/** = anon
+				/wx/** = anon<!-- 微信网页版 -->
+				/admin/** = authc
+				/** = authc
+			</value>
+		</property>
+		<property name="filters">
+			<util:map>
+				<entry key="authc" value-ref="loginFormAuthenticationFilter" />
+			</util:map>
+		</property>
+	</bean>
+	
+	
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">  
+        <property name="realm" ref="shiroDbRealm"></property>  
+        <property name="sessionManager" ref="sessionManager"/>
+		<!-- 使用下面配置的缓存管理器 -->
+		<property name="cacheManager" ref="shiroCacheManager" />
+		<property name="rememberMeManager" ref="rememberMeManager"/>
+    </bean>
+
+    <!--凭证匹配：密码匹配 RetryLimitHashedCredentialsMatcher-->
+    <bean id="credentialsMatcher" class="com.gzedu.xlims.constants.RetryLimitHashedCredentialsMatcher">
+        <constructor-arg ref="shiroCacheManager"/>
+    </bean>
+
+    <!-- 項目自定义的Realm -->
+    <bean id="shiroDbRealm" class="com.gzedu.xlims.constants.ShiroDbRealm">
+    	<property name="credentialsMatcher" ref="credentialsMatcher" />
+		<property name="cachingEnabled" value="true" />
+		<!-- 如需要自定义缓存时间放开以下.修改 ehcache.xml-->
+		<!--<property name="authenticationCachingEnabled" value="true"/>-->
+        <property name="authenticationCacheName" value="authenticationCache"/>
+        <property name="authorizationCachingEnabled" value="true"/>
+        <property name="authorizationCacheName" value="authorizationCache"/>
+         <property name="userType" value="1"/>
+    </bean>
+	
+    <!-- 解决不跳转到successUrl的方法 -->
+    <bean id="loginFormAuthenticationFilter" class="com.gzedu.xlims.constants.shiro.filter.LoginFormAuthenticationFilter"/>
+    
+    <bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
+	<!-- 会话Cookie模板 -->
+    <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="sid"/>
+        <property name="name" value="WEBSID" />
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="-1"/>
+    </bean>
+
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="rememberMe"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="2592000"/><!-- 30天 -->
+    </bean>
+    <!-- rememberMe管理器 -->
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <!-- rememberMe cookie加密的密钥 建议每个项目都不一样 默认AES算法 密钥长度（128 256 512 位）-->
+        <property name="cipherKey"
+                  value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}"/>
+        <property name="cookie" ref="rememberMeCookie"/>
+    </bean>
+	 <!-- 会话DAO -->
+    <bean id="sessionDAO" class="com.gzedu.xlims.constants.MemcachedSessionDAO">
+        <property name="activeSessionsCacheName" value="shiro-activeSessionCache"/>
+        <property name="sessionIdGenerator" ref="sessionIdGenerator"/>
+        <property name="memcachedClient" ref="memcachedClient"/>
+    </bean>
+
+    <!-- 会话验证调度器全局的会话信息检测扫描信息间隔20分钟 -->
+    <bean id="sessionValidationScheduler" class="org.apache.shiro.session.mgt.quartz.QuartzSessionValidationScheduler">
+        <property name="sessionValidationInterval" value="1200000"/>
+        <property name="sessionManager" ref="sessionManager"/>
+    </bean>
+	
+	<!-- 监听会话 -->
+	<bean id="shiroSessionListener" class="com.gzedu.xlims.constants.shiro.filter.ShiroSessionListener"></bean>
+	
+	<!--  会话管理器全局的会话信息设置成30分钟,sessionValidationSchedulerEnabled参数就是是否开启扫描  -->
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="globalSessionTimeout" value="1800000"/><!--30分钟 ~10分钟-->
+        <property name ="sessionListeners">   
+            <list>   
+               <ref bean="shiroSessionListener"/>  
+            </list>    
+        </property>
+        <property name="deleteInvalidSessions" value="true"/>
+        <property name="sessionValidationSchedulerEnabled" value="true"/>
+        <property name="sessionValidationScheduler" ref="sessionValidationScheduler"/>
+        <property name="sessionDAO" ref="sessionDAO"/>
+        <property name="sessionIdCookieEnabled" value="true"/>
+        <property name="sessionIdCookie" ref="sessionIdCookie"/>
+       <!--  <property name="shiroCacheManager" ref="shiroCacheManager"/> -->
+       <!--  <property name="gjtUserAccountDao" ref="gjtUserAccountDao"/> -->
+    </bean>
+	
+	
+	<bean id="shiroCacheManager" class="com.gzedu.xlims.constants.ShiroCacheManager">
+		<property name="memcachedClient" ref="memcachedClient"/>
+		<property name="cacheSizeKey" value="study" />
+	</bean>
+	
+	
+	<!-- shiro缓存管理器 -->
+	<!-- <bean id="cacheManager" class="com.gzedu.xlims.constants.SpringCacheManagerWrapper" >
+	    <property name="cacheManager" ref="springCacheManager"/>
+	</bean> -->
+	
+	 <!-- <bean id="springCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehcacheManager"/>
+    </bean> -->
+
+    <!-- ehcache -->
+    <!-- <bean id="ehcacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache.xml"/>
+    </bean> -->
+	
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+    
+	
+	
+</beans>

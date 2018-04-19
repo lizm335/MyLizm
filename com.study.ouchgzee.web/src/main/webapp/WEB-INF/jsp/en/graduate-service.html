@@ -1,0 +1,62 @@
+<div class="text-center padding25" data-role="apply-box">
+  <i class="loading"></i>
+</div>
+
+<!--提示-->
+<script type="text/template" id="temp">
+	{{if msgCode==200}}
+		{{if data}}
+			{{if data.GRADUATION_RECORD_STATUS && data.GRADUATION_RECORD_STATUS=='register'}}
+				<p class="padding10">
+					<i class="alert-icon alert-icon-0x0"></i>
+					<span class="font22 font_gray_per60 vertical-middle inline-block margin_l10">你还没有填写毕业生登记表，填写后即可进入毕业申请流程！</span>
+				</p>
+				<p class="margin_t25">
+					<a class="btn btn-lg btn-orange" href="#/biye/tianbiao"><span>立即填写毕业生登记表</span></a>
+				</p>
+			{{/if}}
+		{{else}}
+			<p class="padding10">
+				<i class="alert-icon alert-icon-0x0"></i>
+				<span class="font22 font_gray_per60 vertical-middle inline-block margin_l10">无相关数据</span>
+			</p>
+		{{/if}}
+	{{else}}
+		<p class="padding10">
+			<i class="alert-icon alert-icon-0x0"></i>
+			<span class="font22 font_gray_per60 vertical-middle inline-block margin_l10">{{message}}</span>
+		</p>
+	{{/if}}
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+	var $container=$('[data-role="apply-box"]');
+
+	ajaxProcess({
+      url:'/pcenter/graduation/index',
+      type:'GET',
+      success:function(renderData){
+        if(renderData.msgCode==200 && renderData.data && renderData.data.GRADUATION_RECORD_STATUS && renderData.data.GRADUATION_RECORD_STATUS!='register'){
+        	var status=renderData.data.GRADUATION_RECORD_STATUS;
+        	//申请毕业
+        	if(status=='init'){
+        		$('body').data('biye-apply-step',1);
+        		
+        	}
+        	//毕业记录查询
+        	else if(status=='info'){
+        		$('body').data('biye-apply-step',3);
+        	}
+        	window['curRoute'].redirect('#/biye/zkshengqing');
+        }
+        else{
+        	$container.html( template('temp',renderData) );
+        }
+      },
+      fail:function(textStatus){
+        	$container.html( textStatus );
+      }
+    });
+});
+</script>

@@ -1,0 +1,189 @@
+<div class="main-box">
+	<div class="wrap-box clearfix">
+		<div class="main">
+			<div class="bg-white border-e0e0e0">
+				<div class="teacher_title border-bottom">
+					<h2>
+						<i class="icon icon-185x68"></i>
+						<ul class="breadcrumbs"><li>当前位置：</li><li><a href="#/zbliebiao">直播列表</a></li> <li class="last"><a href="javascript:;">直播简介</a></li>
+						</ul>
+					</h2>
+					<a href="#/zbliebiao" class="btn btn-sm btn-gray"><i class="icon icon-175x0"></i>返回列表</a>
+				</div>
+				<div data-id="content">
+					<table width="100%" height="300" class="text-center">
+						<tr>
+							<td valign="middle">
+								
+								<p>
+									<i class="loading"></i>
+							    </p>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/template" id="temp">
+	<div class="article-wrap border-bottom">
+		<div class="typeset">
+			{{if imgUrl}}
+				<img src="{{imgUrl | imgUrlFormat:[330,230]}}" class="fixed" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/broadcast-default.jpg'"  width="330" height="230">
+			{{else}}
+				<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/broadcast-default.jpg" class="fixed" width="330" height="230">
+			{{/if}}              
+	      	<div class="adaptive">
+	      		<div>
+			      	<span class="text-no-bold font26 margin_r10">{{lessonName}}</span>
+			      	{{if status==0}}
+			      		<span class="label label-gray position-relative" style="top:-3px;" data-id="time-left">未开始（<b class="text-style-normal">0天00:00:00</b>）</span>
+			      	{{else if status==1}}
+			      		<span class="label label-warning position-relative" style="top:-3px;" data-id="time-left">直播中（已有{{joinNum}}人参与）</span>
+			      	{{else if status==2}}
+			      		<span class="label label-gray position-relative" style="top:-3px;">已结束</span>
+			      	{{/if}}
+		      	</div>
+		      	<div class="gray margin_t10">
+		      		<span class="margin_r15">主播：{{classTeacher}}</span>
+					<span class="margin_r15">直播时间：{{startTime}}~{{endTime}}</span>
+
+		      	</div>
+		      	<div class="margin_t15 font16">{{desc}}</div>
+		      	{{if fileList && fileList.length>0}}
+			      	<div class="margin_t15">
+			      		<div class="clearfix">
+			      			<span class="fl">相关下载：</span>
+			      			{{each fileList}}
+			      				<a href="{{$value.path}}" target="_blank" class="text-blue text-wrap"><u>{{$value.name}}</u></a>
+			      				{{($index==fileList.length-1)?'':'，'}}
+			      			{{/each}}
+			      		</div>						
+					</div>
+				{{/if}}
+	      	</div>
+	   	</div>
+	</div>
+	<div class="text-center padding15">
+		{{if status===0}}
+			<button type="button" data-url="{{joinUrl}}" data-id="enter-broadcast" class="btn btn-lg btn-orange border-radius disabled" style="width:200px;" disabled>进入直播</button>
+		{{else if status==1}}
+			<button type="button" data-url="{{joinUrl}}" data-id="enter-broadcast" class="btn btn-lg btn-orange border-radius" style="width:200px;">进入直播</button>
+		{{else if status==2 && joinUrl}}
+			<a href="{{joinUrl}}" target="_blank" class="btn btn-lg btn-orange border-radius" style="width:200px;">查看录播</a>
+		{{/if}}
+	</div>
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+	var $container=$('[data-id="content"]');
+
+	template.helper('duration', function (startDate,args) {
+
+	});
+
+	ajaxProcess({
+		//6.2 直播详情
+  		url:'/pcenter/course/queryLiveVideoDetail',
+  		type:'GET',
+  		data:{
+  			id:curRoute.params['id']
+  		},
+  		success:function(renderData){
+  			var rData=renderData.data;
+  			if(renderData.msgCode==200 && rData){
+  				$container.html( template('temp',rData) );
+
+  				//直播未开始
+  				if(rData.status===0 || rData.status===1){
+  					var $timeLeft=$('[data-id="time-left"]');
+  					var $enter=$('[data-id="enter-broadcast"]');
+
+  					
+  					//时间对象转换
+			      	function timeConvert(sTime){
+			      		var sTime=sTime.replace(/-/g,'\/');  
+					    var time = new Date(sTime);//系统当前时间
+					    return time;
+			      	}
+
+			      	if( !dateTimeValidation(rData.startTime) ) return;
+
+		        	if( !dateTimeValidation(rData.endTime) ) return;
+
+		        	if( !dateTimeValidation(rData.currentTime) ) return;
+
+		        	//结束时间
+		        	var t2=( timeConvert(rData.endTime) ).getTime();
+
+		        	//系统当前时间
+		        	var t3=( timeConvert(rData.currentTime) ).getTime();
+
+		        	//距离开始时间的差距
+		        	var t = ( timeConvert(rData.startTime) ).getTime()-t3;
+
+
+					function getRTime(){
+						t=t-1000;//倒计时
+						t3=t3+1000;//模拟系统当前时间计时
+						var d = Math.floor(t / 1000 / 60 / 60 / 24);
+						var h = Math.floor(t / 1000 / 60 / 60 % 24);
+						var m = Math.floor(t / 1000 / 60 % 60);
+						var s = Math.floor(t / 1000 % 60);
+
+						if(t>0){
+							var html=['距离开始还有 '];
+
+							html.push(d + "天");
+							html.push( ((h+"").length<2?("0"+h):h) + ":" );
+							html.push( ((m+"").length<2?("0"+m):m) + ":" );
+							html.push( ((s+"").length<2?("0"+s):s) );
+
+							$timeLeft.children('b').html(html.join(''));
+
+							$enter.addClass('disabled').prop('disabled',true);
+						}
+						else if(t<=0){
+							$enter.removeClass('disabled').prop('disabled',false);
+							//如果系统当前时间>=结束时间，代表结束
+							if(t3>=t2){
+
+								$enter.text('查看录播');
+								$timeLeft.html('已结束').addClass('label-gray').removeClass('label-warning');
+								clearInterval(sExamTimer2);
+							}
+							else if(t==0){
+								$timeLeft.html('直播中').removeClass('label-gray').addClass('label-warning');
+								clearInterval(sExamTimer2);
+							}
+							
+						}
+						
+					}
+					window.sExamTimer2=setInterval(getRTime, 1000);
+					//收集计时器，以便统一管理（销毁）
+					window['timerCollectors'].push(window.sExamTimer2);
+					//启动计时器
+					getRTime();
+  				}
+  				
+  			}
+  			else{
+  				$container.html( template('no-data-tips-temp',{message:'暂无直播内容'}) );
+  			}
+  		},
+  		fail:function(textStatus){
+  			$container.html( template('error-tips-temp',{message:textStatus}) );
+  		}
+  	});
+
+  	//进入直播
+  	$container.on('click', '[data-id="enter-broadcast"]', function(event) {
+  		var url=$(this).data('url');
+  		window.open(url);
+  	});
+});
+</script>

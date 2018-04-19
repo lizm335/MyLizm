@@ -1,0 +1,185 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+<style type="text/css">
+html,body{height: 100%;}
+</style>
+</head>
+<body class="body-pop">
+<div class="u-panel overlay-wrapper">
+	<div class="u-panel-head">
+	    上传个人证件电子照片
+	    <span class="pop-close" data-role="pop-close"></span>
+  	</div>
+  	<div class="u-panel-body scroll-box">
+      <div style="width:75%;" class="center-block">
+        <div class="text-center" style="padding:30px 0 0;">
+            <i class="alert-icon alert-icon-0x0 margin_r10"></i>
+            <span class="font24 text-orange vertical-middle inline-block">预约考试前，请先上传个人证件电子照片</span>
+        </div>
+        <div class="gray margin_t20">
+          远程网考要求考生考试全程视频监控，为了不影响你的考试请先上传本人的个人证件电子照片（蓝底1寸）。如果有疑问，请在右上角的“学习支持服务”下“提问题”处。
+        </div>
+      </div>
+      <div class="clearfix margin-t30 center-block" style="width:800px;">
+        <div class="col-4">
+          <div class="cert-wrap cert-wrap-2">
+            <div class="valid-control">
+              <div class="cert-box cert-box-3">
+                <a href="javascript:void(0);" class="info-img-box">
+                  <div class="upload-btn" data-role="upload-img" data-object='{
+                            "title":"电子版免冠一寸蓝底证件照",
+                            "sampleImg":[
+                              {
+                                "title":"正确示例",
+                                "lgImg":"http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/temp/img3.jpg",
+                                "smImg":"http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/temp/img3.jpg"
+                              }
+                            ]
+                          }'><i></i><span>点击上传</span></div>
+                </a>
+                <a href="#" class="light-box" data-role="fancybox">点击放大</a>
+                <input type="text" class="img-val">
+              </div>
+              <div class="tooltip yellow_tip t_arrow tooltip-valid">
+                <div class="tooltip-in"></div>
+                <span class="t_arrow"><i class="arrow"></i><i class="arrow arrow_inner"></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="cert-wrap cert-wrap-2">
+            <img style="margin: -18px 0 0 -40px;margin: -8px 0 0 -40px !ie;" src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/temp/jinzhao.jpg">
+            <div class="margin_t5 text-center" style="width:152px;">
+              正确示例
+            </div>
+          </div>
+        </div>
+        <div class="col-4 pos-rel" style="left:-50px">
+          <div class="font_gray f12">
+            要求：规范清晰 <br>
+            1.蓝色背景一寸图片<br>
+            2.图像大小在30K-900K之间，格式为jpg<br>
+            3.图像“高”要求在640-768 像素(px)之间，“宽”要求在480-600 像素(px)间，高宽比严格为4:3(若高为640 px，
+            则宽必需为480 px)，分辨率最小为72 dpi（像素/英寸）
+          </div>
+          <div class="font_orange margin_t5">建议：去照相馆拍照符合规格电子照</div>
+        </div>
+      </div>
+      
+  	</div>
+  	<div class="u-panel-footer">
+  		<div class="in" align="right">
+        <button class="btn btn-md btn-gray min-width-100 margin_r10" data-role="close">取消</button>
+  			<button class="btn btn-md min-width-100 btn-orange" data-role="sure">确定</button>
+  		</div>
+  	</div>
+    <div class="overlay bg-black bg-center hide"></div>
+</div>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+<script type="text/javascript">
+require(['jquery','common'], function ($) {
+  //“x”关闭窗口
+  $('[data-role="pop-close"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  //取消
+  $('[data-role="close"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  //确定
+  $('[data-role="sure"]').on('click', function(event) {
+    event.preventDefault();
+    var $imgInput=$('.img-val');
+    if($imgInput.val()==''){
+      $('.tooltip').show().children('.tooltip-in').text('请添加电子版免冠一寸蓝底证件照');
+      return;
+    }
+    $('.overlay').show();
+
+    ajaxProcess({
+      url:'/pcenter/exam/updatePersonalZP',
+      type:'POST',
+      data:{URL_ADDRESS:$imgInput.val()},
+      success:function(renderData){
+        $('.overlay').hide();
+        if(renderData.msgCode==200 && renderData.data && renderData.data.result==1){
+          $.resultDialog(1,'上传成功')
+          .done(function(){
+            //弹出预约窗口
+            parent.$.mydialog({
+              id:'dating-pop',
+              width:640,
+              height:600,
+              urlData: $.extend(true, frameElement.data, {isUpload:true}),
+              content: 'pop-dating-exam-make-up.html'
+            });
+
+            parent.$.closeDialog(frameElement.api);
+          });
+        }
+        else{
+          $.resultDialog(0,'上传失败');
+        }
+      }
+    });
+    
+  });
+
+  //查看大图
+  require(['jquery.fancybox'],function(){
+    $('[data-role="fancybox"]').fancybox();
+  });
+
+  //点击上传
+  $('[data-role="upload-img"]').click(function(event) {
+    var data=$(this).attr('data-object');
+    data=$.parseJSON(data);
+
+    $('.cert-box').removeClass('actived');
+    $(this).closest('.cert-box').addClass('actived');
+
+    if( $.type(data)=="object" ){
+        $.mydialog({
+        id:'pop2',
+        width:980,
+        zIndex:1000,
+        height:500,
+        urlData:data,
+        content: 'pop-upload-picture.html'
+      });
+    }
+  });
+
+  if($(frameElement).height()>0){
+    $('.scroll-box').height($(frameElement).height()-90);
+  }
+});
+</script>
+</body>
+</html>

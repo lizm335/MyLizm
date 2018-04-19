@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	   xsi:schemaLocation="http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+
+
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/data/jpa 
+		http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<!-- 定义受环境影响易变的变量 -->
+	<bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath*:/properties/${properties.file}</value>
+			</list>
+		</property>
+	</bean>
+	<context:property-placeholder location="classpath*:/properties/${properties.file}"  />
+
+	<bean class="com.gzedu.xlims.common.AppConfig" init-method="init">
+		<property name="defaultConfig" value="/properties/${properties.file}" />
+	</bean>
+	<!-- Activates annotation-based bean configuration -->
+	<context:annotation-config />
+
+	<!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
+	<context:component-scan base-package="com.ouchgzee.headTeacher">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+	</context:component-scan>
+
+	<bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+		<property name="databasePlatform">
+			<bean factory-method="getDialect" class="com.gzedu.xlims.common.Hibernates">
+				<constructor-arg ref="dataSource"/>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- Jpa Entity Manager 配置 -->
+	<bean id="entityManagerFactoryBzr" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="entityManagerFactoryBzr" />
+		<property name="dataSource" ref="dataSource"/>
+		<property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter"/>
+		<property name="packagesToScan" value="com.ouchgzee.headTeacher"/>
+		<property name="jpaProperties">
+			<props>
+				<!-- 命名规则 My_NAME->MyName -->
+				<prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
+				<prop key="hibernate.show_sql">${show.sql}</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- Spring Data Jpa配置 -->
+	<jpa:repositories base-package="com.ouchgzee.headTeacher" transaction-manager-ref="transactionManagerBzr" entity-manager-factory-ref="entityManagerFactoryBzr"/>
+
+	<!-- Jpa 事务配置 -->
+	<bean id="transactionManagerBzr" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactoryBzr"/>
+	</bean>
+
+	<!-- AOP配置事物 -->
+	<tx:advice id="transactionAdviceBzr" transaction-manager="transactionManagerBzr">
+		<tx:attributes>
+			<tx:method name="query*" read-only="true" propagation="REQUIRED" />
+			<tx:method name="find*" read-only="true" propagation="REQUIRED" />
+			<tx:method name="get*" read-only="true" propagation="REQUIRED" />
+			<tx:method name="count*" read-only="true" propagation="REQUIRED" />
+			<tx:method name="delete*"  propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="insert*" propagation="REQUIRED" />
+			<tx:method name="add*" propagation="REQUIRED" />
+			<!-- <tx:method name="*" propagation="REQUIRED" /> -->
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- 配置AOP切面 -->
+	<aop:config>
+		<aop:pointcut id="transactionPointcutBzr" expression="execution(* com.ouchgzee.headTeacher..serviceImpl..*(..))"/>
+		<aop:advisor pointcut-ref="transactionPointcutBzr" advice-ref="transactionAdviceBzr"/>
+	</aop:config>
+
+	<!-- JSR303 Validator定义 -->
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+
+
+	<!-- 配置dbcp数据源 -->
+
+	<!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@172.16.146.66:1521:gzdec" />
+		<property name="username" value="gzlll_gjt_gxlclms4" />
+		<property name="password" value="password" />
+		<property name="minIdle" value="10" />        
+		<property name="maxIdle" value="50" />        
+		<property name="maxWait" value="3000" />        
+		<property name="maxActive" value="100" />    
+		<property name="initialSize" value="5" />
+	</bean> -->
+	<!-- 队列中的最小等待数 -->
+	<!-- 队列中的最大等待数 -->
+	<!-- 最长等待时间，单位毫秒 -->
+	<!-- 最大活跃数 -->
+	<!-- 初始大小 -->
+
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName"><value>${db.datasource}</value></property>
+	</bean>
+
+	<!-- 使用JDBC事物 -->
+	<!--<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean> -->
+
+	<!--&lt;!&ndash; Spring+Mybatis整合 &ndash;&gt;
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:sqlMapConfig.xml"></property>
+		<property name="mapperLocations" value="classpath:mapper/*Mapper.xml"></property>
+	</bean>
+
+	&lt;!&ndash; 配置SQLSession模板 &ndash;&gt;
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>-->
+
+	<!--mongodb集成 MongodbPlugin-->
+	<bean id="mongoClientFactoryBean" class="com.gzedu.xlims.mogo.MongoClientFactoryBean">
+		<property name="database" value="${mongo.connect.database}"/>
+		<property name="mongoHost" value="${mongo.connect.host}"/>
+		<property name="mongoPort" value="${mongo.connect.port}"/>
+		<property name="username" value="${mongo.connect.username}"/>
+		<property name="password" value="${mongo.connect.password}"/>
+	</bean>
+
+	<import resource="classpath:spring-config-redis.xml"/>
+	<import resource="classpath:spring-config-memcached.xml"/>
+	<!-- <import resource="classpath:spring-config-shrio.xml"/> -->
+	<import resource="classpath:spring-config-xlims.xml"/>
+	<import resource="classpath:weixin.xml"/>
+
+	<!-- 使用annotation定义事务 由于多个数据源，默认xlims，所以要放在它之后，然后使用注解要用到这个数据源就的要指定一下@Transactional("transactionManagerBzr") -->
+	<tx:annotation-driven transaction-manager="transactionManagerBzr" />
+</beans>

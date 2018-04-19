@@ -1,0 +1,108 @@
+<div class="main-box" data-role="article-page">
+	<div class="wrap-box clearfix">
+		<div class="main">
+			<div class="bg-white border-e0e0e0">
+				<div class="teacher_title border-bottom">
+					<h2>
+						<i class="icon icon-185x68"></i>
+						<ul class="breadcrumbs">
+							<li>当前位置：</li>
+							<li><a href="#/tzgonggao">通知公告</a></li>
+							<li class="last"><a href="javascript:void(0);">公告详情</a></li>
+						</ul>
+					</h2>
+					<a href="#/tzgonggao" class="btn btn-sm btn-gray"><i class="icon icon-175x0"></i>返回列表</a>
+				</div>
+				<div class="article-wrap" data-role="article-box">
+					<div style="height:300px;"></div>
+        			<div class="overlay bg-center"></div>
+				</div>
+			</div>
+		</div>
+	</div>		
+</div>
+
+<!--模板-->
+<script type="text/template" id="article-temp">
+	<div class="article-head text-center">
+		<h1 class="article-title">
+			{{infoType?('<small>【'+infoType+'】</small>'):''}}
+			{{infoTheme}} 
+			{{if isStick==1}}
+				<small class="label label-warning" style="vertical-align:middle;">置顶</small>
+			{{/if}}
+		</h1>
+		<div class="article-other">
+			<span class="padding_r20">发布人：{{putUserName}}</span>
+			<span class="padding_l20">发布时间：{{createdDt}}</span>
+		</div>
+	</div>
+	<div class="article-content">
+		{{infoContent}}
+	</div>
+	{{if !!fileUrl && fileUrl!=null}}
+		<div class="article-addon">
+			附件：<a href="{{fileUrl}}">{{fileName}}</a>
+		</div>
+	{{/if}}
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate'], function ($,template) {
+	//数据绑定
+    var $wrapper=$('[data-role="article-page"]');
+    var $container=$('[data-role="article-box"]',$wrapper);
+    
+    var articleId=curRoute.params['id'];
+    articleId||(articleId=0);
+
+    var muid=curRoute.params['muid'];
+    muid||(muid=0);
+    
+    var parArray=[];
+    if( articleId ){
+    	parArray.push({name:'id',value:articleId});
+    }
+    if( muid ){
+    	parArray.push({name:'messageUserId',value:muid});
+    }
+
+    //初始化信息
+    var xhr=$.get('/pcenter/home/message/view',{id:articleId})
+			.done(function(renderData){
+				if(renderData.msgCode==200){
+					if(renderData.data){
+					  var render = template.compile($("#article-temp").html(),{escape:false});
+					  var renderHtml = render(renderData.data);
+					    $container.html(renderHtml);
+					}
+					else{
+					  $container.html('无数据');
+					}
+				}
+				else{
+				  	$container.html( renderData.message )
+				}
+			})
+			.fail(function(XMLHttpRequest, textStatus){
+			    $container.html( textStatus )
+			});
+    window['jqAjaxCollectors'].push(xhr);
+
+    //修改已读状态
+    var xhr2=$.get('/pcenter/home/message/updateRead',$.param(parArray))
+			.done(function(renderData){
+				if(renderData.msgCode==200){
+					console.log('通知公告已读状态更新成功')
+				}
+				else{
+				  	console.log('通知公告已读状态更新失败')
+				}
+			})
+			.fail(function(XMLHttpRequest, textStatus){
+			    console.log('通知公告已读状态更新失败')
+			});
+    window['jqAjaxCollectors'].push(xhr2);
+
+});
+</script>

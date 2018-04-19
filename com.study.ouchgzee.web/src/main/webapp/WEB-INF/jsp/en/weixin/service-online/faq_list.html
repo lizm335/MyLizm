@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0" />
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<meta content="telephone=no" name="format-detection">
+	<title>在线服务</title>
+	<link rel="stylesheet" type="text/css" href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/reset.css"/>
+	<link rel="stylesheet" type="text/css" href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/base.css"/>
+	<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/conversion.750.js"></script>
+
+	<link rel=stylesheet href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/weui.min.css">
+	<link rel=stylesheet href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/wx.css">
+	
+<style type="text/css">
+@font-face{
+	font-weight:normal;
+	font-style:normal;
+	font-family:"wx";
+	src:url('data:application/octet-stream;base64,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NystsEwssgABNystsE0ssgEANystsE4ssgEBNystsE8ssgAAOSstsFAssgABOSstsFEssgEAOSstsFIssgEBOSstsFMssgAAPCstsFQssgABPCstsFUssgEAPCstsFYssgEBPCstsFcssgAAOCstsFgssgABOCstsFkssgEAOCstsFossgEBOCstsFsssDArLrEkARQrLbBcLLAwK7A0Ky2wXSywMCuwNSstsF4ssAAWsDArsDYrLbBfLLAxKy6xJAEUKy2wYCywMSuwNCstsGEssDErsDUrLbBiLLAxK7A2Ky2wYyywMisusSQBFCstsGQssDIrsDQrLbBlLLAyK7A1Ky2wZiywMiuwNistsGcssDMrLrEkARQrLbBoLLAzK7A0Ky2waSywMyuwNSstsGossDMrsDYrLbBrLCuwCGWwAyRQeLABFTAtuABsLEu4AAhQWLEBAY5ZuAH/hbgARB25AAgAA19eLbgAbSwgIEVpRLABYC24AG4suABtKiEtuABvLCBGsAMlRlJYI1kgiiCKSWSKIEYgaGFksAQlRiBoYWRSWCNlilkvILAAU1hpILAAVFghsEBZG2kgsABUWCGwQGVZWTotuABwLCBGsAQlRlJYI4pZIEYgamFksAQlRiBqYWRSWCOKWS/9LbgAcSxLILADJlBYUViwgEQbsEBEWRshISBFsMBQWLDARBshWVktuAByLCAgRWlEsAFgICBFfWkYRLABYC24AHMsuAByKi24AHQsSyCwAyZTWLBAG7AAWYqKILADJlNYIyGwgIqKG4ojWSCwAyZTWCMhuADAioobiiNZILADJlNYIyG4AQCKihuKI1kgsAMmU1gjIbgBQIqKG4ojWSC4AAMmU1iwAyVFuAGAUFgjIbgBgCMhG7ADJUUjISMhWRshWUQtuAB1LEtTWEVEGyEhWS24AHYsS7gACFBYsQEBjlm4Af+FuABEHbkACAADX14tuAB3LCAgRWlEsAFgLbgAeCy4AHcqIS24AHksIEawAyVGUlgjWSCKIIpJZIogRiBoYWSwBCVGIGhhZFJYI2WKWS8gsABTWGkgsABUWCGwQFkbaSCwAFRYIbBAZVlZOi24AHosIEawBCVGUlgjilkgRiBqYWSwBCVGIGphZFJYI4pZL/0tuAB7LEsgsAMmUFhRWLCARBuwQERZGyEhIEWwwFBYsMBEGyFZ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') format('truetype');
+}
+.wx-icon{
+	display: inline-block;
+    vertical-align: middle;
+    font: normal .3rem/1 "wx";
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+.wx-icon-contact:before{
+	content: "\E600";
+}
+.wx-icon-tel:before{
+	content: "\E601";
+}
+.search_mdl{
+	position: fixed;
+	left: 0;
+	border-bottom: 1px solid #ddd;
+	height: 1.04rem;
+	overflow: hidden;
+	box-sizing: border-box;
+}
+.weui-tabbar{
+	position: fixed;
+	left: 0;
+	
+}
+.weui-tabbar__item{
+	padding:0;
+}
+.weui-tabbar__item:first-child .weui-tabbar__label{
+	border-left: 0;
+}
+.weui-tabbar__item .weui-tabbar__label{
+	font-size: .25rem;
+    line-height: .88rem;
+    height: .88rem;
+    color: #333;
+    border-left: 1px solid #ddd;
+}
+.weui-tabbar__item .wx-icon{
+	font-size: .4rem;
+	margin-right: 7px;
+	color: #999;
+}
+.faq_list_dl:first-child{
+	border: 0 none;
+}
+.faq_list_dl dt{
+	font-weight:bold;
+	overflow:hidden;
+}
+</style>
+</head>
+<body class="gray_body">
+
+
+<div class="search_mdl">
+	<form id="searchForm" action="javascript:return true;">
+		<input type="search" name="search" id="search" value="">
+		<p class="tip"><i class="icons"></i>输入你遇到的问题的关键字</p>
+		<button type="button" class="search_btn" id="searchBtn"><i class="icons"></i></button>
+	</form>
+</div>
+<article class="faq_ctn" id="faq_ctn" style="bottom:0.88rem;top:1.04rem;">
+			
+</article>
+<div class="weui-tabbar">
+	<a href="javascript:Phone.questions();" class="weui-tabbar__item">
+        <p class="weui-tabbar__label">
+	        <i class="wx-icon">&#x0078;</i>
+	        	在线答疑
+        </p>
+    </a>
+    
+    <a href="javascript:Phone.consulting();" class="weui-tabbar__item">
+        <p class="weui-tabbar__label">
+        	<i class="wx-icon">&#xe600;</i>
+        	咨询老师
+        </p>
+    </a>
+    
+    <a href="tel:4000099662" class="weui-tabbar__item">
+        <p class="weui-tabbar__label">
+	        <i class="wx-icon">&#xe601;</i>
+	        电话
+        </p>
+    </a>
+</div>
+
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/zepto.min.js"></script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/zepto.cookie.min.js"></script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/common.js"></script>
+
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/weui.min.js"></script>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/sammyjs/plugins/template.js"></script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/wx.js"></script>
+
+<!-- 站长统计 -->
+<div style="display:none;">
+	<script src="https://s22.cnzz.com/z_stat.php?id=1272380732&web_id=1272380732" language="JavaScript"></script>
+</div>
+
+<!--常见问题 模板-->
+<script type="text/template" id="common-faq-temp">
+	
+
+	{{if msgCode==200 && data.oftenTypeList && data.oftenTypeList.length>0}}
+		<div data-id="faq-list-box">
+			{{include 'common-faq-list-temp' data}}
+		</div>
+	{{else}}
+		{{include 'no-data-temp'}}
+	{{/if}}
+
+</script>
+
+<script type="text/template" id="common-faq-list-temp">
+	{{if hasFAQ}}
+		{{each oftenTypeList as v1 i}}
+			{{if v1.oftenTypeMapList && v1.oftenTypeMapList.length>0}}
+				<dl class="faq_list_dl {{v1.isFirstSeenChild?'cur':''}}">
+					<dt>
+						<i class="tri icons"></i>
+						
+						{{v1.name}}
+					</dt>
+					<dd class="faq_list">
+						{{each v1.oftenTypeMapList as v2 j}}
+							<a href="faq_details.html?id={{v2.id}}" onclick='_czc.push(["_trackEvent", "常见问题", "问题详情", "{{v2.title}}"]);'>{{j+1}}、{{v2.title}}</a>
+						{{/each}}
+					</dd>
+				</dl>
+			{{/if}}
+		{{/each}}
+	{{else}}
+		{{include 'no-data-temp'}}
+	{{/if}}
+</script>
+
+<script type="text/template" id="no-data-temp">
+	<div align="center" style="padding-top:2rem;font-size:.3rem;color: #666;">
+		<i class="weui-icon-info weui-icon_msg" style="font-size: .5rem;"></i>
+		{{message?message:'暂无相关问题！'}}
+    </div>
+</script>
+
+<script>
+$(function(){
+
+	var orgCode=GetQueryStringFn('orgCode');
+
+	orgCode || (orgCode='041');
+
+	//选项卡切换
+	;(function(){
+		var $container=$('#faq_ctn');
+		var loading = weui.loading('加载中...');
+
+		//1.1.1答疑常见问题列表（新）
+		$.ajax({
+			url: '/wx/feedback/oftenList',
+			type: 'GET',
+			dataType: 'json',
+			data: {
+				orgCode:orgCode
+			},
+			success: function(data){
+				if(data.msgCode==200 && data.data && data.data.oftenTypeList && data.data.oftenTypeList.length>0){
+					$.each(data.data.oftenTypeList, function(index, node) {
+						if(node.oftenTypeMapList && node.oftenTypeMapList.length>0){
+							node.isFirstSeenChild=true;
+							data.data.hasFAQ=true;
+							return false;
+						}
+					});
+				}
+
+				$container.html(
+					template('common-faq-temp',data)
+				);
+
+				
+				loading.hide();
+			}
+		});
+	})();
+
+
+	//搜索交互
+	$(document).on('focus','#search',function(){
+		$(this).siblings('.tip').hide();
+		$(this).siblings('.search_btn').css('display','block');	
+	})
+	.on('blur','#search',function(){
+		if($(this).val() == ''){
+			$(this).siblings('.tip').show();
+			$(this).siblings('.search_btn').css('display','none');	
+		};
+	})
+
+	//搜索表单
+	.on('submit','#searchForm',function(event){
+		event.preventDefault();
+		var $container=$('#faq_ctn');
+		var loading = weui.loading('搜索中...');
+		$.ajax({
+			url: '/wx/feedback/oftenList',
+			type: 'GET',
+			dataType: 'json',
+			data: {
+				title:$.trim(document.getElementById('search').value),
+				orgCode:orgCode
+			},
+			success: function(data){
+				if(data.msgCode==200 && data.data && data.data.oftenTypeList && data.data.oftenTypeList.length>0){
+					$.each(data.data.oftenTypeList, function(index, node) {
+						if(node.oftenTypeMapList && node.oftenTypeMapList.length>0){
+							node.isFirstSeenChild=true;
+							data.data.hasFAQ=true;
+							return false;
+						}
+					});
+
+					$container.find('[data-id="faq-list-box"]').html(
+						template('common-faq-list-temp',data.data)
+					);
+				}
+				else{
+					$container.find('[data-id="faq-list-box"]').html(
+						template('no-data-temp',{message:data.message})
+					)
+				}
+
+				$('#search').val('').blur();
+
+				loading.hide();
+			}
+		});
+	})
+
+	//提交搜索
+	.on('click','#searchBtn',function(){
+		$('#searchForm').submit();
+	});
+	
+	$('#faq_ctn').on('click','.faq_list_dl dt',function(){
+		if(!$(this).parent().hasClass('cur')){
+			$(this).parent().addClass('cur');
+		}else{
+			$(this).parent().removeClass('cur');
+		}
+	});
+});	
+</script>
+</body>
+</html>

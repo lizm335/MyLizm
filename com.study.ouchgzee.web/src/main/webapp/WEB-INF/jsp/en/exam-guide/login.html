@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>登录</title>
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta content="telephone=no" name="format-detection">
+  <meta content="email=no" name="format-detection">
+
+  <link rel="stylesheet" href="http://css.gzedu.com/gzdd_ouchgzee_com/platform/student/mobile/css/sm.min.css">
+  <link rel="stylesheet" href="http://css.gzedu.com/gzdd_ouchgzee_com/platform/student/mobile/css/sm-extend.min.css">
+  <link rel="stylesheet" href="http://css.gzedu.com/exam_chinaeenet_com/mobile/exam-guide/style/guide.css">
+
+  
+</head>
+<body>
+
+<div class="page-group">
+    <!-- 单个page ,第一个.page默认被展示-->
+    <div class="bg-white page page-current">
+        <!-- 这里是页面内容区 -->
+        <div class="content">
+            <div class="content-block">
+              <div class="login-logo text-center">
+                <div class="inner">
+                  <img src="http://css.gzedu.com/exam_chinaeenet_com/mobile/exam-guide/images/login-logo.png">
+
+                  <h1 class="login-subtitle">
+                    <span>登录后可看到你的考试安排哦</span>
+                  </h1>
+                </div>
+              </div>
+              <form id="login-form" action="javascript:return true;">
+                <div class="login-form-box">
+                  <div class="form-group">
+                    <input class="form-control" placeholder="学号/身份证号/手机号/账号" type="text" data-rule=".+" data-msg-empty="请填写学号" data-msg-error="请填写学号" name="username">
+                  </div>
+                  <div class="form-group">
+                    <input class="form-control" placeholder="请输入密码" type="password" data-rule=".+" data-msg-empty="请填写密码" data-msg-error="请填写密码" name="password">
+                  </div>
+
+                  <button type="button" class="login-submit">登录</button>
+                </div>
+              </form>
+              
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="http://css.gzedu.com/gzdd_ouchgzee_com/platform/student/mobile/js/zepto.min.js"></script>
+
+<script type="text/javascript" src="http://css.gzedu.com/gzdd_ouchgzee_com/platform/student/mobile/js/template.js"></script>
+
+
+<script type="text/javascript" src="http://css.gzedu.com/gzdd_ouchgzee_com/platform/student/mobile/js/sm.min.js"></script>
+
+<script type="text/javascript" src="http://css.gzedu.com/gzdd_ouchgzee_com/platform/student/mobile/js/common.js"></script>
+
+
+<script type="text/javascript">
+
+$('.login-submit').on('click', function(event) {
+    if (commonjs.checkform()) {
+        $.showIndicator();
+        $.ajax({
+            type: 'POST',
+            url: '/sso/login',
+            dataType: 'json',
+            data: $('#login-form').serialize(),
+            success: function(response) {
+                $.hideIndicator();
+                if (response.msgCode != 200) {
+                    $.alert(response.message);
+                    return;
+                }
+                $.toast('登陆成功');
+                setTimeout(function() {
+                    location.href = 'guide.html';
+                }, 1000);
+            }
+        });
+    }
+});
+</script>
+</body>
+</html>

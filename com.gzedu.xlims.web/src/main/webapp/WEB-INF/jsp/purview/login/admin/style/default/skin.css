@@ -1,0 +1,37 @@
+@charset "utf-8";
+/* CSS Document */
+
+.body {background:#f0f0f0 url('images/bg-body.gif') top left repeat-y;color: #555; font-size: 12px; }
+
+/*-- 框架 -*/
+#main-content{ margin-left:230px;}
+#side-nav{ width:230px;}
+
+/*-- 顶部 --*/
+.header{background:url(images/head_bg2.jpg) repeat-x;}
+.header_content{ height:138px; background:url(images/head_bg.jpg) no-repeat;}
+.header .s1{ font:bold 20px/1.2em Microsoft YaHei,'\5b8b\4f53',sans-serif; color:#fff;}
+.header .s2{ font:bold 18px/1.2em Microsoft YaHei,'\5b8b\4f53',sans-serif; color:#fff;}
+.header .s1 img{vertical-align:middle;margin-top:-8px;}
+
+/*-- 顶部菜单 --*/
+.head_dh_area .dh_lt{background:url(images/header_dh_nav.png) no-repeat;}
+.head_dh_area .dh_rt{background:url(images/header_dh_nav.png) right 0 no-repeat;}
+.head_dh_area .dh_list li i{background:url(images/header_dh_nav.png) 0 -100px no-repeat;}
+.head_dh_area .dh_list li span{background:url(images/header_dh_nav.png) right -100px no-repeat;}
+.head_dh_area .dh_list li.cur a span{ color:yellow;}
+.head_dh_area .dh_list li a:hover span{ color:yellow;}
+
+
+/*-- 侧栏菜单 --*/
+/************ Sidebar Accordion Menu ************/
+#side-nav nav{ margin-left:9px;}
+#side-nav nav #main-nav{width: 206px;padding: 0; margin: 0 0 0 15px;padding-top:29px; }
+#side-nav nav #main-nav li a.nav-top-item { background: transparent url(images/bg-menu-item-green.gif) right center no-repeat;}
+#side-nav nav #main-nav li a.current { background-image: url(images/bg-menu-item-current.gif) !important; color: #333; font-weight: bold; }
+#side-nav nav #main-nav li a.current:hover { color: #333; }
+#side-nav nav #main-nav ul li a {color: #aaa;}
+#side-nav nav #main-nav ul li a:hover,
+#side-nav nav #main-nav ul li a.current,
+#side-nav nav #main-nav ul li a.current:hover { color: #fff; }
+#side-nav nav #main-nav ul li a.current { background: transparent url(images/menu-current-arrow.gif) right center no-repeat  !important; }

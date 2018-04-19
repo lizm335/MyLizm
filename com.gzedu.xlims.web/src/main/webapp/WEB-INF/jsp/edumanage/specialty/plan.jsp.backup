@@ -1,0 +1,333 @@
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ include file="/WEB-INF/jsp/common/taglibs.jsp"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
+<html class="reset">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>专业管理－课程列表</title>
+<%@ include file="/WEB-INF/jsp/common/jslibs.jsp"%>
+<script type="text/javascript">
+</script>
+
+</head>
+<body class="inner-page-body">
+
+<section class="content-header">
+	<button class="btn btn-default btn-sm pull-right min-width-60px" data-role="back-off">返回</button>
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-home"></i> 首页</a></li>
+		<li><a href="#">教学管理</a></li>
+		<li><a href="#">专业管理</a></li>
+		<li class="active">设置专业规则</li>
+	</ol>
+</section>
+<section class="content">
+<div class="alert alert-success" <c:if test="${empty feedback || !feedback.successful}"> hidden="hidden"</c:if>><button data-dismiss="alert" class="close">×</button>${feedback.message}</div>
+	<div class="alert alert-danger" <c:if test="${empty feedback || feedback.successful}"> hidden="hidden"</c:if>><button data-dismiss="alert" class="close">×</button>${feedback.message}</div>
+	
+	<div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title text-bold">专业信息</h3>
+      </div>
+      <div class="box-body">
+      	<div class="table-responsive">
+      		<input name="specialtyId" value="${entity.specialtyId }" type="hidden"/>
+	      	<table class="table-gray-th">	      	
+	      		<tr>
+	      			<th width="15%">专业规则号</th>
+	      			<td width="35%">${entity.ruleCode}</td>
+
+	      			<th width="15%">专业名称</th>
+	      			<td width="35%">
+	      				${entity.zymc}<br>
+	      				<c:if test="${not empty entity.zyh}">
+	      					<span class="gray9">（${entity.zyh}）</span>
+	      				</c:if>
+	      			</td>
+	      		</tr>
+	      		<tr>
+	      			<th>专业类型</th>
+	      			<td>${zyxzMap[entity.specialtyCategory]}</td>
+
+	      			<th>培养层次</th>
+	      			<td>
+	      			 ${pyccMap[entity.pycc]} 
+	      			</td>
+	      		</tr>
+	      		<tr>
+	      			<th>总学分</th>
+	      			<td>${entity.zxf}</td>
+	      			
+	      			<th>最低毕业学分</th>
+	      			<td>${entity.zdbyxf}</td>
+	      		</tr>
+	      		<tr>
+	      			<th>必修学分</th>
+	      			<td>${entity.bxxf}</td>
+	      			
+	      			<th>选修学分</th>
+	      			<td>${entity.xxxf}</td>
+	      		</tr>
+	      		<tr>
+	      			<th>所属学科</th>
+	      			<td>${xkMap[entity.zylb]}</td>
+
+	      			<th>所属行业</th>
+	      			<td>${syhyMap[entity.syhy]}</td>
+	      		</tr>
+	      	</table>
+      	</div>
+      </div>
+    </div>
+    
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title text-bold">课程模块学分</h3>
+      </div>
+      <div class="box-body">
+      	<div class="table-responsive">
+      		<table class="table table-bordered table-striped vertical-mid text-center margin-bottom-none" data-role="set-model">
+				<thead>
+					<tr>
+						<th width="30%">课程模块</th>
+						<th width="30%">总学分</th>
+						<th width="30%">最低毕业学分</th>
+					</tr>
+				</thead>
+				<tbody>
+				<c:forEach items="${list }" var="obj">
+					<tr>
+						<td>
+							${courseTypeMap2[obj.id]}
+						</td>
+						<td>
+							<fmt:formatNumber value="${obj.totalScore}" pattern="#" type="number"/>
+						</td>
+						<td>
+							<fmt:formatNumber value="${obj.score}" pattern="#" type="number"/>
+						</td>
+					</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+      	</div>
+      </div>
+    </div>
+    
+     <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title text-bold">专业规则</h3>
+        <div class="pull-right no-margin">
+			<a href="#" role="button" class="btn btn-default btn-sm" data-role="add-semester"><i class="fa fa-fw fa-plus"></i> 新增学期</a>
+			<!-- <a href="#" role="button" class="btn btn-default btn-sm margin_r10" data-role="set"><i class="fa fa-fw fa-sign-in"></i> 批量导入专业规则</a> -->
+		</div>
+      </div>
+      <form id="inputForm" class="form-horizontal" role="form"	action="${ctx }/edumanage/specialty/savePlan" method="post">
+      <input type="hidden" name="specialtyId" value="${entity.specialtyId}">
+      <div class="box-body" data-role="box">
+      	<div class="table-responsive tea-plan-box">
+	      	<table id="planTable" class="plan-table tea-plan-tbl table table-bordered table-hover table-font vertical-mid text-center margin-bottom-none" data-semester="第一学期">
+	      		<thead>
+	      			<tr>
+	      				<th>序号</th>
+	      				<th>建议学期</th>
+	      				<th>课程模块</th>
+	      				<th>课程名称</th>
+	      				<th>课程性质</th>
+	      				<th>课程类型</th>
+	      				<th>考试单位</th>
+	      				<th>学分</th>
+	      				<th>学时</th>
+	      				<th>操作</th>
+	      			</tr>
+	      		</thead>
+	      		
+	      		<tbody id="plan1">
+	      		<%-- <c:forEach items="${gjtSpecialtyPlan}" var="item"> --%>
+	      		<c:forEach items="${gjtSpecialtyPlan}" varStatus="i" var="item">
+	      			<tr> 		      				
+	      				<c:forEach items="${countMap}" var="countMapItem">
+	      					<c:if test="${(item.termTypeCode!=gjtSpecialtyPlan[i.index-1].termTypeCode) && (item.termTypeCode==countMapItem.key)}">	      					
+	      						<td class="order" rowspan="${countMapItem.value}" ></td>
+			      				<td class="semester" rowspan="${countMapItem.value}">
+			      					第${item.termTypeCode }学期
+			      				</td>
+	      					</c:if>
+	      				</c:forEach>		
+	      				<td>
+							${courseTypeMap[item.courseTypeId]}
+						</td>
+	      				<td>
+							${item.gjtCourse.kcmc }
+							<br>
+	      					<span class="gray9">
+	      						(${item.gjtCourse.kch })
+	      					</span>
+	      					<input type="hidden" name="courseIds" value="${item.courseId}">
+	      					<input type="hidden" name="courseTypeIds" value="${item.courseTypeId}">
+	      					<input type="hidden" name="termTypeCodes" value="${item.termTypeCode}">
+	      				</td>
+	      				<td>
+	      					<select class="form-control" name="courseCategorys">
+			                  <option value="0" <c:if test="${item.courseCategory=='0'}"> selected="selected"</c:if>>必修</option>
+			                  <option value="1" <c:if test="${item.courseCategory=='1'}"> selected="selected"</c:if>>选修</option>
+			                </select>
+	      				</td>
+	      				<td>
+	      					<select class="form-control" name="coursetypes">
+			                  <option value="0" <c:if test="${item.coursetype=='0'}"> selected="selected"</c:if>>统设</option>
+			                  <option value="1" <c:if test="${item.coursetype=='1'}"> selected="selected"</c:if>>非统设</option>
+			                </select>
+	      				</td>
+	      				<td>
+	      					<select class="form-control" name="examUnits">
+			                  <option value="1" <c:if test="${item.examUnit=='1'}"> selected="selected"</c:if>>省</option>
+			                  <option value="2" <c:if test="${item.examUnit=='2'}"> selected="selected"</c:if>>中央</option>
+			                </select>
+	      				</td>
+	      				<td>
+	      					<input type="text" class="form-control text-center center-block" value='<fmt:formatNumber value="${item.score}" pattern="#" type="number"/>' name="scores"
+									onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')" />
+									
+	      				</td>
+	      				<td>
+	      					<input type="text" class="form-control text-center center-block" value='<fmt:formatNumber value="${item.hours}" pattern="#" type="number"/>' name="hours"
+									onkeyup="this.value=this.value.replace(/\D/g,'')"  onafterpaste="this.value=this.value.replace(/\D/g,'')" />
+	      				</td>
+	      				<td>
+	      					<%-- <a href="../courseFormUpdate?id=${item.id}&termTypeCode=${item.termTypeCode }&specialtyId=${entity.specialtyId }" class="operion-item" data-toggle="tooltip" title="编辑" data-role="add-course"><i class="fa fa-edit"></i></a>
+	      					<a href="../courseFormView?id=${item.id}" data-role="add-course" class="operion-item" data-toggle="tooltip" title="查看详情"><i class="fa fa-fw fa-view-more"></i></a> --%>
+	      					<a href="javascript:void(0);" class="operion-item operion-del del-one" val="${item.id}" title="删除" data-tempTitle="删除"><i class="fa fa-fw fa-trash-o"></i></a>
+	      				</td>	      				
+	      			</tr>	
+      				<c:if test="${item.termTypeCode!=gjtSpecialtyPlan[i.index+1].termTypeCode}">
+      				 	<tr>
+			      			<td colspan="13" align="center">
+			      			<a href="../choiceCourseList?termTypeCode=${item.termTypeCode }&specialtyId=${entity.specialtyId }" role="button" class="btn btn-block text-green nobg margin_t5" data-role="add-course"><i class="fa fa-fw fa-plus"></i>添加课程</a>
+			      			</td>
+		      			 </tr> 		    		
+	      				</tbody>   	 
+	      				<tbody id="plan${item.termTypeCode + 1}">          				
+      				</c:if>	
+	      		</c:forEach>	
+	      		</tbody>   		
+	      	</table>	
+	      	<input type="hidden" id = "count" value ="${countMap.size()}"/>	      	
+      	</div>
+      	<div class="box-footer text-right">
+			<button type="button" class="btn btn-default min-width-90px margin_r10" data-role="cancel"  onclick="history.back()">取消</button>
+			<button id="btn-submit" type="submit" class="btn btn-primary min-width-90px"  data-role="save">保存设置</button>
+		</div>
+      </div>
+	  </form>
+    </div> 
+</section>
+<%@ include file="/WEB-INF/jsp/common/footer.jsp"%>
+<script type="text/javascript">
+
+$("#planTable").find("tbody:last").remove();
+/* 
+//新增学期
+$('[data-role="add-semester"]').click(function(event) {
+	event.preventDefault();
+	$.mydialog({
+	  id:'add-semester',
+	  width:460,
+	  height:300,
+	  zIndex:11000,
+	  content: 'url:/edumanage/specialty/'+$(this).attr('href')
+	});
+});*/
+var count = $("#count").val();
+var flag = 1;
+$('[data-role="add-semester"]').click(function(event) {	
+	if(flag==1){
+	count++;
+	var html = "<tbody id=\"plan"+count+"\">"+
+		"<tr>"+
+	"<td class=\"order\"></td>"+
+	"<td class=\"semester\">"+
+		
+	"</td>"+
+	"<td></td>"+
+	"<td>"+
+		
+	"</td>"+
+	"<td></td>"+
+	"<td></td>"+
+	"<td></td>"+
+	"<td></td>"+
+	"</tr>"+
+	"<tr>"+
+	"<td colspan=\"13\" align=\"center\">"+
+	"<a href=\"../choiceCourseList?termTypeCode="+count+"&specialtyId=${entity.specialtyId }\" role=\"button\" class=\"btn btn-block text-green nobg margin_t5\" data-role=\"add-course\"><i class=\"fa fa-fw fa-plus\"></i>添加课程</a>"+
+	"</td>"+
+	"</tr>"+	
+	"</tbody>";
+	
+	$(".plan-table").append(html);
+	flag = 0;
+	}
+	
+});
+//新增课程
+$("body").on('click', '[data-role="add-course"]', function(event) {
+	event.preventDefault();
+	$(".tea-plan-box").removeClass('on');
+	$(this).parent().addClass('on');
+	$.mydialog({
+	  id:'add-course',
+	  width:'90%',
+	  height:700,
+	  zIndex:11000,
+	  content: 'url:'+$(this).attr('href')
+	});
+});
+
+$("[data-role='save']").click(function(event) {
+	event.preventDefault();
+	
+	var flag = true;
+	$("input[name='scores']").each(function(index, el) {
+		if (flag && $(this).val() == "") {
+			alert("请填写学分");
+			flag = false;
+			$(this).focus();
+		}
+	});
+	if (!flag) {
+		return flag;
+	}
+	
+	$("input[name='hours']").each(function(index, el) {
+		if (flag && $(this).val() == "") {
+			alert("请填写学时");
+			flag = false;
+			$(this).focus();
+		}
+	});
+	if (!flag) {
+		return flag;
+	}
+	
+	$.ajax({  
+        type : "post",  
+        url : $("#inputForm").attr("action"),  
+        data : $("#inputForm").serialize(),  
+        dataType:'json',
+        async : false,  
+        success : function(data){  
+        	if(data.successful){
+        		window.location.reload();
+			} else {
+				alert(data.message);
+			}
+        }
+	});
+});
+
+</script>
+</body>
+</html>

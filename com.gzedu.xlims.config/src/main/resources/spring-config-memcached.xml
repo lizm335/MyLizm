@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans.xsd
+   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+   
+    <bean id="memcachedClient" class="net.spy.memcached.spring.MemcachedClientFactoryBean">
+        <property name="servers" value="${memcached.servers}" />
+        <property name="daemon" value="${memcached.daemon}" />
+        <property name="protocol" value="${memcached.protocol}" />
+        <property name="transcoder">
+            <bean class="net.spy.memcached.transcoders.SerializingTranscoder">
+                <property name="compressionThreshold" value="${memcached.compressionThreshold}" />
+            </bean>
+        </property>
+        <property name="opTimeout" value="${memcached.opTimeout}" />
+        <property name="timeoutExceptionThreshold" value="${memcached.timeoutExceptionThreshold}" />
+        <property name="hashAlg">
+            <value type="net.spy.memcached.DefaultHashAlgorithm">${memcached.hashAlg}</value>
+        </property>
+        <property name="locatorType" value="${memcached.locatorType}" />
+        <property name="failureMode" value="${memcached.failureMode}" />
+        <property name="useNagleAlgorithm" value="${memcached.useNagleAlgorithm}" />
+    </bean>
+    
+</beans>

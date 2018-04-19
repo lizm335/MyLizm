@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>查看试卷</title>
+  </head>
+  <body>
+  	<form id="theform" name="theform" method="post">
+  		<input name="formMap.USER_NO" type="hidden">
+  		<input name="formMap.EXAM_NO" type="hidden">
+  		<input name="formMap.EXAM_BATCH_CODE" type="hidden">
+  	</form>
+    <script>
+    	//url参数解析
+		function GetQueryString(name)
+		{
+		     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+		     var r = window.location.search.substr(1).match(reg);
+		     if(r!=null) return  unescape(r[2]);
+		     return null;
+		}
+
+		var action=GetQueryString('action');
+		var USER_NO=GetQueryString('USER_NO');
+		var EXAM_NO=GetQueryString('EXAM_NO');
+		var EXAM_BATCH_CODE=GetQueryString('EXAM_BATCH_CODE');
+
+
+		if( action && USER_NO && EXAM_NO && EXAM_BATCH_CODE){
+			var form=document.forms['theform']
+			form.action=action;
+			form['formMap.USER_NO'].value=USER_NO;
+			form['formMap.EXAM_NO'].value=EXAM_NO;
+			form['formMap.EXAM_BATCH_CODE'].value=EXAM_BATCH_CODE;
+			form.submit();
+		}
+    </script>
+
+  </body>
+</html>

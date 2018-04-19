@@ -1,0 +1,216 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+<style type="text/css">
+html,body{
+  height: 100%;
+  overflow: hidden;
+}
+.fancybox-lock .fancybox-overlay{
+  overflow: hidden !important;
+}
+</style>
+</head>
+<body class="body-pop">
+<div class="u-panel overlay-wrapper">
+	  <div class="u-panel-head">
+	    查看学习凭证详情
+	    <span class="pop-close" data-role="pop-close"></span>
+  	</div>
+  	<div class="u-panel-body scroll-box">
+      <div class="padding15" data-role="container">
+          
+      </div>
+  	</div>
+  	<div class="u-panel-footer">
+  		<div class="in" align="right">
+        <button class="btn btn-md btn-gray min-width-100" data-role="pop-close">关闭</button>
+  		</div>
+  	</div>
+    <div class="overlay bg-center"></div>
+</div>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+
+<script type="text/template" id="temp">
+  <div class="margin_b10 f16 sub-title">
+      {{COURSE_THEME}}学习凭证表
+    </div>
+    <table width="100%" class="table-gray-th text-center">
+      <thead>
+          <tr>
+              <th>姓名</th>
+              <th>学号</th>
+              <th>签到状态</th>
+          </tr>
+      </thead>
+      <tbody>
+          {{each certList}}
+          <tr>
+            <td>{{$value.STUDENT_NAME}}</td>
+            <td>{{$value.STUDENT_NO}}</td>
+            <td>
+              {{if $value.SING_STATUS==1}}
+                <span class="text-green">已签到</span>
+              {{else if $value.SING_STATUS==='0'}}
+                <span class="text-orange">未签到</span>
+              {{/if}}
+            </td>
+          </tr>
+          {{/each}}
+      </tbody>
+    </table>
+
+    <div class="f16 sub-title margin_t25">
+      学习凭证扫描件
+    </div>
+    <div>
+      {{each imageList}}
+        <span class="p-win-cert margin_r10 margin_t10">
+          <img class="vertical-middle" src="{{$value.IMAGE | imgUrlFormat:[195,130]}}" width="195" height="130">
+          <a href="{{$value.IMAGE}}" class="light-box" data-role="fancybox"><span>点击放大</span></a>
+        </span>
+      {{/each}}
+    </div>
+</script>
+
+<script type="text/template" id="error-tips-temp">
+  <div class="text-center padding10">
+    <i class="alert-icon alert-icon-0x125 margin_r5"></i>
+    <span class="text-orange font16">{{message}}</span>
+  </div>
+</script>
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+  //阿里云图片地址的格式化
+    /*
+    用法：
+        1、{{photoUrl | imgUrlFormat:[150,210]}}
+        2、{{photo | imgUrlFormat}}
+    */
+    template.helper('imgUrlFormat', function (native,args) {
+      var result='';
+
+      var w,//图片宽度
+          h;//图片高度
+      if( !!args && args.length>1 ){
+          w=args[0];
+          h=args[1];
+      }
+      else{
+          w=4000;
+          h=4000;
+      }
+
+      
+      if(native){
+        if(native.indexOf('http://eefile.download.eenet.com')==-1){
+          result=native;
+        }
+        else{
+          if(native.indexOf('?x-oss-process=image')==-1){
+              result=native+'?x-oss-process=image/resize,h_'+h+',w_'+w+'/auto-orient,1'
+          }
+          else{
+              result=native+'/{0}';
+              result=result.format(result.indexOf('resize,h_'+h+',w_'+w+'/auto-orient,1')==-1?'resize,h_'+h+',w_'+w+'/auto-orient,1':'');
+          }
+        }
+        
+      }
+      return result;
+    });
+
+  var $container=$('[data-role="container"]');
+  var $loading=$('.overlay');
+
+  //“x”关闭窗口
+  $('[data-role="pop-close"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  if($(frameElement).height()>0){
+    $('.scroll-box').height($(frameElement).height()-90);
+  }
+
+  if(!frameElement.data){
+    $loading.hide();
+    $container.html(
+      template( 'error-tips-temp',{message:'传递参数出错'} )
+    );
+    return;
+  }
+
+  ajaxProcess({
+    //接口 4.4 查看授课凭证
+    url:'/pcenter/course/getGrantCourseCert',
+    type:'POST',
+    data:{
+        GRANT_ID:frameElement.data.GRANT_ID
+    },
+    success:function(renderData){
+        if(renderData.msgCode==200){
+            if(renderData.data){
+                $container.html(
+                    template('temp',
+                      $.extend(
+                        true, 
+                        renderData.data, 
+                        {COURSE_THEME:frameElement.data.COURSE_THEME}
+                      )
+                    )
+                );
+            }
+            else{
+                $container.html( template('error-tips-temp',{message:'暂无学习凭证'}) );
+            }
+            
+        }
+        else{
+            $container.html( template('error-tips-temp',{message:renderData.message}) );
+        }
+    },
+    fail:function(errorMessage){
+        $container.html( template('error-tips-temp',{message:'数据出错'}) );
+        console.log('接口"/pcenter/course/getGrantCourseCert"错误：'+errorMessage);
+    },
+    always:function(){
+      $loading.hide();
+    }
+});
+
+  //查看大图
+  require(['jquery.fancybox'],function(){
+    $('body').on('click','[data-role="fancybox"]',function(event) {
+      event.preventDefault();
+      var self=this;
+      $.fancybox({
+        'padding'   : 0,
+        'href'      : $(self).attr('href')
+      });
+    });
+  });
+});
+</script>
+</body>
+</html>

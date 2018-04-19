@@ -1,0 +1,244 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+<meta name="renderer" content="webkit">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<title>个人信息</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/personal-information.css" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+</head>
+<body class="bg-white">
+<div class="wrapper">
+	<div class="header">
+		<div data-id="header-stu-info" class="padding10">
+			<table width="100%" height="90">
+				<tr>
+					<td valign="middle">
+						<div class="text-center"><i class="loading"></i></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		
+		<ul class="menu margin_t10">
+			
+		</ul>
+		
+	</div>
+	<!--站点内容容器-->
+	<div id="app-container" class="clearfix padding10 margin_t20">
+
+	</div>
+</div>
+<!--站点加载 提示层-->
+<div class="overlay bg-center" data-role="page-loading"></div>
+
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+<script type="text/javascript" src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/app-personal-information.js"></script>
+
+<!--错误提醒 全站使用-->
+<script type="text/template" id="error-tips-temp">
+	<div class="text-center padding10">
+		<i class="alert-icon alert-icon-0x125 margin_r5"></i>
+		<span class="text-orange font16">{{message}}</span>
+	</div>
+</script>
+<!--加载load 全站使用-->
+<script type="text/template" id="loading-tips-temp">
+	<div class="text-center"><i class="loading"></i>{{msg}}</div>
+</script>
+
+<script type="text/template" id="site-menu-temp">
+	{{each siteMenu}}
+		{{if $value.isVisible}}
+			<li data-hash="{{$value.hashPath}}">
+				<a href="{{$value.hashPath}}">{{$value.name}}</a>
+			</li>
+		{{/if}}
+	{{/each}}
+</script>
+
+<!--网站顶部 学员信息 模板-->
+<script type="text/template" id="header-stu-info-temp">
+	<table width="100%" class="header-tbl">
+		<tbody>
+			<tr>
+				<td class="h-td h-td1">
+					<div class="in">
+						<div class="typeset">
+							{{if info.avatar}}
+								<img src="{{info.avatar | imgUrlFormat:[90,90]}}" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png'" class="fixed circle" width="90" height="90">
+							{{else}}
+								<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png" class="fixed circle" width="90" height="90">
+							{{/if}}
+						    <dl class="adaptive">
+						    	<dt>
+						    		<span class="font20">{{info.xm}}</span>
+						    		<small>({{info.xbmName}})</small>
+						    	</dt>
+						    	{{if info.xxzxName}}
+						    		<dd title="{{info.xxzxName}}">{{info.xxzxName}}</dd>
+						    	{{/if}}
+						    	{{if info.teachClassName}}
+						    		<dd title="{{info.teachClassName}}">{{info.teachClassName}}</dd>
+						    	{{/if}}
+						    </dl>
+						</div>
+					</div>
+				</td>
+				<td class="h-td h-td2">
+					<div class="in">
+						<table width="100%">
+							<colgroup>
+								<col width="50%"></col>
+								<col width="50%"></col>
+							</colgroup>
+							<tbody>
+								<tr>
+									<td>
+										<div class="typeset">
+											<div class="fixed nomargin">学号：</div>
+											<div class="adaptive">{{info.xh}}</div>
+										</div>
+									</td>
+									<td>
+										<div class="typeset">
+											<div class="fixed nomargin">层次：</div>
+											<div class="adaptive">{{!info.pyccName?'--':info.pyccName}}</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="typeset">
+											<div class="fixed nomargin">手机：</div>
+											<div class="adaptive">{{!info.sjh?'--':info.sjh}}</div>
+										</div>
+									</td>
+									<td>
+										<div class="typeset">
+											<div class="fixed nomargin">学期：</div>
+											<div class="adaptive">
+												{{!info.gradeName?'--':info.gradeName}}
+											</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div class="typeset">
+											<div class="fixed nomargin">学籍：</div>
+											<div class="adaptive">
+												{{info.xjzt | DictionaryConvert:dicStudentNumberStatusList}}
+											</div>
+										</div>
+									</td>
+									<td>
+										<div class="typeset">
+											<div class="fixed nomargin">专业：</div>
+											<div class="adaptive">
+												{{!info.specialtyName?'--':info.specialtyName}}
+											</div>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</td>
+				{{if simulation}}
+					<td class="h-td h-td3 text-center">
+						<div class="in">
+							<button type="button" onclick="window.open('http://'+location.host)" class="btn btn-normal btn-gray border-radius font14 btn-md btn-block">模拟登录</button>
+						</div>
+					</td>
+				{{/if}}
+			</tr>
+		</tbody>
+	</table>
+</script>
+<!--页面初始化-->
+<script type="text/javascript">
+//url参数解析
+function GetQueryString(name)
+{
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);
+     if(r!=null) return  unescape(r[2]);
+     return null;
+}
+
+require(['jquery','sammy','artTemplate','common'], function ($,sammy,template) {
+	//菜单渲染
+	;(function(){
+		var menu=$('.menu');
+		menu.html(
+			template('site-menu-temp',appJSON)
+		);
+	})();
+
+	//缓存学员学籍信息
+	appJSON.studenBaseInfo=null;
+
+	$('body').on('click', 'a[href="#"]', function(event) {
+		event.preventDefault();
+	});
+
+	window.studenBaseInfoAjax=ajaxProcess({
+        //1.1 学籍基本资料
+        url: '/pcenter/roll/getBaseInfo',
+        type: 'GET',
+        success: function(jsonData) {
+            if (jsonData.msgCode == 200 && jsonData.data) {
+                studenBaseInfo=jsonData.data;
+                $('[data-id="header-stu-info"]').html(
+                	template('header-stu-info-temp',
+                		$.extend({}, jsonData.data, {
+                			simulation:( GetQueryString('simulation')==1?true:false )
+                		})
+                	)
+                )
+                window.pageApp.run(location.hash?location.hash:'#/home');
+            }
+        },
+        fail:function(errorMsg){
+        	$('[data-id="header-stu-info"]').html(
+        		template('error-tips-temp',{message:errorMsg})
+        	)
+        },
+        always: function() {
+            $('[data-role="page-loading"]').hide();
+        }
+    });
+
+	//浏览器适配
+	;(function(){
+		var $html=$('html');
+		if( $html.hasClass('ie67') || $html.hasClass('ie8') ){
+			var $w=$(window);
+			$w.resize(function(event) {
+				var $wrap=$('.wrapper');
+				if($w.width()<960){
+					$wrap.width(960);
+				}
+				else if($w.width()>1100){
+					$wrap.width(1100);
+				}
+				else{
+					$wrap.css('width','100%');
+				}
+			});
+		}
+	})();
+});
+</script>
+</body>
+</html>

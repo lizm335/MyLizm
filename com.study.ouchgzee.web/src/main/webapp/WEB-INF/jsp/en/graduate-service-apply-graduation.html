@@ -1,0 +1,403 @@
+﻿<div class="yahei f14 graduate-cnt-box" data-role="graduate-box">
+  
+</div>
+<div class="overlay bg-center" data-role="graduate-mark"></div>
+<!--1、申请毕业 模板-->
+<script type="text/template" id="apply-step1-temp">
+  {{if msgCode==200}}
+    {{if data}}
+      <div class="panel-tips padding10 tips-gray">
+          <dl class="oper-proc clearfix"> <dt>我的毕业生登记表</dt>
+              <dd class="bar clearfix">
+                  <div class="u-proc-box warning fl">
+                      <div class="u-proc-bar" style="width:100%;"></div>
+                  </div>
+                  <div class="fl txt"> <span class="f14">完成进度:</span>
+                      <span class="font_orange f18">100%</span>
+                  </div>
+              </dd>
+              <dd class="oper">
+                  <a href="#/biye/tianbiao"> <i class="u-icon u-icon-48x2"></i>
+                      <span>预览</span>
+                  </a>
+                  <a href="#/biye/tianbiao" class="margin_l25"> <i class="u-icon u-icon-0x25"></i>
+                      <span>修改</span>
+                  </a>
+              </dd>
+          </dl>
+      </div>
+      <ul class="page-process-box process-width-3 clearfix gray6 margin_t25 margin_b25">
+          <li class="page-process-item active">
+              <div class="in">1、申请毕业 <span class="u-arrow">
+                <i></i>
+                <em></em>
+              </span>
+              </div>
+          </li>
+          <li class="page-process-item">
+              <div class="in">2、确认签名 <span class="u-arrow">
+                <i></i>
+                <em></em>
+              </span>
+              </div>
+          </li>
+          <li class="page-process-item">
+              <div class="in">3、毕业审核</div>
+          </li>
+      </ul>
+      <div class="text-center" style="margin-bottom:50px;">
+          <div class="padding_t25 padding_b25">
+              {{if data.isApply}}
+                <i class="alert-icon alert-icon-56x0"></i>
+              {{else}}
+                <i class="alert-icon alert-icon-0x0"></i>
+              {{/if}}
+              <span class="font18 margin_l10 gray6 txt_l vertical-middle inline-block">{{data.message}}</span>
+          </div>
+          <div>
+              {{if data.isApply}} 
+                <button type="button" class="btn btn-orange btn-lg" style="width:190px;" data-role="apply-graduate-btn">申请毕业</button>
+              {{else}}
+                <button type="button" class="btn btn-orange btn-lg disabled" disabled style="width:190px;">申请毕业</button>
+              {{/if}}
+              <p class="gray margin_t5">学籍有效期：{{data.rollRegisterDt}}至{{data.rollEndDt}}</p>
+          </div>
+      </div>
+      <div class="center-block" style="width:600px;">
+          <div class="panel">
+              <div class="panel-header padding_l20 padding_r20">
+                  <h3 class="inform_title font20 nomargin"><i class="ico_shuxian"></i>毕业要求</h3>
+              </div>
+              <div class="panel-body padding_t10 padding_l20 padding_r20 padding_b20 bg-fafafa">
+                  <ol class="graduate-comman">
+                      <li>
+                          <div class="clearfix"> <em>1</em>
+                              <i class="u-icon u-icon-0x0 fr"></i>
+                              <span class="font16">
+                                学籍周期：2.5年
+                              </span>
+                                    </div>
+                                    <div class="margin_t5"> <span class="font_red">
+                                学籍周期是指从学籍注册时间至当前时间的时长
+                              </span>
+                          </div>
+                      </li>
+                      <li>
+                          <div class="clearfix"> <em>2</em>
+                              <i class="u-icon u-icon-0x0 fr"></i>
+                              <span class="font16">
+                              毕业生登记表
+                            </span>
+                          </div>
+                          <div class="margin_t5">完成进度:<span class="font_green">100%</span>，100%完成可以申请毕业</div>
+                      </li>
+                      <li class="last">
+                          <div class="clearfix"> <em>3</em>
+                              {{if credit && minGraduationCredit && credit>=minGraduationCredit}}
+                                <i class="u-icon u-icon-0x0 fr"></i>
+                              {{else}}
+                                <i class="u-icon u-icon-26x0 fr"></i>
+                              {{/if}}
+                              <span class="font16">
+                                学分要求
+                              </span>
+                          </div>
+                          
+                          <div class="margin_t5">
+                              <table class="gray">
+                                  <tr>
+                                      <td width="250">总学分：{{data.creditSum | NumberConvert}}</td>
+                                      <td>已修学分：{{credit | NumberConvert}}</td>
+                                  </tr>
+                                  <tr>
+                                      <td>最低毕业学分：{{data.minGraduationCredit | NumberConvert}}</td>
+                                      <td>已修学分：{{credit | NumberConvert}}</td>
+                                  </tr>
+                                  {{if data.creditList && data.creditList.length>0}}
+                                    {{each data.creditList}}
+                                      <tr>
+                                          <td>{{$value.COURSENAME}}：{{$value.CREDIT | NumberConvert}}</td>
+                                          <td>已修学分：{{$value.GETCREDITS | NumberConvert}}</td>
+                                      </tr>
+                                    {{/each}}
+                                  {{/if}}
+                              </table>
+                          </div>
+                          
+                      </li>
+                  </ol>
+              </div>
+          </div>
+          <div class="panel-tips tips-yellow padding10 f12 gray margin_t15">
+              <p>注意事项:</p>
+              <ol class="ol-decimal">
+                  <li>思想品德经鉴定不符合要求的学员不能毕业；</li>
+                  <li>学习期间被处分，或被开除学籍的学员，不能申请毕业；</li>
+                  <li>超过学籍有效期未达到毕业要求或未申请毕业的学员，将不能毕业。</li>
+              </ol>
+          </div>
+      </div>
+    {{else}}
+      <div class="text-center margin-t30">
+        <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/qa_null.png" alt="">
+        <p class="font24 margin_b10" style="color:#b2b2b2;">无相关数据</p>
+      </div>
+    {{/if}}
+  {{else}}
+    <div class="text-center text-orange">
+      <i class="alert-icon alert-icon-72x125"></i>
+      {{message}}
+    </div>
+  {{/if}}
+</script>
+
+<!--2、确认签名-->
+<script type="text/template" id="apply-step2-temp">
+  <div class="panel-tips padding10 tips-gray">
+      <dl class="oper-proc clearfix"> <dt>我的毕业生登记表</dt>
+          <dd class="bar clearfix">
+              <div class="u-proc-box warning fl">
+                  <div class="u-proc-bar" style="width:100%;"></div>
+              </div>
+              <div class="fl txt"> <span class="f14">完成进度:</span>
+                  <span class="font_orange f18">100%</span>
+              </div>
+          </dd>
+          <dd class="oper">
+              <a href="#/biye/tianbiao"> <i class="u-icon u-icon-48x2"></i>
+                  <span>预览</span>
+              </a>
+              <a href="#/biye/tianbiao" class="margin_l25"> <i class="u-icon u-icon-0x25"></i>
+                  <span>修改</span>
+              </a>
+          </dd>
+      </dl>
+  </div>
+   <ul class="page-process-box process-width-3 clearfix gray6 margin_t25 margin_b25">
+      <li class="page-process-item active">
+        <div class="in">
+          1、申请毕业
+          <span class="u-arrow">
+            <i></i>
+            <em></em>
+          </span>
+        </div>
+      </li>
+      <li class="page-process-item active">
+        <div class="in">
+          2、确认签名
+          <span class="u-arrow">
+            <i></i>
+            <em></em>
+          </span>
+        </div>
+      </li>
+      <li class="page-process-item">
+        <div class="in">
+          3、毕业审核
+        </div>
+      </li>
+   </ul>
+   <div class="text-center padding_t25" data-id="qrcode-box">
+      <i class="loading"></i> <span>二维码生成中</span>
+   </div>
+</script>
+
+<script type="text/template" id="qrcode-temp">
+  {{if msgCode==200 && data}}
+    {{if data.successful}}
+      <p class="f18">请用手机扫描二维码进行签名确认</p>
+      <div class="margin_t10" id="sign-qrcode"></div>
+    {{else}}
+      <i class="alert-icon alert-icon-0x125 margin_r10"></i>
+      <span class="font16 text-orange">{{data.message}}</span>
+      <div class="margin_t10"><a href='javascript:curRoute.app.refresh();' class="text-blue">重新刷新</a></div>
+    {{/if}}
+  {{else}}
+    <i class="alert-icon alert-icon-0x125 margin_r10"></i>
+    <span class="font16 text-orange">{{message}}</span>
+    <div class="margin_t10"><a href='javascript:curRoute.app.refresh();' class="text-blue">重新刷新</a></div>
+  {{/if}}
+</script>
+
+<!--3、毕业审核-->
+<script type="text/template" id="apply-step3-temp">
+   <ul class="page-process-box process-width-3 clearfix gray6 margin_b25">
+      <li class="page-process-item active">
+        <div class="in">
+          1、申请毕业
+          <span class="u-arrow">
+            <i></i>
+            <em></em>
+          </span>
+        </div>
+      </li>
+      <li class="page-process-item active">
+        <div class="in">
+          2、确认签名
+          <span class="u-arrow">
+            <i></i>
+            <em></em>
+          </span>
+        </div>
+      </li>
+      <li class="page-process-item active">
+        <div class="in">
+          3、毕业审核
+        </div>
+      </li>
+   </ul>
+   <div class="text-center padding_t25">
+      <p>
+        <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/u-icon-1.png" class="vertical-middle">
+      </p>
+      <p class="font22 gray margin_t25">你的毕业申请已提交，学院受理中……</p>
+   </div>
+   <div class="text-center padding_t25">
+      <p>
+        <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/u-icon-2.png" class="vertical-middle">
+      </p>
+      <p class="font22 gray margin_t25">你的毕业申请已受理，请等待审核……</p>
+   </div>
+   <div class="text-center padding_t25">
+      <p>
+        <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/u-icon-3.png" class="vertical-middle">
+      </p>
+      <p class="font22 margin_t25" style="color:#db3a0c;">你的毕业申请审核未通过</p>
+      <p class="gray">原因：已超过学籍有效期</p>
+   </div>
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','jquery.qrcode','common'], function ($,template) {
+  
+  var $container=$('[data-role="graduate-box"]');
+  var $mark=$container.next('[data-role="graduate-mark"]');
+
+  //进度id，从1开始
+  var tabId=$('body').data('biye-apply-step');
+  if(!tabId){
+    ajaxProcess({
+      url:'/pcenter/graduation/index',
+      type:'GET',
+      success:function(renderData){
+        if(renderData.msgCode==200 && renderData.data && renderData.data.GRADUATION_RECORD_STATUS && renderData.data.GRADUATION_RECORD_STATUS!='register'){
+          var status=renderData.data.GRADUATION_RECORD_STATUS;
+          //申请毕业
+          if(status=='init'){
+            $('body').data('biye-apply-step',1);
+            step1();
+          }
+          //毕业记录查询
+          else if(status=='info'){
+            $('body').data('biye-apply-step',3);
+            step3();
+          }
+        }
+        else{
+          window['curRoute'].redirect('#/biye');
+        }
+      }
+    });
+  }
+  else{
+    if(tabId<=0){
+      tabId=1;
+    }
+    else if(tabId>3){
+      tabId=3;
+    }
+
+    switch(tabId){
+      case 2:
+        step2();
+        break;
+      case 3:
+        step3();
+        break;
+      default:
+        step1();
+        break;
+    }
+  }
+
+  //申请毕业 按钮
+  $container.on('click', '[data-role="apply-graduate-btn"]', function(event) {
+      step2();
+  }); 
+
+  //申请毕业
+  function step1(){
+    ajaxProcess({
+      url:'/pcenter/graduation/graduationApply',
+      type:'GET',
+      success:function(renderData){
+        var renderHteml=template('apply-step1-temp',renderData);
+        $container.html(renderHteml);
+      },
+      always:function(){
+        $mark.hide();
+      }
+    });
+  }
+
+  function step2(){
+    var renderHteml=template('apply-step2-temp',{});
+    $container.html(renderHteml);
+    $mark.hide();
+
+    var $qrcodeBox=$('[data-id="qrcode-box"]',$container);
+
+    //获取签名二维码
+    ajaxProcess({
+      url:'/pcenter/qrcode/getToken',
+      type:'GET',
+      success:function(data){
+        var renderHteml=template('qrcode-temp',data);
+        $qrcodeBox.html( renderHteml );
+        
+        if( data.data && data.data.obj){
+          //如果是IE8及以下的IE浏览器，使用table渲染类型
+          var qrcodeRenderType=($('html').hasClass('ie8') || $('html').hasClass('ie67'))?"table":"canvas";
+
+          $('#sign-qrcode',$container).qrcode({
+            render : qrcodeRenderType,
+            width : 230,
+            height : 230,
+            text  : 'http://'+location.host+'/pcenter/qrcode/mobile-signup.html?token='+(data.data.obj)
+          });
+
+          // 每隔1秒检测是否签名
+          var signInt = setInterval(function () {
+            // 获取当前时间戳(以s为单位)
+            var timestamp = Date.parse(new Date());
+            timestamp = timestamp / 1000;
+            
+            ajaxProcess({
+              url:'/pcenter/qrcode/signCheck',
+              type:'GET',
+              data:{token:data.data.obj,timestamp:timestamp},
+              success:function(data){
+                if(data.data && data.data.obj) {
+                    clearInterval(signInt); 
+                    step3();
+                }
+              }
+            })
+          }, 1000);
+
+          window['timerCollectors'].push(signInt);
+        }
+      }
+    });
+  }
+
+  function step3(){
+    var renderHteml=template('apply-step3-temp',{});
+    $container.html(renderHteml);
+    $mark.hide();
+  }
+
+
+});
+</script>

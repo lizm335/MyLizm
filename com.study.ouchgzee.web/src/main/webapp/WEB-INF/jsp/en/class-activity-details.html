@@ -1,0 +1,643 @@
+<div class="main-box" data-role="activity-summary">
+	<div class="wrap-box clearfix">
+		<div class="main">
+			<div class="bg-white border-e0e0e0">
+				<div class="teacher_title border-bottom">
+					<h2><i class="icon icon-185x68"></i><ul class="breadcrumbs"><li>当前位置：</li><li><a href="">班主任服务</a></li><li><a href="">班级活动</a></li><li class="last"><a href="">活动详情</a></li></ul></h2>
+					<a href="#/bjhuodong" class="btn btn-sm btn-gray"><i class="icon icon-175x0"></i>返回列表</a>
+				</div>
+				<div class="bzr_tabs_content" data-role="list-wrapper">
+					<div class="qa_box">
+						<div class="item clearfix" data-role="act-top-info">
+							<div class="text-center"><i class="loading"></i></div>
+						</div>
+						<ul class="tabs1 tabs-list clearfix pad-l35" dat-role="type-tab">
+							<li class="active">
+								<a href="#">
+									活动简述
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									已报名（<span data-rold="sign-count">0</span>）
+								</a>
+							</li>
+							<li>
+								<a href="#">
+									评论（<span data-rold="comment-count">0</span>）
+								</a>
+							</li>
+						</ul>
+						<div class="tabs-content pad30 margin-l30 margin-r30 clearfix overlay-wrapper" id="tabs-content-box" data-role="summary-box">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!--点击“报名参与”的弹出框的模板-->
+<script type="text/template" id="activity-pop-temp">
+	<table width="100%" height="100%">
+        <tr>
+          <td valgin="middle">
+          	<div class="center-block" style="width:82%;">
+	          	<h3 class="font24 text-no-bold text-646e7d margin_b25 text-center">{{ activityName }}</h3>
+	          	<table class="table-gray-th">
+	          		<tr>
+	          			<th width="28%" class="text-right">活动时间</th>
+	          			<td>{{ activityTime }}</td>
+	          		</tr>
+	          		<tr>
+	          			<th class="text-right">活动地点</th>
+	          			<td>{{ activityPlace }}</td>
+	          		</tr>
+	          		<tr>
+	          			<th class="text-right">剩余名额</th>
+	          			<td>{{ restNumber }}</td>
+	          		</tr>
+	          		<tr>
+	          			<th class="text-right">活动费用</th>
+	          			<td>{{ activityCost }}</td>
+	          		</tr>
+	          	</table>
+          	</div>
+          </td>
+        </tr>
+    </table>
+</script>
+
+<script type="text/template" id="act-top-temp">
+	{{if !!publicityPicture}}
+		<img src="{{publicityPicture | imgUrlFormat:[237,144]}}" alt="" class="bjhd_p">
+	{{else}}
+		<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/temp/bj+hf.jpg" alt="" class="bjhd_p">
+	{{/if}}
+	<div class="qa_txt">
+		<h2>{{activityTitle}}</h2>
+		<div class="badge_icon">
+			<div class="fr text-center">
+				{{if activityType=='over'}}
+					<button type="button" class="btn btn-normal btn-orange border-radius margin_b5 disabled" disabled>活动已结束</button>
+				{{else}}
+					<!--
+					data-activity-name	:	活动名称
+					data-activity-time	:	活动时间
+					data-activity-place	:	活动地点
+					data-rest-number	:	剩余名额
+					data-activity-cost	:	活动费用，取值：“免费参与” 或 “xx元”
+					-->
+					<button type="button" class="btn btn-normal btn-orange border-radius margin_b5 {{isEnter==1?'disabled':''}}" data-role="sign-up"
+					data-activity-name='{{activityTitle}}'
+					data-activity-time='{{beginTime}}'
+					data-activity-place='{{activityAddress}}'
+					data-rest-number='{{ceilingNum-joinNum}}'
+					data-activity-cost='
+						{{if isFree==1}}
+							免费参与
+						  {{else if isFree==2}}
+						  	{{if chargeMoney!=null}}
+						  		￥{{chargeMoney}}
+						  	{{else}}
+						  		0
+						  	{{/if}}
+						{{/if}}
+					'
+					{{isEnter==1?'disabled':''}}>报名参与</button>
+					{{if isEnter==1}}
+						{{if studentAuditStatus==0}}
+							<div class="text-orange">已报名，待审核通过</div>
+						{{else if studentAuditStatus==1}}
+							<div class="text-green">已报名，已通过审核</div>
+						{{else if studentAuditStatus==2}}
+							<div class="text-green">已报名，审核不通过</div>
+						{{/if}}
+					{{/if}}
+				{{/if}}
+			</div>
+			<div class="oh">
+				<table width="100%">
+					<tbody>
+						<tr>
+							<td><span><i class="icon icon-68x68"></i>{{beginTime}}</span></td>
+							<td><span><i class="icon icon-92x68"></i>人数限制（{{ceilingNum}}）</span></td>
+							<td><span><i class="icon icon-115x68"></i>报名人数（{{joinNum}}）</span></td>
+						</tr>
+						<tr>
+							<td>
+								<span>
+									<i class="icon icon-138x68"></i>费用
+									{{if isFree==1}}
+										（无）
+									  {{else if isFree==2}}
+									  	{{if chargeMoney!=null}}
+									  		{{chargeMoney}}
+									  	{{else}}
+									  		（0）
+									  	{{/if}}
+									{{/if}}
+								</span>
+							</td>
+							<td><span><i class="icon icon-162x68"></i>评论（{{commentNum}}）</span></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td colspan="3"><span><i class="icon icon-185x68"></i>{{activityAddress}}</span></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</script>
+
+<!--评论 模板-->
+<script type="text/template" id="comment-template">
+	{{if pageInfo.totalElements>0}}
+		<div class="comment-list clearfix">
+			<ul>
+				{{each pageInfo.content}}
+					<li class="comment-item no-pad-left {{$index==0?'padding_t10':''}}">
+						{{if $value.avatar}}
+							<img src="{{$value.avatar | imgUrlFormat:[68,68]}}" alt="" class="aq_head_user">
+						{{else}}
+							<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png" alt="" class="aq_head_user">
+						{{/if}}
+						<div class="qa_txt">
+							<h2>{{$value.name}}</h2>
+							<div class="font_gray font12">
+								<span class="margin_r10">{{$value.commentDate}}</span><span>发表</span>
+							</div>
+							<div class="txt">{{$value.comments}}</div>
+						</div>
+					</li>
+				{{/each}}
+			</ul>
+		</div>
+	{{/if}}
+</script>
+<!--评论 表格 模板-->
+<script type="text/template" id="comment-form-template">
+	<div class="comments margin_t25">
+		<h4 class="font18 margin_b10 text-no-bold">发表评论</h4>
+		<div class="custom-tbl form">   
+	        <textarea class="textareaInput full-width box-sizing-border" rows="5" cols="30" placeholder="请输入评论内容！" maxlength="100" data-role="comment-input"></textarea>
+	        <div class="clearfix margin_t10">
+		        <div class="fl f12">
+		          字数：<span class="text-orange"><i class="input-char-num">0</i> / 100字</span>
+		        </div>
+		        <button type="button" class="btn btn-md btn-orange fr min-width-100" data-role="submit-btn">发表</button>
+	        </div>
+	    </div>
+	</div>
+</script>
+
+
+<!--已报名 模板-->
+<script type="text/template" id="have-signup-template">
+	{{if pageInfo.totalElements>0}}
+		<div class="enroll_wrap_01 clearfix">
+			{{each pageInfo.content}}
+				<div class="enroll_list_bj">
+					{{if $value.avatar}}
+						<img src="{{$value.avatar | imgUrlFormat:[68,68]}}" alt="">
+					{{else}}
+						<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png" alt="">
+					{{/if}}
+					<div class="oh">
+						<h2 class="font16 margin_b5 padding_t5">
+							{{$value.name}}
+							{{if !!$value.sex && $value.sex!=null}}
+								{{if $value.sex=='男'}}
+									<i class="icon icon-1x93"></i>
+								{{else $value.sex=='女'}}
+									<i class="icon icon-22x93"></i>
+								{{/if}}
+							{{/if}}						
+						</h2>
+						{{if $value.joinDate}}
+							<p class="font12 font_gray"><time class="margin_r10">{{$value.joinDate | bjhdTimeConvert}}</time>报名</p>
+						{{/if}}
+					</div>
+
+					{{if $value.auditStatus!=null}}
+						<span class='label
+							{{if $value.auditStatus==0}}
+								label-warning
+							{{else if $value.auditStatus==1}}
+								label-success
+							{{else if $value.auditStatus==2}}
+								label-danger
+							{{/if}}
+						'>
+							{{if $value.auditStatus==0}}
+								待审核
+							{{else if $value.auditStatus==1}}
+								审核通过
+							{{else if $value.auditStatus==2}}
+								不通过
+							{{/if}}
+						</span>
+					{{/if}}
+				</div>
+			{{/each}}
+		</div>
+	{{/if}}
+</script>
+
+<!--详情 模板-->
+<script type="text/template" id="summary-template">
+	{{activityIntroduce}}
+	{{if picArr.length>0}}
+		<div class="act-imgs">
+			<h5>活动照片</h5>
+			<ul class="act-img-list">
+			{{each picArr}}
+				<li>
+					<img src="{{$value | imgUrlFormat:[150,100]}}">
+				</li>
+			{{/each}}
+			</ul>
+		</div>
+	{{/if}}
+</script>
+
+<!--分页模板-->
+<script type="text/templte" id="pagenation-temp">
+	{{if totalPages>1}}
+	    <div class="margin_t25 margin_b25" data-role="page-box">
+	      <nav class="pagination-box text-right">
+	          <div class="inline-block vertical-middle" id="page-render"></div>
+	          <div class="pageing-info">
+	            <span>共 {{totalPages}} 页，到第 </span>
+	            <input type="text" class="form-control" value="1" size="2" data-role="jump-page-input">
+	            <span>页</span>
+	            <button class="btn btn-normal btn-gray" data-role="jump-page-btn">确定</button>
+	          </div>
+	      </nav>
+	    </div>
+	{{/if}}
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common','Validform'], function ($,template) {	
+
+	template.helper('bjhdTimeConvert', function (orientVal) {
+		if(!!orientVal&&orientVal.indexOf(' ')!=-1){
+			return orientVal.substring(0,orientVal.indexOf(' '));
+		}
+		else{
+			return '';
+		}
+    });
+
+    var activityType=curRoute.params['act_type'] || 'over';
+
+	var $wrapper=$('[data-role="activity-summary"]');
+	var $container=$('[data-role="summary-box"]');
+
+	//文章ID
+	var articalId=curRoute.params['id'];
+    articalId||(articalId=0);
+	
+	//初始化页面
+	;(function(){
+        var url='/pcenter/headTeacherService/classActivity/activityDetails';
+        var xhr=$.get(url,{
+        	activityId:articalId
+        })
+        .done(function(renderData){
+            var $box=$('[data-role="act-top-info"]');
+            if(renderData.msgCode==200 && renderData.data && renderData.data.info){
+            	var dataInfo=renderData.data.info;
+                var renderHtml = template('act-top-temp',
+                		$.extend(true, dataInfo, {activityType:activityType})
+                	);
+                $box.html(renderHtml);
+
+                var imgArr=[];
+                if(!!dataInfo.activityPicture){
+                	imgArr=dataInfo.activityPicture.split(',');
+                }
+                
+                var render=template.compile($('#summary-template').html(),{escape:false});
+                var renderHtml2 = render(
+                	$.extend({},dataInfo,{picArr:imgArr})
+                );
+                $container.html(renderHtml2);
+
+                $('[data-rold="sign-count"]',$wrapper).text(dataInfo.joinNum);
+                $('[data-rold="comment-count"]',$wrapper).text(dataInfo.commentNum);
+            }
+            else{
+                $box.html(renderData.message);
+                $container.html(renderData.message);
+            }
+        });
+        window['jqAjaxCollectors'].push(xhr);
+    })();
+
+    //点击“报名参与”
+    $wrapper.on('click','[data-role="sign-up"]',function(event) {
+        var $btn=$(this);
+        var cost=$btn.data('activity-cost');
+        var popSureBtnLabel=parseFloat(cost);
+
+        //如果属性字符串是以数字开头，
+        //也就是该活动是需要付费的，那按钮就显示
+        //‘立即支付’，否则就显示‘立即参与’
+        //popSureBtnLabel=isNaN(popSureBtnLabel)?'立即参与':'立即支付活动费用';
+        popSureBtnLabel='立即参与';
+
+        var activityData={
+            activityName:$btn.data('activity-name'),
+            activityTime:$btn.data('activity-time'),
+            activityPlace:$btn.data('activity-place'),
+            restNumber:$btn.data('rest-number'),
+            activityCost:cost
+        };
+
+        var renderHtml = template('activity-pop-temp',activityData);
+
+        var $pop=$.alertDialog({
+        	title:'报名参与活动',
+			width:600,
+		    height:420,
+		    content:renderHtml,
+		    cancelCss:'btn btn-normal btn-gray min-width-100',
+		    okLabel:popSureBtnLabel,
+		    okCss:'btn btn-normal btn-orange margin_l15 min-width-100',
+		    ok:function(){
+		    	$('.u-panel',$pop).addClass('overlay-wrapper').append('<div class="overlay bg-center"></div>')
+		    	var url='/pcenter/headTeacherService/classActivity/applyAdd';
+
+		    	ajaxProcess({
+		      		url:url,
+		      		type:'POST',
+		      		data:{activityId:articalId},
+		      		success:function(data){
+		      			$.when(
+							$.resultDialog(
+								((data.msgCode==200&&data.busCode!=101)?1:0
+								),
+								((data.msgCode==200&&data.busCode!=101)?'报名成功':data.message),
+								1500
+							)
+						)
+	                    .done(function(){
+	                        $.closeDialog($pop);
+						    curRoute.app.refresh();
+	                    });
+		      		},
+		      		always:function(){
+		      			$('.u-panel',$pop).remove('overlay-wrapper').children('.overlay').remove();
+		      		}
+		      	});
+		    }
+		});
+
+        
+    })
+    //发表评论
+    .on('click', '[data-role="submit-btn"]', function(event) {
+    	event.preventDefault();
+    	var $input=$('[data-role="comment-input"]');
+    	var comment=$input.val();
+    	var self=this;
+    	if(!!comment){
+    		var url='/pcenter/headTeacherService/classActivity/commentAdd';
+
+    		$(self).prop('disabled', true).addClass('disabled').text('数据提交中...');
+    		$container.append('<div class="overlay bg-center"></div>');
+
+    		ajaxProcess({
+	      		url:url,
+	      		type:'POST',
+	      		data:{
+					activityId:articalId,
+					comment:comment
+				},
+	      		success:function(data){
+	      			$(self).prop('disabled', false).removeClass('disabled').text('发表');
+	    			//分页ajax
+	    			if(data.msgCode==200){
+						var xhrUrl='/pcenter/headTeacherService/classActivity/getComments';
+
+					    var xhr=createHtml(xhrUrl,'comment-template');
+					    xhr.done(function(renderData){
+					    	var pageInfo=renderData.data.pageInfo;
+					    	$input.val('');
+					    	$('[data-rold="comment-count"]',$wrapper).text(pageInfo.totalElements);
+					    	$('.input-char-num',$wrapper).text(0)
+					    });
+					    
+				    }
+	      		},
+	      		always:function(){
+	      			$container.children('.overlay').remove();
+	      		}
+	      	});
+    	}
+    	else{
+	    	var $pop=$.alertDialog({
+				width:340,
+			    height:270,
+			    content:[
+			    	'<i class="alert-icon alert-icon-0x0 margin_r10"></i>',
+			        '<span class="font18 text-orange vertical-middle inline-block">请输入评论内容</span>'
+			    ].join(''),
+			    cancel:false,
+			    okCss:'btn btn-normal btn-orange min-width-100',
+			    ok:function(){
+			    	$input.focus();
+			    	$.closeDialog($pop);
+			    }
+			});
+		}
+    });;
+    
+    //限制输入字数
+    $container.on('change keydown keyup','textarea[maxlength]', function(event) {
+        // Store the maxlength and value of the field.
+        var maxlength = $(this).attr('maxlength');
+        var val = $(this).val();
+        if (val.length > maxlength) {
+            $(this).val(val.substring(0, maxlength));
+        } else {
+            $(this).closest('.custom-tbl').find(".input-char-num").text(val.length);
+        }
+    });
+
+    //分页ajax
+    function pageAjax(searchData){
+      var $box=$('[data-role="item-list-container"]');
+      $box.append('<div class="overlay bg-center"></div>');
+
+      	var xhr=ajaxProcess({
+	  		url:(searchData?(searchData.xhrUrl||''):''),
+	  		type:'GET',
+	  		data:{
+	          activityId:articalId,
+	          pageSize:searchData?(searchData.pageSize||2):2,
+	          pageNumber:searchData?(searchData.pageNumber||1):1
+	      	},
+	  		success:function(renderData){
+	  			if(renderData.msgCode==200){
+					if(renderData.data.pageInfo.totalElements>0){
+						var renderHtml = template(searchData?(searchData.temp||''):'',renderData.data);
+						$box.html(renderHtml);
+					}
+					else{
+						var renderHtml = template('no-data-tips-temp',{
+	                                      message:(searchData.temp=='have-signup-template'?'暂无学员报名该活动':'暂无该活动的评论')
+	                                    });
+	                    $box.html(renderHtml);
+					}
+		        }
+		        else{
+		            $box.html( renderData.message )
+		        }
+	  		},
+	  		always:function(){
+	  			$box.children('.overlay').remove();
+	  		}
+  		});
+
+  		return xhr;
+    }
+
+    //创建分页html
+    function createHtml(url,temp,pageSize){
+      var flag=true;
+      var def=pageAjax({
+      	xhrUrl:(url?url:''),
+      	temp:(temp?temp:''),
+        pageSize:(pageSize?pageSize:5)
+      })
+      .done(function(renderData){
+        var pageInfo=renderData.data.pageInfo;
+        flag=false;
+        if(pageInfo.totalElements>0){
+          var html=template('pagenation-temp',pageInfo);
+          if($('[data-role="page-box"]',$container).length<=0){
+            $('[data-role="item-list-container"]',$container).after(html);
+          }
+          else{
+            $('[data-role="page-box"]',$container).replaceWith(html);
+          }
+
+          //生成分页
+          createPagination({
+            pageCount:pageInfo.totalElements,
+            pageSize:pageInfo.size,
+            currentPage:pageInfo.number-1
+          },function (new_page_index, pagination_container) {
+            if(flag){
+              pageAjax({
+              	xhrUrl:(url?url:''),
+      			temp:(temp?temp:''),
+                pageSize:pageInfo.size,
+                pageNumber:new_page_index+1
+              });
+            }
+            flag=true;
+            return false;
+          });
+        }
+        else{
+          $('[data-role="page-box"]',$container).remove();
+          //$box=$('[data-role="summary-box"]',$container);
+          //$box.html(window['noDataTips']);
+        }
+      });
+      return def;
+    }
+
+    //分页跳转
+    $wrapper.on('click', '[data-role="jump-page-btn"]', function(event) {
+      var $pageContainer=$("#page-render");
+      var jumpPageNum=$('[data-role="jump-page-input"]',$pageContainer.parent()).val()-1;
+      var pageCount=$pageContainer.data('pageCount');
+      var curPage=$pageContainer.data('current_page');
+      if( $.isNumeric(jumpPageNum) && pageCount && pageCount>1 && curPage!=jumpPageNum && jumpPageNum<pageCount){
+        $pageContainer.trigger('setPage', [jumpPageNum]);
+      }
+    });
+
+    //选项卡
+    $('[dat-role="type-tab"] > li').click(function(event) {
+    	event.preventDefault();
+
+		var index=$(this).index();
+		var renderHtml='';
+
+		$container.append('<div class="overlay bg-center"></div>');
+
+		$(this).addClass('active').siblings().removeClass('active');
+
+		//活动简述
+		if(index==0){
+			var url='/pcenter/headTeacherService/classActivity/activityDetails';
+
+	        ajaxProcess({
+	      		url:url,
+	      		type:'GET',
+	      		data:{
+		        	activityId:articalId
+		        },
+	      		success:function(renderData){
+	      			if(renderData.msgCode==200){
+		            	var dataInfo=renderData.data.info;
+		            	var imgArr=[];
+		                if(!!dataInfo.activityPicture){
+		                	imgArr=dataInfo.activityPicture.split(',');
+		                }
+		                var render=template.compile($('#summary-template').html(),{escape:false});
+		                var renderHtml2 = render(
+		                	$.extend({},dataInfo,{picArr:imgArr})
+		                );
+		                $container.html(renderHtml2);
+		            }
+		            else{
+		                $container.html(renderData.message);
+		            }
+	      		}
+	      	});
+		}
+		//已报名
+		else if(index==1){
+			//template.config('cache', false);
+
+			$container.html([
+				'<div data-role="item-list-container" class="overlay-wrapper">',
+			      '<div class="text-center"><i class="loading"></i></div>',
+			    '</div>'
+			].join(''));
+			//分页ajax
+			var xhrUrl='/pcenter/headTeacherService/classActivity/getPersonnels';
+
+		    createHtml(xhrUrl,'have-signup-template',12);
+		}
+		//评论
+		else if(index==2){
+		  	//template.config('cache', false);
+		  	$container.html([
+				'<div data-role="item-list-container" class="overlay-wrapper">',
+			      '<div class="text-center"><i class="loading"></i></div>',
+			    '</div>'
+			].join(''));
+			//分页ajax
+			var xhrUrl='/pcenter/headTeacherService/classActivity/getComments';
+
+		    var xhr=createHtml(xhrUrl,'comment-template');
+		    xhr.done(function(){
+		    	$container.append($('#comment-form-template').html())
+		    });
+		}
+
+		
+    });
+});
+</script>

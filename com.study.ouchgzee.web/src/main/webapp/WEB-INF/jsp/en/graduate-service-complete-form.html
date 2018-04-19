@@ -1,0 +1,731 @@
+<div class="padding10" data-id="by-complete-info">
+  <div class="text-center"><i class="loading"></i></div>
+</div>
+
+<!--浮动导航-->
+<script type="text/template" id="float-menu-temp">
+  <div class="float-menu" data-rel-component="2-3">
+    <ul>
+      <li>
+        <i class="u-icon u-icon-0x0 fr"></i>
+        <span>学籍信息</span>
+      </li>
+      <li>
+        <!--<i class="u-icon u-icon-26x0 fr"></i>-->
+        <i class="u-icon u-icon-0x0 fr"></i>
+        <span>照片</span>
+      </li>
+      <li>
+        <i class="u-icon u-icon-0x0 fr"></i>
+        <span>联系方式</span>
+      </li>
+      <li>
+        <i class="u-icon u-icon-0x0 fr"></i>
+        <span>学习经历</span>
+      </li>
+      <li>
+        <i class="u-icon u-icon-0x0 fr"></i>
+        <span>毕业实习</span>
+      </li>
+      <li>
+        <i class="u-icon u-icon-0x0 fr"></i>
+        <span>毕业论文</span>
+      </li>
+      <li>
+        <i class="u-icon u-icon-0x0 fr"></i>
+        <span>在线奖惩</span>
+      </li>
+      <li>
+        <i class="u-icon u-icon-0x0 fr"></i>
+        <span>自我鉴定</span>
+      </li>
+    </ul>
+  </div>
+</script>
+
+<!--模板-->
+<script type="text/template" id="by-complete-temp">
+  <form class="theform">
+    <div class="oper-step">
+      <h3 class="sub-title font18 text-no-bold margin_b10">
+        
+        学籍信息
+        <span class="text-red font14">（学籍信息不能修改，如果信息有误，请联系班主任。）</span>
+      </h3>
+      <div class="text-center">
+        <table class="table-gray-th form" width="100%">
+            <tr>
+                <th width="15%" class="text-right">
+                  姓名
+                </th>
+                <td width="35%">{{xm}}</td>
+                <th width="15%" class="text-right">
+                  性别
+                </th>
+                <td width="35%">{{xbm}}</td>
+            </tr>
+            <tr>
+                <th class="text-right">
+                  学号
+                </th>
+                <td>{{!!xh?xh:'--'}}</td>
+                <th class="text-right">
+                  出生日期
+                </th>
+                <td>{{csrq}}</td>
+            </tr>
+            <tr>
+                <th class="text-right">
+                  民族
+                </th>
+                <td>
+                  {{!!mzm?mzm:'--'}}
+                </td>
+                <th class="text-right">
+                  政治面貌
+                </th>
+                <td>{{!!politicsstatus?politicsstatus:'--'}}</td>
+            </tr>
+            <tr>
+                <th class="text-right">
+                  证件类型
+                </th>
+                <td>{{!!certificatetype?certificatetype:'--'}}</td>
+                <th class="text-right">
+                  证件号
+                </th>
+                <td>{{!!sfzh?sfzh:'--'}}</td>
+            </tr>
+            <tr>
+                <th class="text-right">
+                  学生类别
+                </th>
+                <td>
+                  {{if specialtyCategory==1}}
+                    开放教育专业
+                  {{else if specialtyCategory==2}}
+                    助力计划专业
+                  {{else if specialtyCategory==3}}
+                    开放教育专科
+                  {{/if}}            
+                </td>
+                <th class="text-right">
+                  学历层次
+                </th>
+                <td>{{!!exedulevel?exedulevel:'--'}}</td>
+            </tr>
+            <tr>
+                <th class="text-right">
+                  专业
+                </th>
+                <td>{{!!zymc?zymc:'--'}}</td>
+                <th class="text-right">
+                  入学时间
+                </th>
+                <td>{{!!gradeName?gradeName:'--'}}</td>
+            </tr>
+            <tr>
+                <th class="text-right">
+                  毕业时间
+                </th>
+                <td>{{!!graduationTime?graduationTime:'--'}}</td>
+                <th class="text-right">
+                  
+                </th>
+                <td></td>
+            </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="oper-step">
+      <h3 class="sub-title font18 text-no-bold margin_t25 margin_b10 margin_b10">
+        照片
+      </h3>
+      <div class="info-section">
+        <div class="section-body">
+          <div class="padding_l20 padding_r20 padding_b20 padding_t10">
+            <div class="clearfix top10 bottom10">
+              <div class="col-4">
+                <div class="cert-wrap cert-wrap-2">
+                  <div class="valid-control">
+                    {{if photo!='' && photo!=null}}
+                      <div class="cert-box cert-box-3 has-upload">
+                        <a href="javascript:void(0);" class="info-img-box">
+                          <img src="{{photo | imgUrlFormat:[150,210]}}" class="info-img">
+                          <div class="upload-btn" data-role="upload-img" data-object='{
+                                    "title":"电子版免冠一寸蓝底证件照",
+                                    "sampleImg":[
+                                      {
+                                        "title":"正确示例",
+                                        "lgImg":"http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/temp/img3.jpg",
+                                        "smImg":"http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/temp/img3.jpg"
+                                      }
+                                    ]
+                                  }'><i></i><span>重新上传</span></div>
+                        </a>
+                        <a href="{{photo | imgUrlFormat}}" class="light-box" data-role="fancybox">点击放大</a>
+                        <input type="text" class="img-val" datatype="*" nullmsg="请添加电子版免冠一寸蓝底证件照" errormsg="请添加电子版免冠一寸蓝底证件照" name="photo" value="{{photo}}">
+                      </div>
+                    {{else}}
+                      <div class="cert-box cert-box-3">
+                        <a href="javascript:void(0);" class="info-img-box">
+                          <div class="upload-btn" data-role="upload-img" data-object='{
+                                    "title":"电子版免冠一寸蓝底证件照",
+                                    "sampleImg":[
+                                      {
+                                        "title":"正确示例",
+                                        "lgImg":"http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/temp/img3.jpg",
+                                        "smImg":"http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/temp/img3.jpg"
+                                      }
+                                    ]
+                                  }'><i></i><span>点击上传</span></div>
+                        </a>
+                        <a href="#" class="light-box" data-role="fancybox">点击放大</a>
+                        <input type="text" class="img-val" datatype="*" nullmsg="请添加电子版免冠一寸蓝底证件照" errormsg="请添加电子版免冠一寸蓝底证件照" name="photo">
+                      </div>
+
+                    {{/if}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="cert-wrap cert-wrap-2">
+                  <div class="cert-box has-upload cert-box-3">
+                    <div class="ver-middle-box">
+                      <div class="ver-middle-cnt">
+                        <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/temp/img3.jpg">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="font14 top5 text-center" style="width:152px;">
+                    正确示例
+                  </div>
+                </div>
+              </div>
+              <div class="col-4 pos-rel" style="left:-50px">
+                <table width="100%" class="font_gray f12">
+                  <tr>
+                    <td width="40" valign="top">要求：</td>
+                    <td>必须使用符合规格的电子相片，1寸蓝底电子照，尺寸为150×210像素，大小为≤40K，宽高比在1.25—1.55之间。</td>
+                  </tr>
+                  <tr>
+                    <td>建议：</td>
+                    <td>去照相馆拍照符合规格电子照</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="oper-step">
+      <h3 class="sub-title font18 text-no-bold margin_t25 margin_b10">
+        
+        联系方式
+        <span class="text-red font14">（如没有内容，请填写“无”。）</span>
+      </h3>
+      <div class="text-center">
+        <table class="table-gray-th" width="100%">
+            <tr>
+                <th width="15%" class="text-right">
+                  工作单位
+                </th>
+                <td width="35%">
+                  <div class="valid-control">
+                    <input class="form-control form-control-block" value="{{scCo}}" placeholder="工作单位" datatype="*" nullmsg="请填写工作单位" name="company">
+                  </div>
+                </td>
+                <th width="15%" class="text-right">
+                  单位电话
+                </th>
+                <td width="35%">
+                  <div class="valid-control">
+                    <input class="form-control form-control-block" value="{{scCoPhone}}" placeholder="单位电话" datatype="/(^(0[0-9]{2,3})-([2-9][0-9]{6,7})+(-[0-9]{1,4})?$)/|/无/" nullmsg="请填写单位电话" errormsg="固定电话格式不对：区号-电话" name="companyPhone">
+                  </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-right">
+                  手机号码
+                </th>
+                <td>
+                  <div class="valid-control">
+                    <input class="form-control form-control-block" value="{{sjh}}" placeholder="手机号码" datatype="m|/无/" nullmsg="请填写手机号码" errormsg="手机号码格式不对" name="phone">
+                  </div>
+                </td>
+                <th class="text-right">
+                  家庭电话
+                </th>
+                <td>
+                  <div class="valid-control">
+                    <input class="form-control form-control-block" placeholder="家庭电话" datatype="/(^(0[0-9]{2,3})-([2-9][0-9]{6,7})+(-[0-9]{1,4})?$)/|/无/" nullmsg="请填写家庭电话" errormsg="电话格式不对：区号-电话" value="{{homePhone}}" name="homePhone">
+                  </div>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-right">
+                  E-mail
+                </th>
+                <td>
+                  <div class="valid-control">
+                    <input class="form-control form-control-block" value="{{dzxx}}" placeholder="邮箱" datatype="e|/无/" nullmsg="请填写邮箱" errormsg="邮箱格式不对" name="email">
+                  </div>
+                </td>
+                <th class="text-right">
+                  
+                </th>
+                <td>
+                  
+                </td>
+            </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="oper-step">
+      <h3 class="sub-title font18 text-no-bold margin_t25 margin_b10">
+        <span class="label bg-green fr as-link" data-role="record" data-oper="add">+添加</span>
+        
+        主要学历经历
+
+        <span class="text-red f12 vertical-middle inline-block margin_l10" style="display:none;" data-role="main-record-tips">
+          <i class="alert-icon alert-icon-123x63"></i>
+          "主要学历经历"不能为空
+        </span>
+      </h3>
+      <table class="table-basic text-center" data-role="main-record">
+        <thead>
+          <tr>
+            <th>时间</th>
+            <th>学校</th>
+            <th>学历</th>
+            <th>地区</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{each eduLiveList}}
+            <tr data-tr-id="{{$index}}">
+              <td>
+                {{$value.beginTime}}
+                <input type="hidden" name="{{'eduLiveList['+$index+'].beginTime'}}" value="{{$value.beginTime}}">
+                至
+                {{$value.endTime}}
+                <input type="hidden" name="{{'eduLiveList['+$index+'].endTime'}}" value="{{$value.endTime}}">
+              </td>
+              <td>
+                {{$value.school}}
+                <input type="hidden" name="{{'eduLiveList['+$index+'].school'}}" value="{{$value.school}}">
+              </td>
+              <td>
+                {{$value.degree}}
+                <input type="hidden" name="{{'eduLiveList['+$index+'].degree'}}" value="{{$value.degree}}">
+              </td>
+              <td>
+                {{$value.region}}
+                <input type="hidden" name="{{'eduLiveList['+$index+'].region'}}" value="{{$value.region}}">
+              </td>
+              <td>
+                <input type="hidden" name="{{'eduLiveList['+$index+'].eduId'}}" value="{{$value.eduId}}">
+                <input type="hidden" name="{{'eduLiveList['+$index+'].status'}}" value="1">
+                <a href="#" class="font_blue" data-role="record" data-oper="edit">编辑</a>
+                <a href="#" class="text-red margin_l10" data-role="delete">删除</a>
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+
+    </div>
+
+    <div class="oper-step">
+      <h3 class="sub-title font18 text-no-bold margin_t25 margin_b10">
+        
+        毕业实习单位及主要内容
+      </h3>
+      <div class="custom-tbl form">
+        <div class="valid-control">
+          <textarea class="form-control full-width" rows="10" placeholder="请输入毕业实习单位及主要内容" maxlength="300" style="width:97.5% !ie;" datatype="*" nullmsg="请填写毕业实习单位及主要内容" name="practiceContent">{{practiceContent}}</textarea>
+        </div>
+        <div class="f12">
+          字数：<span class="text-orange"><i class="input-char-num">0</i> / 300字</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="oper-step">
+      <h3 class="sub-title font18 text-no-bold margin_t25 margin_b10">
+        
+        毕业论文及毕业设计题目
+      </h3>
+      <div class="custom-tbl form">
+        <div class="valid-control">
+          <textarea class="form-control full-width" rows="10" placeholder="请输入毕业论文及毕业设计题目" maxlength="300" style="width:97.5% !ie;" datatype="*" nullmsg="请填写毕业论文及毕业设计题目" name="graduationDesign">{{graduationDesign}}</textarea>
+        </div>
+        <div class="f12">
+          字数：<span class="text-orange"><i class="input-char-num">0</i> / 300字</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="oper-step">
+      <h3 class="sub-title font18 text-no-bold margin_t25 margin_b10">
+        
+        在校期间受过何种奖励和处分
+        <span class="text-red font14">（如没有内容，请填写“无”。）</span>
+      </h3>
+      <div class="custom-tbl form">
+        <div class="valid-control">
+          <textarea class="form-control full-width" rows="10" placeholder="请填写在校期间受过的奖励和处分" maxlength="300" style="width:97.5% !ie;" datatype="*" nullmsg="请填写在校期间受过何种奖励和处分" name="awardRecord">{{awardRecord}}</textarea>
+        </div>
+        <div class="f12">
+          字数：<span class="text-orange"><i class="input-char-num">0</i> / 300字</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="oper-step">
+      <h3 class="sub-title font18 text-no-bold margin_t25 margin_b10">
+        <a href="/template/自我鉴定.docx" target="_blank" class="font_blue f14 fr">自我鉴定示例文档>></a>
+        
+        自我鉴定
+      </h3>
+      <div class="custom-tbl">
+        <div class="valid-control">
+          <textarea class="form-control full-width" rows="10" placeholder="请参考自我鉴定示例文档进行填写" maxlength="900" style="width:97.5% !ie;" datatype="*" nullmsg="请填写自我鉴定" name="evaluation">{{evaluation}}</textarea>
+        </div>
+        <div class="f12">
+          字数：<span class="text-orange"><i class="input-char-num">0</i> / 900字</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-group-placeholder margin_t15">
+      <div class="text-center btn-group-holder" data-rel-component="2-3">
+        <button type="button" data-role="service-save" class="btn btn-lg btn-orange min-width-120">保存并进入下一步</button>
+      </div>
+    </div>
+    <input type="hidden" value="{{registerId}}" name="registerId">
+  </form>
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','lodash','common'], function ($,template,_) {
+
+    var $container=$('[data-id="by-complete-info"]');
+ 
+    //限制输入字数
+    $container.on('change keydown keyup','textarea[maxlength]', function(event) {
+        // Store the maxlength and value of the field.
+        var maxlength = $(this).attr('maxlength');
+        var val = $(this).val();
+        if (val.length > maxlength) {
+            $(this).val(val.substring(0, maxlength));
+        } else {
+            $(this).closest('.custom-tbl').find(".input-char-num").text(val.length);
+        }
+    })
+    //删除学历
+    .on('click','[data-role="delete"]', function(event) {
+        event.preventDefault();
+        var self=this;
+        var pop=$.alertDialog({
+            width:340,
+              height:220,
+              content:[
+                '<i class="alert-icon alert-icon-0x0 margin_r10"></i>',
+                  '<span class="font18 text-orange vertical-middle inline-block">确认删除该学历经历？</span>'
+              ].join(''),
+              ok:function(){
+                var $status=$(self).siblings('[name$="status"]')
+
+                if( $status.val()==1 ){
+                  $status.val(2).closest('tr').hide();
+                }
+                else{
+                  $status.closest('tr').remove();
+                }
+                $.closeDialog(pop);
+              }
+          });
+    })
+    //添加/编辑学历
+    .on('click','[data-role="record"]', function(event) {
+        event.preventDefault();
+        var operType=$(this).attr('data-oper');
+        var popJson={};
+        popJson.operType=operType;
+
+        if( operType=='edit' ){
+          var $tr=$(this).closest('tr');
+          $tr.addClass('active').siblings().removeClass('active');
+          popJson.content={
+            beginTime : $('[name$="beginTime"]',$tr).val(),
+            endTime : $('[name$="endTime"]',$tr).val(),
+            school : $('[name$="school"]',$tr).val(),
+            degree : $('[name$="degree"]',$tr).val(),
+            region : $('[name$="region"]',$tr).val(),
+            eduId : $('[name$="eduId"]',$tr).val(),
+            status : $('[name$="status"]',$tr).val(),
+            order:$tr.attr('data-tr-id')
+          }
+        }
+
+        $.mydialog({
+            id: 'oper-graduete',
+            width: 550,
+            zIndex: 1000,
+            height: 370,
+            urlData: popJson,
+            content: 'pop-graduation-service-add-qualifications.html'
+        });
+
+    })
+    //点击上传
+    .on('click', '[data-role="upload-img"]', function(event) {
+      event.preventDefault();
+      var data=$(this).attr('data-object');
+      data=$.parseJSON(data);
+
+      $('.cert-box').removeClass('actived');
+      $(this).closest('.cert-box').addClass('actived');
+
+        if( $.type(data)=="object" ){
+          $.mydialog({
+          id:'pop2',
+          width:980,
+          zIndex:1000,
+          height:500,
+          urlData:data,
+          content: 'pop-upload-picture.html'
+        });
+      }
+    });
+
+    //查看大图
+    require(['jquery.fancybox'],function(){
+      $('[data-role="fancybox"]').fancybox();
+    });
+
+    //数据绑定
+  ;(function(){
+    var url='/pcenter/graduation/graduationRegister';
+    var xhr=$.get(url)
+      .done(function(renderData){
+          if(renderData.msgCode==200 && renderData.data){
+            $('body').append($("#float-menu-temp").html());
+
+            // 窗口调整
+            $(window).resize(_.throttle(floatMenuControl,100)).trigger('resize');
+            //快捷菜单滚动
+            function floatMenuControl() {
+                var $floatMenu = $(".float-menu");
+                if ($floatMenu.length <= 0) return;
+                var scrollTop = $(window).scrollTop();
+                var $rel = $("#tabs-content-box");
+                var pos = $rel.offset().top;
+                var differ = scrollTop - pos;
+                if (!window.XMLHttpRequest) { //ie6
+                    $floatMenu.css({
+                        'margin-left': ($(window).width() - $rel.outerWidth()) / 2 - $floatMenu.width() - 10,
+                        'margin-top': differ > 0 ? differ : 0
+                    });
+                } else { //非ie6
+                    $floatMenu.css({
+                        'margin-left': ($(window).width() - $rel.outerWidth()) / 2 - $floatMenu.width() - 10,
+                        'top': differ > 0 ? 0 : pos,
+                        'position': differ > 0 ? 'fixed' : 'absolute'
+                    });
+                }
+                if (!$("body").data("isClick")) {
+                    var $e = $(".oper-step").filter(function(index) {
+                        return scrollTop > $(this).offset().top;
+                    }).last();
+                    if ($e.length > 0) {
+                        $(".float-menu li").eq($e.index()).addClass('actived').siblings().removeClass('actived');
+                    }
+                } else {
+                    $("body").data("isClick", false);
+                }
+            }
+            //内容导读菜单
+            $(".float-menu li").click(function(event) {
+                var index = $(this).index();
+                //设置事件的类型，click事件与window 的滚动不能并行
+                $("body").data("isClick", true);
+                $('html, body').scrollTop($(".oper-step").eq(index).offset().top);
+                $(".float-menu li").eq(index).addClass('actived').siblings().removeClass('actived');
+            });
+
+            //底部浮动按钮效果
+            function floatBtnGroup(){
+              var $groupHolder = $(".btn-group-placeholder");
+              if ($groupHolder.length <= 0) return;
+              var h = $(window).height();
+              var scrollTop = $(window).scrollTop();
+              //按钮条滚动
+              var pos = $groupHolder.offset().top;
+              if (h + scrollTop >= pos+10) {
+                  $groupHolder.append($(".btn-group-holder"));
+              } else {
+                  $("body").append($('.btn-group-holder'));
+              }
+              if(scrollTop==0){
+                  $(".float-menu li").eq(0).addClass('actived').siblings().removeClass();
+              }
+              //快捷菜单滚动
+              floatMenuControl();
+            }
+
+            //lodash 的 _.throttle 方法 延迟事件发生
+            $(window).scroll(_.throttle(floatBtnGroup,50));
+          }
+      })
+      .done(function(renderData){
+          if(renderData.msgCode==200){
+            if(renderData.data){
+              var json=renderData.data;
+              var renderHtml = template('by-complete-temp',json);
+                $container.html(renderHtml);
+                $(window).trigger('scroll');
+                
+                var $floatLi=$('.float-menu li');
+                //头像资料是否完善
+                if( !json.photo ){
+                  $floatLi.eq(1).children('.u-icon').removeClass('u-icon-0x0').addClass('u-icon-26x0')
+                }
+
+                //联系方式是否完善
+                if( !(json.scCo && json.scCoPhone && json.sjh && json.homePhone && json.dzxx)  ){
+                  $floatLi.eq(2).children('.u-icon').removeClass('u-icon-0x0').addClass('u-icon-26x0')
+                }
+
+                //主要学历经历是否完善
+                if( !(json.eduLiveList && json.eduLiveList.length>0) ){
+                    $floatLi.eq(3).children('.u-icon').removeClass('u-icon-0x0').addClass('u-icon-26x0')
+                }
+
+                //毕业实习单位及主要内容 是否完善
+                if( !json.practiceContent ){
+                    $floatLi.eq(4).children('.u-icon').removeClass('u-icon-0x0').addClass('u-icon-26x0')
+                }
+
+                //毕业论文及毕业设计题目 是否完善
+                if( !json.graduationDesign ){
+                    $floatLi.eq(4).children('.u-icon').removeClass('u-icon-0x0').addClass('u-icon-26x0')
+                }
+
+                //毕业论文及毕业设计题目 是否完善
+                if( !json.graduationDesign ){
+                    $floatLi.eq(5).children('.u-icon').removeClass('u-icon-0x0').addClass('u-icon-26x0')
+                }
+
+                //在校期间受过何种奖励和处分 是否完善
+                if( !json.awardRecord ){
+                    $floatLi.eq(6).children('.u-icon').removeClass('u-icon-0x0').addClass('u-icon-26x0')
+                }
+
+                //自我鉴定 是否完善
+                if( !json.evaluation ){
+                    $floatLi.eq(7).children('.u-icon').removeClass('u-icon-0x0').addClass('u-icon-26x0')
+                }
+
+
+                //表单验证
+                require(['Validform'],function(){
+                  JPlaceHolder.init();
+
+                  $('.valid-control').append([
+                    '<div class="tooltip yellow_tip t_arrow tooltip-valid">',
+                      '<div class="tooltip-in"></div>',
+                      '<span class="t_arrow"><i class="arrow"></i><i class="arrow arrow_inner"></i></span>',
+                    '</div>'
+                  ].join(''));
+
+                  $.Tipmsg.r='';
+                  var vForm=$(".theform").Validform({
+                    ajaxPost:true,
+                    ignoreHidden:true,
+                    tiptype:function(msg,o,cssctl){
+                      if(!o.obj.is("form")){
+                        var objtip=o.obj.closest('.valid-control').find(".tooltip");
+                        switch(o.type){
+                            case 3:
+                              objtip.children('.tooltip-in').text(msg).parent().show();
+                              break;
+                            default:
+                              objtip.children('.tooltip-in').text('').parent().hide();
+                              break;
+                          }
+                      }
+                    },
+                    beforeSubmit:function(curform){
+                      //判断“主要学历经历”是否为空
+                      if( $('[data-role="main-record"] tbody tr',$container).length<=0 ){
+                        $('[data-role="main-record-tips"]',$container).show();
+                        
+                        $.when($.resultDialog(0,'"主要学历经历"不能为空'))
+                        .done(function(){
+                            $floatLi.eq(3).trigger('click');
+                        });
+                        
+                        return false;
+                      }
+
+                      $('[data-role="page-loading"]').show();
+                      
+                      ajaxProcess({
+                        url:'/pcenter/graduation/updateGraduationRegister',
+                        type:'POST',
+                        data:curform.serialize(),
+                        success:function(renderData){
+                          $.when(
+                            $.resultDialog(
+                              ((renderData.msgCode==200)?1:0),
+                              ((renderData.msgCode==200)?'提交成功':renderData.message),
+                              1500
+                            )
+                          )
+                          .done(function(){
+                              curRoute.redirect('#/biye/zkshengqing');
+                          });
+                        },
+                        always:function(){
+                          $('[data-role="page-loading"]').hide();
+                        }
+                      });
+
+                      return false;
+                    },
+                    callback:function(data){
+                      //data 后台返回的数据对象结果
+                      
+                    }
+                  });
+
+                  $('body').unbind('click').on('click','[data-role="service-save"]',function(){
+                    vForm.ajaxPost();
+                    return false;
+                  });
+                });
+            }
+            else{
+              $container.html(template('error-tips-temp',{message:'无数据'}));
+            }
+          }
+          else{
+              $container.html(template('error-tips-2-temp',{message:renderData.message}));
+          }
+      })      
+      .fail(function(XMLHttpRequest, textStatus, errorThrown){
+          $container.html( template('error-tips-2-temp',{
+            message:( textStatus || errorThrown )
+          }) );
+      });
+    window['jqAjaxCollectors'].push(xhr);
+  })();
+});
+</script>

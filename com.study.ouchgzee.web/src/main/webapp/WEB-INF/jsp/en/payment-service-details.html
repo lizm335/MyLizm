@@ -1,0 +1,101 @@
+<div class="padding10">
+    <table class="table-gray-th text-center">
+        <tbody>
+            <tr>
+                <th colspan="6">
+                    <ul class="clearfix fqfk_table">
+                        <li>学费标准：<span class="text-red">￥8600</span>
+                        </li>
+                        <li>优惠：<span class="text-red">￥700</span>
+                        </li>
+                        <li>应交：<span class="text-red">￥7900</span>
+                        </li>
+                    </ul>
+                </th>
+            </tr>
+            <tr>
+                <th class="text-center"></th>
+                <th class="text-center">学费</th>
+                <th class="text-center">教材费</th>
+                <th class="text-center">合计</th>
+                <th class="text-center">缴费方式</th>
+                <th class="text-center">缴费状态</th>
+            </tr>
+            <tr>
+                <td>第一学年</td>
+                <td>￥3450</td>
+                <td>￥500</td>
+                <td>￥3950</td>
+                <td rowspan="2">
+                    分期付款： <br>
+                    24月，371元/月
+                </td>
+                <td>已交</td>
+                
+            </tr>
+            <tr>
+                <td>第二学年</td>
+                <td>￥3450</td>
+                <td>￥500</td>
+                <td>￥3950</td>
+                <td>
+                    正常
+                    <a href="javascript:void(0);" class="font_blue margin_l10"><u>我要缴费</u></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table-gray-th margin-t30 text-center">
+        <tbody>
+            <tr>
+                <th>缴费时间</th>
+                <th>缴费类型</th>
+                <th>金额</th>
+                <th>备注</th>
+                <th>操作</th>
+            </tr>
+            <tr>
+                <td>2016.09.01 10:08:09</td>
+                <td>分期付款</td>
+                <td>￥371</td>
+                <td>2016年09月分期付款</td>
+                <td>
+                    <a href="javascript:void(0);" class="font_blue" data-role="apply-invoice"><u>申请发票</u></a>
+                </td>
+            </tr>
+            <tr>
+                <td>2016.09.01 10:08:09</td>
+                <td>分期付款</td>
+                <td>￥371</td>
+                <td>2016年09月分期付款</td>
+                <td>
+                    
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="margin_t10 f12 text-red">
+        温馨提示： <br>
+        <ol class="ol-decimal">
+            <li>只有学费才能申请开发票，其它费用如教材费、补考费等为代收代缴，不能开发票。</li>
+            <li>第三学期可以开第一学年的发票，第五学期可以开第二学年的发票。</li>
+        </ol>
+    </div>
+</div>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+    //申请发票
+    $('[data-role="apply-invoice"]').on('click', function(event) {
+        event.preventDefault();
+        $.mydialog({
+          id:'apply-invoice',
+          width:560,
+          zIndex:1000,
+          height:600,
+          content: 'pop-apply-invoice.html'
+        });
+    });
+});
+</script>

@@ -1,0 +1,128 @@
+<div class="padding10 overlay-wrapper">
+  <ul class="col-menu center-block" style="width:80%;">
+    <li class="col-menu-item">
+      <div class="fr" data-role="register-entrance" data-path="bysdengji">
+          <i class="loading"></i>
+      </div>
+      <div class="oh">
+        <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/beye-icon001.png" class="vertical-middle margin_l20 margin_r20">
+        <span class="font20">
+          毕业生登记表
+        </span>
+      </div>
+    </li>
+    <li class="col-menu-item">
+      <div class="fr" data-role="graduate-entrance" data-path="shsjxiezuo">
+          <i class="loading"></i>
+      </div>
+      <div class="oh">
+        <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/beye-icon0.png" class="vertical-middle margin_l20 margin_r20">
+        <span class="font20">
+          社会实践写作
+        </span>
+      </div>
+    </li>
+    <li class="col-menu-item">
+      <div class="fr" data-role="graduate-entrance" data-path="lwxiezuo">
+          <i class="loading"></i>
+      </div>
+      <div class="oh">
+        <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/beye-icon1.png" class="vertical-middle margin_l20 margin_r20">
+        <span class="font20">
+          论文写作
+        </span>
+      </div>
+    </li>
+    <li class="col-menu-item">
+      <div class="fr">
+        <div class="gray font16">暂未开放</div>
+      </div>
+      <div class="oh">
+        <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/beye-icon3.png" class="vertical-middle margin_l20 margin_r20">
+        <span class="font20">
+          申请毕业
+        </span>
+      </div>
+    </li>
+    <li class="col-menu-item">
+      <div class="fr">
+        <div class="gray font16">暂未开放</div>
+      </div>
+      <div class="oh">
+        <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/beye-icon4.png" class="vertical-middle margin_l20 margin_r20">
+        <span class="font20">
+          申请学位
+        </span>
+      </div>
+    </li>
+    <li class="col-menu-item">
+      <div class="fr">
+        <div class="gray font16">暂未开放</div>
+      </div>
+      <div class="oh">
+        <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/beye-icon5.png" class="vertical-middle margin_l20 margin_r20">
+        <span class="font20">
+          证书发放
+        </span>
+      </div>
+    </li>
+    <li class="col-menu-item">
+      <div class="fr">
+        <div class="gray font16">暂未开放</div>
+      </div>
+      <div class="oh">
+        <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/beye-icon2.png" class="vertical-middle margin_l20 margin_r20">
+        <span class="font20">
+          毕业资格查询
+        </span>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+
+  //设置 ‘毕业生登记表’、‘实践’、‘论文’的访问权限
+  ;(function(){
+    var $permissions=$('[data-role="register-entrance"]');
+    var $permissions2=$('[data-role="graduate-entrance"]');
+
+    ajaxProcess({
+      url:'/pcenter/graduation/graduationServiceHomePage',//1.2.12毕业服务首页
+      type:'POST',
+      success:function(json){
+        var rData=json.data;
+        if(json.msgCode==200 && rData && rData.registerResult){
+          //毕业生登记表
+          if(rData.registerResult.isApply){
+            $permissions.html('<a href="#/{0}" class="text-blue font16">进入</a>'.format( $permissions.data('path')) );
+          }
+          else{
+            $permissions.html('<div class="gray font16">暂未开放</div>');
+          }
+
+          //‘实践’、‘论文’的访问权限
+          if(rData.registerResult.isLastGradeToApply){
+            $permissions2.each(function(index, el) {
+                $(this).html('<a href="#/{0}" class="text-blue font16">进入</a>'.format( $(this).data('path')) );
+            });
+            
+          }
+          else{
+            $permissions2.html('<div class="gray font16">暂未开放</div>');
+          }
+        }
+        else{
+          $permissions.html('--');
+          $permissions2.html('--');
+        }
+      },
+      fail:function(errorMsg){
+        $permissions.html('--');
+        $permissions2.html('--');
+      }
+    });
+  })();
+});
+</script>

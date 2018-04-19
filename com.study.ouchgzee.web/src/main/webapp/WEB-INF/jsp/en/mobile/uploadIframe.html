@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>iframe communication (iframe page)</title>
+    <!--<script type="text/javascript" src="http://css.gzedu.com/common/js/jquery-1.7.2.min.js"></script>-->
+  </head>
+  <body>
+
+    <script>
+    	var getQueryString = function(url) {
+    		
+			var noQuery = 1, paramStr;
+			paramStr = url && (url.split('?')[1] || noQuery) || document.location.search.slice(1) || noQuery;
+			if (paramStr === noQuery) return false;
+			var params = paramStr.split('&'),queryParam = {},param;
+			for (var i = 0; i < params.length; i++) {
+				param = params[i].split('=');				
+				try {
+					queryParam[param[0]] = decodeURIComponent(param[1]);
+				} catch(e) {
+					queryParam[param[0]] = null;
+				}
+			};
+			return queryParam;
+		};
+
+		function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+            if (r != null) return unescape(r[2]); return null; //返回参数值
+        }
+		
+		var data = getQueryString(location.href);
+		var param=getUrlParam('data');
+		
+		ajaxFilelist=JSON.parse(param);
+		if(top.imgCallback){
+			if(typeof(top.imgCallback) ==='function'){
+				top.imgCallback(ajaxFilelist);
+			}
+		}
+    </script>
+
+  </body>
+</html>

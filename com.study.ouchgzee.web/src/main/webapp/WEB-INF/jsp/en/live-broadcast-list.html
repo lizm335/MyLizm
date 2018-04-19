@@ -1,0 +1,221 @@
+<div class="main-box">
+	<div class="wrap-box clearfix">
+		<div class="main">
+			<div class="bg-white border-e0e0e0">
+				<div class="teacher_title">
+					<a class="btn btn-normal btn-gray fr" href="#/zhibo">
+						<i class="icon icon-175x0 margin_r5"></i>返回
+					</a>
+					<h2><i class="icon icon-0x32"></i>全部直播</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="main-box">
+	<div class="wrap-box clearfix">
+		<div class="main">
+			<div class="bg-white border-e0e0e0">
+				<div class="tabs-content padding_b20" id="tabs-content-box">
+					
+					<div class="border-bottom padding20">
+						<form data-id="form">
+							<select class="form-control margin_r5" style="width:200px;" data-role="sel-filter-note" name="status">
+								<option value=''>请选择直播状态</option>
+								<option value='0'>未开始</option>
+								<option value='1'>直播中</option>
+								<option value='2'>已结束</option>
+							</select>
+
+							<input class="form-control margin_r5" name="lessonName" placeholder="请输入关键词搜索" style="width:250px;">
+
+							<button type="button" class="btn btn-normal btn-gray" data-id="search">搜索</button>
+						</form>
+					</div>
+					
+					<div class="overlay-wrapper padding_l20 padding_r20" data-role="type-content">
+						<div data-role="item-list-container">
+					        <div class="text-center padding_t25"><i class="loading"></i></div>
+					    </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>		
+</div>
+
+
+<!--列表 模板-->
+<script type="text/template" id="list-render-temp">
+	{{if pageInfo.totalElements>0}}
+	<div class="broadcast-list-box padding_t5">
+		<ul class="broadcast-list">
+			{{each pageInfo.content}}
+				<li>
+					<div class="inner">
+						<div class="bc-img">
+							<a href="#/zbjianjie?id={{$value.id}}" title="{{$value.lessonName}}">
+								{{if $value.imgUrl}}
+									<img src="{{$value.imgUrl | imgUrlFormat:[260,180]}}" class="vertical-middle" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/broadcast-default.jpg'">
+								{{else}}
+									<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/broadcast-default.jpg" class="vertical-middle">
+								{{/if}}
+							</a>
+							<div class="bc-helper">
+								<i class="mark"></i>
+								<div class="txt clearfix">
+									{{$value.status | createBarText:[$value.startTime,$value.endTime,$value.joinNum]}}
+								</div>
+							</div>
+						</div>
+						<div class="title" title="{{$value.lessonName}}">{{$value.lessonName}}</div>
+					</div>
+				</li>
+			{{/each}}
+		</ul>
+	</div>
+	{{/if}}
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+	template.helper('createBarText', function (status,args) {
+		var startTime=args[0],
+			endTime=args[1],
+			joinNum=args[2];
+		var result='';
+
+		//日期格式检测
+		if( !dateTimeValidation(startTime) && !dateTimeValidation(endTime) ){
+			return result;
+		}
+
+		//已结束
+		if(status==2){
+			result='\
+						<div class="bc-count">{0}</div>\
+						<div class="oh">{1} 已结束</div>\
+					'.format(
+						joinNum,
+						fomateDateMD(endTime)
+					);
+		}
+		//直播中
+		else if(status==1){
+			result='\
+						<div class="bc-count">{0}</div>\
+						<div class="oh">直播中 {1}~{2}</div>\
+					'.format(
+						joinNum,
+						fomateTime(startTime),
+						fomateTime(endTime)
+					);
+		}
+		//未开始
+		else if(status==0){
+			var now=new Date();
+			var start=new Date( startTime.replace(/-/g,'\/') );
+			//如果是今天
+			if( 
+				start.getFullYear()==now.getFullYear() && 
+				start.getMonth()==now.getMonth() &&
+				start.getDate()==now.getDate()
+			){
+				result='\
+							<div class="oh">即将开始 今天 {0}~{1}</div>\
+						'.format(
+							fomateTime(startTime),
+							fomateTime(endTime)
+						);
+			}
+			else{
+				result='\
+							<div class="oh">{0} {1}~{2}</div>\
+						'.format(
+							fomateDateMD(startTime),
+							fomateTime(startTime),
+							fomateTime(endTime)
+						);
+			}
+		}
+
+		return result;
+    });
+
+    function fomateDateMD(strDate){
+    	if( !dateTimeValidation(strDate) ){
+			return '--';
+		}
+		else{
+			var date=new Date(strDate.replace(/-/g,'\/'));
+			var y=date.getFullYear(),
+				m=date.getMonth()+1,
+				d=date.getDate();
+
+			return y+'-'+( m<10?('0'+m):m )+'-'+( d<10?('0'+d):d );
+		}
+    }
+
+    function fomateTime(strDate){
+		if( !dateTimeValidation(strDate) ){
+			return '--';
+		}
+		else{
+			var date=new Date(strDate.replace(/-/g,'\/'));
+			var hh=date.getHours();
+			var mm=date.getMinutes();
+
+			return ( hh<10?('0'+hh):hh )+':'+( mm<10?('0'+mm):mm );
+		}
+    };
+
+	var $container=$('[data-role="type-content"]');
+
+	//生成分页
+	function genarateHtml(filterType){
+		var $form=$('[data-id="form"]');
+		var elForm=$form.get(0);
+	    return new myPagination({
+		    form: $form,
+		    ajaxUrl: '/pcenter/course/queryLiveVideoList', //6.1 直播列表
+		    $Container: $container,
+		    pageSize: 12,
+		    boxCss:'padding_l30 padding_r30 text-right',
+		    callback: function(renderData) {
+		        var $box = $('[data-role="item-list-container"]');
+		        $box.append('<div class="overlay bg-center"></div>');
+		        if (renderData.msgCode == 200) {
+		            if (renderData.data && renderData.data.pageInfo) {
+		                if (renderData.data.pageInfo.totalElements > 0) {
+		                	var render=template.compile( $('#list-render-temp').html(),{escape:false} );
+		                    var renderHtml = render(renderData.data);
+		                    $box.html(renderHtml);
+		                } else {
+		                    if (elForm.status.value != '' && elForm.lessonName.value) {
+		                        $box.html(window['noDataTips']);
+		                    } else {
+		                        var renderHtml = template('no-data-tips-temp', {
+		                            message: '暂无直播内容'
+		                        });
+		                        $box.html(renderHtml);
+		                    }
+		                }
+		            } else {
+		                $box.html(window['noDataTips']);
+		            }
+		        } else {
+		            $box.html( '<div class="padding_t25">'+template('error-tips-temp',{message:renderData.message})+'</div>' );
+		            $box.next('[data-role="page-box"]').remove();
+		        }
+		    }
+		}).createHtml()
+	}
+
+	$('[data-id="search"]').click(function(event) {
+		genarateHtml();
+	});
+
+	genarateHtml();
+
+});
+</script>

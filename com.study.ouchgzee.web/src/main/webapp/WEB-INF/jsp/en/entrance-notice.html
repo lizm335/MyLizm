@@ -1,0 +1,57 @@
+<div class="padding10" data-role="inf-box">
+    
+</div>
+<script type="text/template" id="rxzs-temp">
+
+  <div class="center-block" style="width:60%;">
+      <div class="bg-fafafa border-e0e0e0 pad30">
+        <div class="text-center print-obj">
+          <img id="note-cert" class="img-responsive" style="display:none;">
+          <i class="loading"></i>
+        </div>
+      </div>
+      <div class="margin_t25 text-center">
+        <button type="button" class="btn btn-md btn-yellow min-width-100" onclick="printPageCnt();">打印</button>
+
+        <a href="/pcenter/roll/downloadNoticeToFile" target="_blank" class="btn btn-md btn-green min-width-100 margin_l10">下载</a>
+      </div>
+  </div>
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+
+  //数据绑定
+  ;(function(){
+    var $container=$('[data-role="inf-box"]');
+
+      $container.html( $('#rxzs-temp').html() )
+
+      var $img=$('#note-cert',$container);
+      var def=$.Deferred();
+
+      $img.attr('src','/pcenter/roll/getNoticeToFile')
+      .on('load', function(event) {
+        def.resolve();
+        clearTimeout(timer);
+      });
+
+      //图片加载如果超过10秒没响应，就放弃
+      var timer=setTimeout(function(){
+        def.reject();
+      },10000);
+
+      def.done(function(){
+        $img.show().next('.loading').remove();
+      })
+      .fail(function(){        
+        $img.siblings().hide();
+        $img.before('<div class="text-red"><i class="alert-icon alert-icon-123x63 vertical-middle margin_r10"></i>图片加载异常</div>');
+      });
+
+      window.timerCollectors.push(timer);
+
+
+  })();
+});
+</script>

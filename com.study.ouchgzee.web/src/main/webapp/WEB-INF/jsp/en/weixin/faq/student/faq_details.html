@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0" />
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<meta content="telephone=no" name="format-detection">
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/reset.css"/>
+	<link rel="stylesheet" type="text/css" href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/base.css"/>
+	<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/conversion.750.js"></script>
+
+	<link rel=stylesheet href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/weui.min.css">
+	<link rel=stylesheet href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/wx.css">
+	
+</head>
+<body class="gray_body">
+<div class="faq_details bg-white">
+	<div data-id="detail">
+
+	</div>
+</div>
+
+
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/zepto.min.js"></script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/zepto.cookie.min.js"></script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/common.js"></script>
+
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/weui.min.js"></script>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/sammyjs/plugins/template.js"></script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/wx.js"></script>
+
+<script type="text/template" id="detail-temp">
+	{{if msgCode==200 && data && data.vo}}
+			<dl class="faq_details_dl">
+				<dd>
+					<em>Q：</em>
+					<div class="info">
+						<p>{{data.vo.title}}</p>
+						{{if data.vo.imgUrls && data.vo.imgUrls.length>0}}
+							<ul class="img-list-box clearfix">
+								{{each data.vo.imgUrls as pic j}}
+									<li>
+										<img onclick="showLargeImg(this.getAttribute('data-large'))" data-large="{{pic}}" src="{{pic | imgUrlFormat:[85,70]}}" alt="">
+									</li>
+								{{/each}}
+							</ul>
+						{{/if}}
+					</div>
+				</dd>
+			</dl>
+			{{if data.vo.gjtFeedbackVoList && data.vo.gjtFeedbackVoList.length>0}}
+				{{each data.vo.gjtFeedbackVoList as fd i}}
+					<dl class="faq_details_dl">
+						<dd>
+							<em>
+								{{if fd.type=='reply'}}
+									A：
+								{{else if fd.type=='ask'}}
+									Q：
+								{{/if}}
+							</em>
+							<div class="info">
+								<p>{{fd.content | Url2Link}}</p>
+								{{if fd.imgUrls && fd.imgUrls.length>0}}
+									<ul class="img-list-box clearfix">
+										{{each fd.imgUrls as pic j}}
+											<li>
+												<img onclick="showLargeImg(this.getAttribute('data-large'))" data-large="{{pic}}" src="{{pic | imgUrlFormat:[85,70]}}" alt="">
+											</li>
+										{{/each}}
+									</ul>
+								{{/if}}
+							</div>
+						</dd>
+					</dl>
+				{{/each}}
+			{{/if}}
+
+			<div style="padding:0 .3rem .3rem;margin-top:.3rem">
+				<div style="margin-bottom:.2rem">是否解决了你的问题：</div>
+
+				<a href="#" class="weui-btn weui-btn_plain-default" id="yjjBtn" style="line-height:2;font-size: .3rem;">解决了</a>
+				<a href="#" data-id="need" class="weui-btn weui-btn_plain-primary" style="line-height:2;font-size: .3rem;">没有，我要咨询</a>
+			</div>
+
+	{{else}}
+		<div class="weui-loadmore weui-loadmore_line">
+            <span class="weui-loadmore__tips">{{message}}</span>
+        </div>
+	{{/if}}
+</script>
+<script type="text/javascript">
+	//网址转换成a链接
+    template.helper('Url2Link', function (native) {
+    	var reg=/(((https|http|ftp|rtsp|mms):\/\/)\w+(\.\w+)+[^\s\u4E00-\u9FA5\uf900-\ufa2d]*)/ig;
+
+    	return native.replace(reg,function(s){
+			var args=arguments;
+			return '<a href="'+s+'" style="color:#0080ff;"><u>'+s+'</u></a>';
+		});
+    });
+    
+	var userid='2cdfadb5c357487e969ee17528b753b0';
+	var id=GetQueryStringFn('id');
+	var $container=$('[data-id="detail"]');
+	var orgCode=sessionStorage.getItem('orgCode');
+	var loading = weui.loading('加载中...');
+
+	$.ajax({
+		url: '/wx/feedback/askDetail',
+		type: 'GET',
+		dataType: 'json',
+		data: {
+			id:id
+		},
+		success: function(data){
+			var render=template.compile($('#detail-temp').html(),{escape:false})
+			$container.html(render(data));
+
+			if(data.data && data.data.vo){
+				document.title=data.data.vo.title;
+			}
+
+			if(!sessionStorage.getItem('student-isBindUser')){
+				$('[data-id="need"]').attr('href',
+					'/wx/studentOauth/to?orgCode='+orgCode+'&url='+
+						encodeURIComponent('/wx/weixin/faq/transfer.html?path='+encodeURIComponent('/wx/weixin/faq/student/faq_list.html?orgCode='+orgCode+'&tid=2')
+						)
+				);
+			}
+			else{
+				$('[data-id="need"]').attr('href','faq_list.html?orgCode='+sessionStorage.getItem('orgCode')+'&tid=2');
+			}
+
+			
+
+			loading.hide();
+		}
+	});
+
+
+	$('body').on('click','#yjjBtn',function(e){
+		e.preventDefault();
+		
+        weui.alert('<span style="font-size:0.35rem;">谢谢支持</span>', 
+        	function(){
+        		history.back();
+        	}
+        );
+	});
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,1200 @@
+<h3 class="text-no-bold sub-title f18 fl margin_t10">
+  考试信息
+</h3>
+<div class="overlay-wrapper" data-id="exam-wrap">
+	<div style="height:300px;"></div>
+	<div class="overlay bg-center"></div>
+</div>
+
+<!--框架 模板-->
+<script type="text/template" id="box-temp">
+	{{if PLAN_LIST && PLAN_LIST.length>0}}
+		<div class="text-right padding_b20 border-bottom">
+			<!--如果有当前考试计划，就选中对应的选项，否则选中第一个计划-->
+			<select class="form-control" data-role="change-exam-plan">
+				<option value="">请选择考试计划</option>
+				{{each PLAN_LIST}}
+					<option 
+						value="{{$value.EXAM_BATCH_CODE}}"
+						data-is-latest="{{$value.CURRENT_FLAG==1?1:0}}"
+						data-index="{{$index}}"
+						{{($value.CURRENT_FLAG==1 || $index==0 )?'selected':''}}
+					>{{$value.EXAM_BATCH_NAME}}（{{$value.EXAM_BATCH_CODE}}）</option>
+				{{/each}}
+			</select>
+		</div>
+		<div data-id="exam-cnt-box" class="padding_t20">
+			{{if toDatingExam}}
+				{{include 'box-sub-temp' toDatingExam}}
+			{{/if}}
+		</div>
+	{{else}}
+		<div class="text-center" style="padding-top:120px;">
+		  <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/icon-1.png" alt="" class="vertical-middle">
+		  <span class="font24 vertical-middle inline-block margin_l10" style="color:#b2b2b2;">{{message}}</span>
+		</div>
+	{{/if}}
+</script>
+
+<!--当前考试计划-->
+<script type="text/template" id="box-sub-temp">
+	<div data-id="exam-plan-tbl">
+		{{include 'exam-plan-tbl-temp' CurExamPlanData}}
+	</div>
+	{{if isCurExamPlan}}
+		<!--考试内容-->
+		<div class="learn-case" data-id="exam-tbl" style="margin:15px 0;">
+			{{include 'exam-tbl-temp' toDatingExam}}
+		</div>
+	{{/if}}
+	<div class="overlay-wrapper border-e0e0e0 margin_t15" data-id="exam-container">
+		<ul class="tabs1 tabs-list clearfix" data-id="tabs-box" style="border-bottom-width:1px;">
+			{{if isCurExamPlan}}
+				<li class="active margin_l20" data-li-id="dating">
+					<a href="#">
+						可预约考试<span data-role="pending-exam-count">{{(toDatingExam.PENDING_COUNT && toDatingExam.PENDING_COUNT>0)?('（'+toDatingExam.PENDING_COUNT+'）'):''}}</span>
+					</a>
+				</li>
+			{{/if}}
+			<li data-li-id="myExam" class="{{isCurExamPlan?'':'active'}}">
+				<a href="#">
+					{{if isCurExamPlan}}
+						TA的考试<span data-role="my-exam-count">{{'' | numTotal:[toDatingExam.DKS_COUNT, toDatingExam.EXAM_COUNT, toDatingExam.YKS_COUNT]}}</span>
+					{{else}}
+						考试记录
+					{{/if}}
+				</a>
+			</li>
+			<!--'data-ticket-type'属性 缓存准考证类型（笔考：8，机考：11）-->
+			<li data-ticket-type="8" data-li-id="ticket">
+				<a href="#">
+					准考证信息
+				</a>
+			</li>
+		</ul>
+		<div class="tabs-content padding20" data-id="exam-content">
+			{{if isCurExamPlan}}
+				{{include 'to-dated-temp' toDatingExam}}
+			{{else}}
+				{{include 'my-exam-temp' myExam}}
+			{{/if}}
+		</div>
+		<div class="overlay hide"></div>
+	</div>
+</script>
+
+<!--表格数据 模板-->
+<script type="text/template" id="exam-plan-tbl-temp">
+	<table class="table-gray-th" style="table-layout: auto;">
+		<thead>
+			<tr>
+				<th colspan="3">
+					<div class="sub-title font16">考试时间</div>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+		      <td width="36%">
+		      	<span class="margin_r5">网考、大作业考试时间：</span>
+		      	{{ONLINE_ST}} 至 {{ONLINE_END}}
+		      </td>
+		      <td width="32%">
+		      	<span class="margin_r5">笔考考试时间：</span>
+		      	{{PAPER_ST}} 至 {{PAPER_END}}
+		      </td>
+		      <td width="32%">
+		      	<span class="margin_r5">论文截止时间：</span>
+		      	{{THESIS_END}}
+		      </td>
+		    </tr>
+		    <tr>
+		      <td>
+		      	<span class="margin_r5">省网考考试时间：</span>
+		      	{{PROVINCE_ONLINE_ST}} 至 {{PROVINCE_ONLINE_END}}
+		      </td>
+		      <td>
+		      	<span class="margin_r5">机考考试时间：</span>
+		      	{{MACHINE_ST}} 至 {{MACHINE_END}}
+		      </td>
+		      <td>
+		      	<span class="margin_r5">报告截止时间：</span>
+		      	{{REPORT_END}}
+		      </td>
+		    </tr>
+		</tbody>
+	</table>
+	<table class="table-gray-th" style="margin-top:-1px;table-layout: auto;">
+		<thead>
+			<tr>
+				<th colspan="2">
+					<div class="sub-title font16">成绩登记截止时间</div>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+		    <tr>
+		      <td width="50%">
+		      	<span class="margin_r5">形考任务成绩截止时间：</span>
+		      	{{SHAPE_END}}
+		      </td>
+		      <td>
+		      	<span class="margin_r5">学习成绩截止登记时间：</span>
+		      	<span data-id="record-end">{{RECORD_END}}</span>
+		      </td>
+		    </tr>
+		</tbody>
+	</table>
+</script>
+<!--表格数据 模板-->
+<script type="text/template" id="exam-tbl-temp">
+	<table class="text-center text-646e7d">
+		<tr data-role="exam-data-tr">
+			<td width="180">
+				<div class="font32 line-height-1">{{PENDING_APPOINTMENT | NumberConvert}}</div>
+				<div class="font12 margin_t5">待预约考点</div>
+			</td>
+			<td width="180">
+				<div class="font32 line-height-1">{{PENDING_COUNT | NumberConvert}}</div>
+				<div class="font12 margin_t5">可预约科目</div>
+			</td>
+			<td width="180">
+				<div class="font32 line-height-1">{{ALREADY_COUNT | NumberConvert}}</div>
+				<div class="font12 margin_t5">已预约科目</div>
+			</td>
+			<td width="180">
+				<div class="font32 line-height-1">{{DKS_COUNT | NumberConvert}}</div>
+				<div class="font12 margin_t5">待考试科目</div>
+			</td>
+			<td width="180">
+				<div class="font32 line-height-1 position-relative">{{EXAM_COUNT | NumberConvert}}</div>
+				<div class="font12 margin_t5">考试中科目</div>
+			</td>
+			<td width="180">
+				<div class="font32 line-height-1">{{YKS_COUNT | NumberConvert}}</div>
+				<div class="font12 margin_t5">已考试科目</div>
+			</td>				
+		</tr>
+	</table>
+</script>
+
+<!--待预约考试 模板-->
+<script type="text/template" id="to-dated-temp">
+	<!--如果没有预约考试科目，就不显示-->
+	{{if LIST && LIST.length>0}}
+		<!--预约考点,只有笔试和机试才显示-->
+		{{if hasWritingExam || hasMachineExam}}
+			<table cellspacing="0" class="table-gray-th table-striped text-center margin_b15">
+		      <thead>
+		        	<tr>
+		        		<th width="24%">考点类型</th>
+						<th width="17%">考点名称</th>
+						<th width="20%">区域</th>
+						<th width="30%">地址</th>
+						<th width="9%">考点状态</th>
+		        	</tr>
+		        </thead>
+		        <tbody>
+		        	{{if POINTLIST && POINTLIST.length>0}}
+			        	{{each POINTLIST}}
+			        		{{if ($value.EXAM_TYPE==8 && hasWritingExam) || ($value.EXAM_TYPE==11 && hasMachineExam)}}
+						        <tr>
+						        	<td>
+						        		{{if $value.EXAM_TYPE==8}}
+						        			笔试考点
+						        		{{else if $value.EXAM_TYPE==11}}
+						        			机考考点
+						        		{{/if}}
+						        	</td>
+									<td>{{$value.POINT_NAME?$value.POINT_NAME:'--'}}</td>
+									<td>{{$value.AREA_NAME?$value.AREA_NAME:'--'}}</td>
+									<td>{{$value.ADDRESS?$value.ADDRESS:'--'}}</td>
+									<td>
+						          	{{if $value.EXAM_POINT=='未开放'}}
+						          		<div data-id="dating-status" data-value="0" data-exam-point-type="{{$value.EXAM_TYPE}}">未开放</div>
+						          	{{else if $value.EXAM_POINT===''}}
+						          		<div class="text-orange" data-id="dating-status" data-value="1" data-exam-point-type="{{$value.EXAM_TYPE}}">
+							          		待预约
+							          	</div>
+							        {{else if $value.EXAM_POINT.length>0}}
+							        	<div class="text-green" data-id="dating-status" data-value="2" data-exam-point-type="{{$value.EXAM_TYPE}}">
+							          		已预约
+							          	</div>
+						          	{{/if}}
+						          </td>
+						        </tr>
+					        {{/if}}
+				        {{/each}}
+			        {{else}}
+			        	<tr>
+			        		<td colspan="5">
+			        			<div class="text-center padding10">
+									<i class="alert-icon alert-icon-123x63 margin_r5"></i>
+									无预约考点
+								</div>
+			        		</td>
+			        	</tr>
+			        {{/if}}
+		      	</tbody>
+		    </table>
+	    {{/if}}
+
+	    
+	    <!--预约考试-->
+	    <table class="table-gray-th table-striped text-center">
+	      <thead>
+	        	<tr>
+		          <th width="8%">学期</th>
+		          <th width="27%">考试科目</th>
+		          <th width="10%">考试方式</th>
+		          <th width="14%">考试时间</th>
+		          <th width="14%">预约时间</th>
+		          <th width="9%">是否补考</th>
+		          <th width="9%">缴费状态</th>
+		          <th width="9%">考试状态</th>
+	        	</tr>
+	        </thead>
+	        <tbody>
+	        	{{if LIST && LIST.length>0}}
+		        	{{each LIST as term i}}
+		        		{{each term.APPOINTMENTLIST}}
+					        <tr>
+					          {{if $index==0}}
+								<td rowspan="{{term.APPOINTMENTLIST.length}}">{{term.TERM_NAME}}</td>
+							  {{/if}}
+					          <td>{{$value.COURSE_NAME}}</td>
+					          <td>{{$value.EXAM_STYLE}}</td>
+					          <td>
+					          	{{[$value.EXAM_STIME,$value.EXAM_ETIME] | SetExamTime:$value.KSFS_FLAG}}
+					          </td>
+					          <td>
+					          	{{if $value.BOOK_STARTTIME && $value.BOOK_ENDTIME}}
+						          	{{$value.BOOK_STARTTIME}} <br>
+						          	至 <br>
+						          	{{$value.BOOK_ENDTIME}}
+					          	{{else}}
+						        	--
+					          	{{/if}}
+					          </td>
+							  <td>{{$value.MAKEUP}}</td>
+							  <td>
+								{{if $value.PAY_STATE==='0'}}
+									<span class="text-orange">待缴费</span>
+								{{else if $value.PAY_STATE==='1'}}
+									<span class="text-green">已交费</span>
+								{{else if $value.PAY_STATE==='2'}}
+									<span class="gray">无需缴费</span>
+								{{/if}}
+							  </td>
+					          <td>
+					          	{{if $value.BESPEAK_STATE==='0'}}
+						          	<div class="text-orange">
+						          	待预约
+						          	</div>
+					          	{{else if $value.BESPEAK_STATE==='1'}}
+					          		<div class="text-green">
+						          	已预约
+						          	</div>
+								{{else if $value.BESPEAK_STATE==='2'}}
+									<div class="gray">无需预约</div>
+					          	{{/if}}
+					          </td>
+					        </tr>
+					    {{/each}}
+					{{/each}}
+				{{else}}
+					<tr>
+		        		<td colspan="9">
+		        			<div class="text-center padding10">
+								<i class="alert-icon alert-icon-123x63 margin_r5"></i>
+								无预约考试
+							</div>
+		        		</td>
+		        	</tr>
+				{{/if}}
+	      	</tbody>
+	    </table>
+	<!--在预约时间内，但没有可预约科目-->
+	{{else if TIME_FLAG==='0'}}
+		<div class="text-center">
+		  <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/icon-1.png" alt="" class="vertical-middle">
+		  <span class="font24 vertical-middle inline-block margin_l10" style="color:#b2b2b2;">暂无可预约考试科目！</span>
+		</div>
+    {{else}}
+    	<div class="text-center">
+		  <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/icon-1.png" alt="" class="vertical-middle">
+		  <span class="font24 vertical-middle inline-block margin_l10" style="color:#b2b2b2;">现考试预约时间已过，请到 <a href="#" data-role="view-my-exam" class="text-blue"><u>ta的考试</u></a> 中查看你的考试预约结果~！</span>
+		</div>
+    {{/if}}
+</script>
+
+<!--我的考试 模板-->
+<script type="text/template" id="my-exam-temp">
+	{{if msgCode==200}}
+		{{if data && data.LIST && data.LIST.length>0}}
+			<!--显示当前考试计划的预约考点-->
+			<div data-id="appointExam-list"></div>
+
+			<table cellspacing="0" class="table-gray-th table-striped text-center margin_t10">
+		      	<thead>
+		        	<tr>
+			          <th width="14%">学期</th>
+			          <th width="26%">考试科目</th>
+			          <th width="14%">考试方式</th>
+			          <th width="20%">考试时间</th>
+			          <th width="14%">考试成绩</th>
+			          <th width="12%">考试状态</th>
+		        	</tr>
+		        </thead>
+		        <tbody data-role="exam-list">
+					{{each data.LIST as term i}}
+						{{each term.EXAMLIST}}
+					        <tr>
+					        	{{if $index==0}}
+									<td rowspan="{{term.EXAMLIST.length}}">{{term.TERM_NAME}}</td>
+								{{/if}}
+								<td>{{$value.COURSE_NAME}}</td>
+								<td>{{$value.EXAM_STYLE}}</td>
+								<td>
+									{{[$value.EXAM_STIME,$value.EXAM_ETIME] | SetExamTime:$value.KSFS_FLAG}}
+								</td>
+								<td>
+									<!--考试成绩-->
+									{{if !$value.EXAM_SCORE}}
+										{{if $value.EXAM_STATE==2}}
+											<span class="text-orange">缺考</span>
+										{{else}}
+											--
+										{{/if}}
+									{{else if $value.EXAM_SCORE==='0' || $value.EXAM_SCORE>=0}}
+										{{$value.EXAM_SCORE}}
+									{{else if $value.EXAM_SCORE=='缺考'}}
+										<span class="text-orange">缺考</span>
+									{{else}}
+										--
+									{{/if}}
+								</td>
+								<td>
+									<!--考试状态-->
+									{{if $value.EXAM_STATE==='0'}}
+										<span class="gray">待开始</span>
+									{{else if $value.EXAM_STATE==1}}
+										<span class="text-green">考试及格</span>
+									{{else if $value.EXAM_STATE==2}}
+										<span class="text-red">考试不及格</span>
+									{{else if $value.EXAM_STATE==3}}
+										<!--形考-->
+										{{if $value.KSFS_FLAG==13}}
+											<span class="text-orange">形考中</span>
+										{{else}}
+											<span class="text-orange">考试中</span>
+										{{/if}}
+									{{else if $value.EXAM_STATE==4}}
+										<span class="gray">待批改</span>
+									{{else if $value.EXAM_STATE==5}}
+										<span class="gray">已截止</span>
+									{{else}}
+										--
+									{{/if}}
+								</td>
+					        </tr>
+				        {{/each}}
+				    {{/each}}
+		      	</tbody>
+		    </table>
+	    {{else}}
+	    	<div class="text-center">
+			  <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/icon-1.png" alt="" class="vertical-middle">
+			  <span class="font24 vertical-middle inline-block margin_l10" style="color:#b2b2b2;">ta本次考试计划暂未预约任何考试科目~！</span>
+			</div>
+	    {{/if}}
+    {{else}}
+    	<div class="text-center">
+		  <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/icon-1.png" alt="" class="vertical-middle">
+		  <span class="font24 vertical-middle inline-block margin_l10" style="color:#b2b2b2;">{{message}}</span>
+		</div>
+    {{/if}}
+</script>
+
+<!--显示当前考试计划的预约考点-->
+<script type="text/template" id="appointExam-list-temp">
+	{{if POINTLIST && POINTLIST.length>0}}
+		<table cellspacing="0" class="table-basic vertical-middle text-center margin_b15">
+	      	<thead>
+	        	<tr>
+	        		<th >考点类型</th>
+					<th width="17%">考点名称</th>
+					<th width="20%">区域</th>
+					<th width="30%">地址</th>
+					<th width="9%">考点状态</th>
+	        	</tr>
+	        </thead>
+	        <tbody>
+	        	{{each POINTLIST}}
+	        		{{if $value.EXAM_POINT.length>0}}
+				        <tr>
+				        	<td>
+				        		{{if $value.EXAM_TYPE==8}}
+				        			笔试考点
+				        		{{else if $value.EXAM_TYPE==11}}
+				        			机考考点
+				        		{{/if}}
+				        	</td>
+							<td>{{$value.POINT_NAME?$value.POINT_NAME:'--'}}</td>
+							<td>{{$value.AREA_NAME?$value.AREA_NAME:'--'}}</td>
+							<td>{{$value.ADDRESS?$value.ADDRESS:'--'}}</td>
+							<td>
+				          		<div class="text-green">
+					          		已预约
+					          	</div>
+				          	</td>
+				        </tr>
+			        {{/if}}
+		        {{/each}}
+	      	</tbody>
+	    </table>
+    {{/if}}
+</script>
+
+<!--准考证信息 模板-->
+<script type="text/template" id="admin-ticket-temp">
+	<ul class="tabs">
+        <li class="margin_r10"><a href="#" class="{{tabType==8?'current':''}}"><span class="f16 min-width-100 text-center">笔考</span></a></li>
+        <li><a href="#" class="{{tabType==11?'current':''}}"><span class="f16 min-width-100 text-center">机考</span></a></li>
+    </ul>
+    <div class="tabs_content padding15">
+		{{if isEmpty || !ADMISSLIST || ADMISSLIST.length<=0 }}
+			<div class="margin_t25 margin_b25">
+				<div class="text-center">
+					<img class="vertical-middle" src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/icon-1.png">
+					<span class="inline-block vertical-middle" style="font-size:36px;color:#b2b2b2;padding-left:30px;">
+						暂未生成
+					</span>
+				</div>
+				<div class="alert-panel margin_t20 padding15 center-block"  style="width:460px;">
+					<div class="typeset font_gray font12">
+						<div class="fixed">注：</div>
+						<div class="adaptive">
+							1、准考证信息暂未生成，请在考试预约后，留意准考证打印通知或短信 <br>
+							2、若没有预约考试的学员，请先完成考试预约操作
+						</div>
+					</div>
+				</div>
+			</div>
+		{{else}}
+			<div>
+				<h3 class="text-no-bold text-center">{{XXMC}} {{STUDY_YEAR_NAME}}考试准考证</h3>
+
+				<div class="stu-info-box margin_t25">
+					<div class="typeset">
+						<div class="fixed">
+							<div class="middle-img-wrap center-block">
+								<div class="ver-middle-box has-pic">
+									{{if STU_PHOTO==null || STU_PHOTO==""}}
+										<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png">
+									{{else}}
+										<img src="{{STU_PHOTO}}">
+									{{/if}}
+								</div>
+							</div>
+						</div>
+						<div class="adaptive">
+							<table>
+								<tbody>
+									<tr>
+										<td width="80">姓名：</td>
+										<td>{{ADMISSION_NAME}}</td>
+									</tr>
+									<tr>
+										<td>学号：</td>
+										<td>{{STU_NUMBER}}</td>
+									</tr>
+									<tr>
+										<td>考点：</td>
+										<td>{{EXAM_POINT_NAME}}</td>
+									</tr>
+									<tr>
+										<td>考点地址：</td>
+										<td>{{EXAM_ADDRESS}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				
+				<table cellspacing="0" class="table-basic vertical-middle text-center margin_t25">
+					<thead>
+						<tr>
+					      <th width="10%">试卷号</th>
+					      <th>考试科目</th>
+					      <th width="11%">考试形式</th>
+					      <th width="11%">考试方式</th>
+					      <th width="11%">考试日期</th>
+					      <th width="11%">考试时间</th>
+					      <th width="13%">考场及座位号</th>
+					      <th width="10%">连考科目</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{each ADMISSLIST}}
+						    <tr>
+						      <td>{{$value.EXAM_NO}}</td>
+						      <td>
+						      	{{$value.COURSE_NAME}}
+						      </td>
+						      <td>
+						      	{{$value.EXAM_TYPE?$value.EXAM_TYPE:'--'}}
+						      </td>
+						      <td>{{$value.EXAM_STYLE}}</td>
+						      <td>{{$value.EXAM_DATE}}</td>
+						      <td>{{$value.EXAM_TIME}}</td>
+						      <td>{{$value.SEAT_NO?$value.SEAT_NO:'--'}}</td>
+						      <td>{{$value.PLAN_COUNT>1?$value.PLAN_COUNT:''}}</td>
+						    </tr>
+					    {{/each}}
+					</tbody>
+				</table>
+				
+			    <div class="text-orange margin_t20 font18">
+			    	<p>考试开始30分钟后，考生不得进入考场</p>
+			    	<p>考生必须带齐身份证、准考证、学生证参加考试,否则不得进入考场</p>
+			    </div>
+
+			    <!--笔考-->
+			    {{if tabType==8}}
+				    <div class="alert-panel padding15 font12 font_gray margin_t20">
+				    	<div class="typeset font_gray font12 clearfix">
+							<div class="fixed nomargin">注：</div>
+							<div class="adaptive">
+								1、新生的学生证在第一场考试前发放，请新生提前半小时联系该考点负责考务工作的教师领取学生证<br>
+								2、请同一时间段考两科或两科以上的学员，考完每一科交卷的时候，要举手告诉监考教师自己是连考学员，监考教师会安排你下一科场考试
+							</div>
+						</div>
+
+						<p style="color:#848c99" class="margin_t15"><strong>关于连考说明如下：</strong></p>
+
+						1、连考就是指同一日期同一时间段考两科或两科以上<br>
+						 
+						2、查看准考证，仔细查看自己是否有连考科目<br>
+						 
+						3、准考证没有明确标明先考具体连考科目，一般是先考卷号小的科目，请去对应的考室考试 <br>
+						4、连考科目的同学，请告知监考教师，自己有连考科目，交卷时举手告诉监考教师自己须连考的，并告知科目名称。交卷时，请谨记不可走出教室，等待监考教师安排
+				    </div>
+				<!--机考-->
+			    {{else if tabType==11}}
+			    	<div class="alert-panel padding15 font12 font_gray margin_t20">
+						<p style="color:#848c99"><strong>注意事项：</strong></p>
+
+						1、提前15分钟到达考场，考试开始30分钟后，考生不得进入考场。<br>
+						 
+						2、带齐三证，即学生证、准考证和有效身份证件（居民身份证、护照、军官证）参加考试。<br>
+						 
+						3、考试期间禁止使用手机等通讯工具。
+				    </div>
+			    {{/if}}
+		    </div>
+
+		    <div class="text-center margin_t20">
+		    	<button type="button" data-role="download-cert" class="btn btn-lg btn-orange" data-json='{
+		    		"EXAM_BATCH_CODE":"{{EXAM_BATCH_CODE}}",
+		    		"EXAM_NO":"{{EXAM_NO}}",
+		    		"TYPE":"{{tabType}}"
+		    	}'>下载准考证信息</button>
+		    </div>
+		{{/if}}
+	</div>
+</script>
+
+<!--考试须知 模板-->
+<script type="text/template" id="instructions-temp">
+	<!--<h3 class="text-no-bold text-center">{{TITLE}}</h3>-->
+	<div class="margin_t25">
+		{{CONTENT}}
+	</div>
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+	var $wrapper=$('[data-id="exam-wrap"]');
+	template.config('escape',false);
+	
+	//考试时间处理
+	template.helper('SetExamTime', function (native,args) {
+      	var result='{0}<br>至<br>{1}';
+      	var timeData=$wrapper.data('json');
+      	var selectedIndex=$wrapper.data('selectedIndex');
+      	var startTime, //考试开始时间
+      		endTime; //考试结束时间
+
+      	if( $.isArray(native) && native.length>1 && args){
+			startTime=native[0];
+			endTime=native[1];
+
+			if(startTime && endTime){
+				return result.format(startTime,endTime);
+			}
+			else{
+				if(args==13 || args==14 || args==15){
+					//形考
+					if(args==13){
+						return timeData[selectedIndex].SHAPE_END+' 前';
+					}
+					//论文
+					else if(args==14){
+						return timeData[selectedIndex].THESIS_END+' 前';
+					}
+					//报告
+					else if(args==15){
+						return timeData[selectedIndex].REPORT_END+' 前';
+					}
+				}
+				else{
+					return '--';
+				}
+			}
+			
+      	}
+      	else{
+      		return '--';
+      	}
+    });
+
+	//数字数据格式化
+    template.helper('json2String', function (native) {
+        return native?(JSON.stringify(native)):'';
+    });
+
+    //分数+单位
+    template.helper('kcxxScoreByUnit', function (orientVal,unit) {
+        return $.isNumeric(orientVal)?(orientVal+unit):(orientVal!=''?orientVal:'--');
+    });
+
+    //统计“我的考试”总数
+    template.helper('numTotal', function (native,args) {
+    	var result=0;
+
+    	if(args && args.length>0){
+    		for(var i=0;i<args.length;i++){
+    			result+=parseInt(args[i]);
+    		}
+    	}
+
+        return result>0?('（'+result+'）'):'';
+    });
+
+    //查看 我的考试 按钮
+    $wrapper.on('click', '[data-role="view-my-exam"]', function(event) {
+    	event.preventDefault();
+    	
+    	$('[data-id="tabs-box"] > li',$wrapper).eq(1).trigger('click');
+    });
+
+	//选择考试计划
+	$wrapper.on('change','[data-role="change-exam-plan"]',function(event) {
+		var self=this;
+		var CurExamPlanCode=$(self).val();//选中的学期code
+
+		//如果未选择考试计划
+		if( CurExamPlanCode=='' ) {
+			var pop=$.alertDialog({
+				width:340,
+			    height:270,
+			    content:[
+			    	'<i class="alert-icon alert-icon-0x0 margin_r10"></i>',
+			        '<span class="font18 text-orange vertical-middle inline-block">请选择考试计划</span>'
+			    ].join(''),
+			    cancel:false,
+			    okLabel:'关闭',
+			    ok:function(){
+			    	$(self).focus();
+			    	$.closeDialog(pop);
+			    }
+			});
+			return;
+		}
+
+		$wrapper.append('<div class="overlay"></div>');
+
+		var selectedIndex=$(self).get(0).selectedIndex;
+		//选中的列表项
+		var $selectedItem=$(self).children().eq(selectedIndex);
+		$wrapper.data('selectedIndex',$selectedItem.data('index'));
+
+		var isLatestPlan=$selectedItem.data('is-latest');
+
+		var planList=$wrapper.data('json');//获取缓存的学期列表
+
+		var CurExamPlanData=planList[$selectedItem.data('index')];
+
+		//查询当前最新的考试计划
+		if( isLatestPlan==1 ){
+			var json={};//创建渲染数据对象		
+			json.CurExamPlanData=CurExamPlanData;
+			json.isCurExamPlan=isLatestPlan;
+			
+			
+			//待预约考试
+			ajaxProcess({
+	      		url:'/pcenter/exam/appointmentExam',
+	      		type:'GET',
+	      		data:{
+	      			EXAM_BATCH_CODE:CurExamPlanCode
+	      		},
+	      		success:function(toDatingExam){
+	      			var toDatingExamData=toDatingExam.data;
+	      			
+					var hasWritingExam=false;//是否有笔试
+					var hasMachineExam=false;//是否有机试
+
+					if(toDatingExamData.LIST && toDatingExamData.LIST.length>0){
+						$.each(toDatingExamData.LIST, function(index, val) {
+							if(val.APPOINTMENTLIST && val.APPOINTMENTLIST.length>0){
+								$.each(val.APPOINTMENTLIST, function(index2, val2) {
+									//笔试
+									if(val2.KSFS_FLAG==8){
+										hasWritingExam=true;
+									}
+									//机试
+									if(val2.KSFS_FLAG==11){
+										hasMachineExam=true;
+									}
+								});
+							}
+						});
+					}
+
+					$.extend(true, toDatingExamData, {
+						hasWritingExam : hasWritingExam,
+						hasMachineExam : hasMachineExam
+					});
+	      				
+	      			json.toDatingExam=toDatingExamData;
+	      			json.message=toDatingExam.message;
+	      			
+	      			$('[data-id="exam-cnt-box"]',$wrapper).html( 
+	      				template('box-sub-temp',json)
+	      			 );
+
+	      			 //隐藏数据
+		      		$('[data-role="dating"],[data-role="dating-place"]',$wrapper).each(function(index, el) {
+		            	var oldData=$(this).data('json');
+		            	$(this).removeAttr('data-json');
+		            	$(this).data('json',oldData);
+		            });
+
+	      		}
+	      	})
+	      	.always(function(){
+	      		$wrapper.children('.overlay').hide();
+	      	});
+      	}
+      	//查询往期考试
+      	else{
+      		ajaxProcess({
+	      		url:'/pcenter/exam/myExamData',
+	      		type:'GET',
+	      		data:{
+	      			EXAM_BATCH_CODE:CurExamPlanCode
+	      		},
+	      		success:function(myExamData){
+	      			$('[data-id="exam-cnt-box"]',$wrapper).html( 
+	      				template('box-sub-temp',$.extend({}, 
+	      						{myExam:myExamData}, 
+	      						{
+	      							CurExamPlanData:CurExamPlanData,
+	      							isCurExamPlan:isLatestPlan
+	      						}
+	      					)
+	      				) 
+	      			);
+
+	      			getPlaceAppoint(myExamData,CurExamPlanCode);
+	      		}
+	      	})
+	      	.always(function(){
+	      		$wrapper.children('.overlay').hide();
+	      	});
+      	}
+      	
+	});
+
+	//异步获取考点
+	function getPlaceAppoint(myExamData,curExamPlanCode){
+		if(myExamData.msgCode==200 && myExamData.data && myExamData.data.LIST && myExamData.data.LIST.length>0){
+  			/*检测是否存在笔试/机试 科目 -start*/
+  			var hasWritingExam=false;//是否有笔试
+  			var hasMachineExam=false;//是否有机试
+
+  			$.each(myExamData.data.LIST, function(index, val) {
+  				if(val.EXAMLIST && val.EXAMLIST.length>0){
+  					$.each(val.EXAMLIST, function(index2, val2) {
+  						//笔试
+  						if(val2.KSFS_FLAG==8){
+  							hasWritingExam=true;
+  						}
+  						//机试
+  						if(val2.KSFS_FLAG==11){
+  							hasMachineExam=true;
+  						}
+  					});
+  				}
+  			});
+
+  			if(hasWritingExam || hasMachineExam){
+	      		ajaxProcess({
+					url:'/pcenter/exam/appointmentExam',
+					type:'GET',
+					data:{
+						EXAM_BATCH_CODE:curExamPlanCode
+					},
+					success:function(renderData){
+						if(renderData.msgCode==200 && renderData.data){
+
+							var renderHtml = template('appointExam-list-temp',renderData.data);
+
+							$('[data-id="appointExam-list"]').html( renderHtml );
+						}
+					}
+				});
+			}
+		}
+	}
+
+	//准考证信息
+	function examAdmissionInfo(exam_type){
+		//exam_type  考试方式
+		var curExamPlanCode=$('[data-role="change-exam-plan"]',$wrapper).val();
+		var def=ajaxProcess({
+		      		url:'/pcenter/exam/examAdmissionInfo',
+		      		type:'GET',
+		      		data:{
+		      			TYPE:exam_type,
+		      			EXAM_BATCH_CODE:curExamPlanCode
+		      		},
+		      		success:function(renderData){
+		      			var $container=$('[data-id="exam-content"]');
+		      			if(renderData.msgCode==200){
+			                var renderHtml = template(
+			                	'admin-ticket-temp',
+			                	$.extend(
+				                	true,
+				                	renderData.data,
+				                	{
+				                		EXAM_BATCH_CODE:curExamPlanCode,
+				                		isEmpty:$.isEmptyObject(renderData.data),
+				                		tabType:exam_type
+				                	}
+			                	)
+			                );
+			                $container.html( renderHtml );
+			            }
+			            else{
+			                $container.html( renderData.message )
+			            }
+		      		}
+		      	});
+
+		return def;
+	}
+
+	//准考证信息 选项卡
+	$wrapper.on('click','.tabs li',function(event) {
+		event.preventDefault();
+		var $loading=$('.overlay',$wrapper);
+		var index=$(this).index();
+		$loading.show();
+		examAdmissionInfo( index==0 ? 8:11 )
+		.always(function(){
+			$loading.hide();
+		});
+	})
+
+	//下载准考证
+	.on('click', '[data-role="download-cert"]', function(event) {
+		var dJson=$(this).data('json');
+
+		ajaxProcess({
+	      url:'/pcenter/exam/saveAdmissionTicketCount',//3.5.1记录下载准考证
+	      type:'POST',
+	      data:{
+	      	EXAM_BATCH_CODE: dJson.EXAM_BATCH_CODE,
+	      	EXAM_NO: dJson.EXAM_NO,
+	      	LOG_TYPE: '1'
+	      }
+	    });
+
+	    window.open('/pcenter/exam/expAdmissionTicket?EXAM_BATCH_CODE={0}&TYPE={1}'.format(dJson.EXAM_BATCH_CODE,dJson.TYPE));
+
+	})
+
+	//查看准考证
+	.on('click', '[data-role="view-ticket"]', function(event) {
+		event.preventDefault();
+
+		$('[data-id="tabs-box"] > li[data-li-id="ticket"]',$wrapper)
+		.data( 'ticket-type',$(this).data('ticket-type') )
+		.trigger('click');
+	})
+
+    //选项卡
+    .on('click','[data-id="tabs-box"] > li',function(event) {
+    	event.preventDefault();
+    	var self=this;
+    	var $box=$('[data-id="exam-container"]',$wrapper);
+    	var $container=$('[data-id="exam-content"]',$wrapper);
+    	var $loading=$('.overlay',$box);
+    	var curExamPlanCode=$('[data-role="change-exam-plan"]',$wrapper).val();
+    	var index=$(this).data('li-id');
+    	
+    	var temp='';
+
+    	$(self).addClass('active').siblings().removeClass('active');
+
+		$loading.show();
+
+		var def;
+    	switch(index){
+    		case 'myExam'://我的考试
+    			def=ajaxProcess({
+		      		url:'/pcenter/exam/myExamData',
+		      		type:'GET',
+		      		data:{
+		      			EXAM_BATCH_CODE:curExamPlanCode,
+		      			CURRENT_FLAG:1
+		      		},
+		      		success:function(renderData){
+		      			var renderHtml = template('my-exam-temp',renderData);
+			            $container.html( renderHtml );
+
+			            //隐藏数据
+			            $('[data-role="exam-list"] .begin-exam',$container).each(function(index, el) {
+			            	var oldData=$(this).data('json');
+			            	$(this).removeAttr('data-json');
+			            	$(this).data('json',oldData);
+			            });
+		      		}
+		      	});
+
+		      	def.done(function(myExamData){
+		      		getPlaceAppoint(myExamData,curExamPlanCode);
+		      	})
+    			break;
+    		case 'ticket'://准考证信息
+    			//准考证类型,8：笔试，11：机考
+    			var ticketType=$(self).data('ticket-type');
+    			ticketType || (ticketType=8);
+    			def=examAdmissionInfo(ticketType);
+    			break;
+    		default://待预约考试
+    			def=ajaxProcess({
+		      		url:'/pcenter/exam/appointmentExam',
+		      		type:'GET',
+		      		data:{
+		      			EXAM_BATCH_CODE:curExamPlanCode
+		      		},
+		      		success:function(renderData){
+		      			if(renderData.msgCode==200){
+		      				var toDatingExamData=renderData.data;
+		      				/*检测是否存在笔试/机试 科目 -start*/
+			      			var hasWritingExam=false;//是否有笔试
+			      			var hasMachineExam=false;//是否有机试
+
+			      			if(toDatingExamData.LIST && toDatingExamData.LIST.length>0){
+				      			$.each(toDatingExamData.LIST, function(index, val) {
+				      				if(val.APPOINTMENTLIST && val.APPOINTMENTLIST.length>0){
+				      					$.each(val.APPOINTMENTLIST, function(index2, val2) {
+				      						//笔试
+				      						if(val2.KSFS_FLAG==8){
+				      							hasWritingExam=true;
+				      						}
+				      						//机试
+				      						if(val2.KSFS_FLAG==11){
+				      							hasMachineExam=true;
+				      						}
+				      					});
+				      				}
+				      			});
+			      			}
+			      			
+			      			/*检测是否存在笔试/机试 科目 -end*/
+
+			                var renderHtml = template('to-dated-temp',
+			                	$.extend(
+				                	true, 
+				                	renderData.data, 
+				                	{
+				                		hasWritingExam : hasWritingExam,
+				                		hasMachineExam : hasMachineExam
+				                	}
+			                	)			                	
+			                );
+			                $container.html( renderHtml );
+
+			                //隐藏数据
+				      		$('[data-role="dating"],[data-role="dating-place"]',$container).each(function(index, el) {
+				            	var oldData=$(this).data('json');
+				            	$(this).removeAttr('data-json');
+				            	$(this).data('json',oldData);
+				            });
+
+			            }
+			            else{
+			                $container.html( renderData.message )
+			            }
+		      		}
+		      	});
+    			break;
+    	}
+    	
+    	def.always(function(){
+    		$loading.hide();
+    	});
+    });
+
+    //考试内容初始化
+    ;(function(){
+    	ajaxProcess({
+      		url:'/pcenter/exam/getExamBatchData',
+      		type:'GET',
+      		success:function(ExamBatchData){
+      			var json={};//创建渲染数据对象
+
+      			if(ExamBatchData.msgCode==200 && ExamBatchData.data){
+      				//考试计划列表
+      				var planList=ExamBatchData.data.PLAN_LIST;
+	                json.PLAN_LIST=planList;
+
+	                //缓存计划列表数据
+	                $wrapper.data('json',planList);
+
+	                if(planList && planList.length>0){
+	                	//是否有当前考试计划
+	                	var CurExamPlanCode='';
+	                	json.toDatingExam={};
+
+	                	//查找 当前考试计划
+	                	$.each(planList, function(i, planItem) {
+	                		if(planItem.CURRENT_FLAG==='1'){
+						      	CurExamPlanCode=planItem.EXAM_BATCH_CODE;
+						      	json.toDatingExam.CurExamPlanData=planItem;
+
+						      	$wrapper.data('selectedIndex',i);
+	                			return false;
+	                		};
+	                	});
+
+	                	var jqxhr;
+
+	                	//如果不存在当前考试计划
+	                	if(!CurExamPlanCode){
+	                		$wrapper.data('selectedIndex',0);
+
+	                		var CurExamPlanData=planList[0];
+	                		CurExamPlanCode=CurExamPlanData.EXAM_BATCH_CODE;
+	                		
+	                		json.toDatingExam=null;
+
+	                		$wrapper.html(template('box-temp',json));
+
+	                		jqxhr=ajaxProcess({
+					      		url:'/pcenter/exam/myExamData',
+					      		type:'GET',
+					      		data:{
+					      			//默认显示第一个考试计划
+					      			EXAM_BATCH_CODE:CurExamPlanCode
+					      			//CURRENT_FLAG:planList[0].CURRENT_FLAG
+					      		},
+					      		success:function(myExamData){
+					      			$('[data-id="exam-cnt-box"]',$wrapper).html( 
+					      				template('box-sub-temp',$.extend({}, 
+					      						{myExam:myExamData}, 
+					      						{
+					      							CurExamPlanData:CurExamPlanData,
+					      							isCurExamPlan:0
+					      						}
+					      					)
+					      				) 
+					      			);
+
+					      			getPlaceAppoint(myExamData,CurExamPlanCode);
+					      		}
+					      	});
+					      	
+	                	}
+	                	//待预约考试数据
+	                	else{
+	                		jqxhr=ajaxProcess({
+					      		url:'/pcenter/exam/appointmentExam',
+					      		type:'GET',
+					      		data:{
+					      			EXAM_BATCH_CODE:CurExamPlanCode
+					      		},
+					      		success:function(toDatingExam){
+					      			var toDatingExamData=toDatingExam.data;
+
+					      			json.toDatingExam.toDatingExam=toDatingExamData;
+
+					      			/*检测是否存在笔试/机试 科目 -start*/
+					      			var hasWritingExam=false;//是否有笔试
+					      			var hasMachineExam=false;//是否有机试
+
+					      			if(toDatingExamData.LIST && toDatingExamData.LIST.length>0){
+						      			$.each(toDatingExamData.LIST, function(index, val) {
+						      				if(val.APPOINTMENTLIST && val.APPOINTMENTLIST.length>0){
+						      					$.each(val.APPOINTMENTLIST, function(index2, val2) {
+						      						//笔试
+						      						if(val2.KSFS_FLAG==8){
+						      							hasWritingExam=true;
+						      						}
+						      						//机试
+						      						if(val2.KSFS_FLAG==11){
+						      							hasMachineExam=true;
+						      						}
+						      					});
+						      				}
+						      			});
+					      			}
+					      			
+					      			json.toDatingExam.toDatingExam.hasWritingExam=hasWritingExam;
+					      			json.toDatingExam.toDatingExam.hasMachineExam=hasMachineExam;
+					      			/*检测是否存在笔试/机试 科目 -end*/
+
+					      			json.toDatingExam.message=toDatingExam.message;
+
+					      			json.toDatingExam.isCurExamPlan=1;
+
+					      			$wrapper.html(template('box-temp',json));
+
+					      			//隐藏数据
+						      		$('[data-role="dating"],[data-role="dating-place"]',$wrapper).each(function(index, el) {
+						            	var oldData=$(this).data('json');
+						            	$(this).removeAttr('data-json');
+						            	$(this).data('json',oldData);
+						            });
+					      		}
+					      	});
+				      	}
+
+	                	//程序出错
+	                	jqxhr.fail(function(XMLHttpRequest, textStatus, errorThrown){
+	                		
+	                		$wrapper.html( template('error-tips-2-temp',{
+	                			message:(textStatus || errorThrown)
+	                		}) );
+	                	});
+			      	}		      	
+			      	else{
+			      		json.message='暂未发布最新的考试计划！';
+			      		$wrapper.html( template('box-temp',json) );
+			      	}
+	            }
+	            else{
+	                json.message=ExamBatchData.message;
+	                $wrapper.html( template('box-temp',json) );
+	            }
+      		}
+      	});
+    })();
+});
+</script>

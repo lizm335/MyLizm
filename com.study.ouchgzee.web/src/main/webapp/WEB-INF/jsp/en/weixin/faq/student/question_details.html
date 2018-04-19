@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0" />
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<meta content="telephone=no" name="format-detection">
+	<title>问题详情</title>
+	<link rel="stylesheet" type="text/css" href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/reset.css"/>
+	<link rel="stylesheet" type="text/css" href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/base.css"/>
+	<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/conversion.750.js"></script>
+
+	<link rel=stylesheet href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/weui.min.css">
+	<link rel=stylesheet href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/wx.css">
+	
+
+</head>
+<body class="gray_body">
+
+<div class="faq_ctn">
+	
+</div>
+
+
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/zepto.min.js"></script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/zepto.cookie.min.js"></script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/common.js"></script>
+
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/weui.min.js"></script>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/sammyjs/plugins/template.js"></script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/wx.js"></script>
+
+<script type="text/template" id="detail-temp">
+	{{if msgCode==200 && data && data.vo}}
+		<ul class="my_ques_list">
+			<li>
+				<div class="per_img">
+					{{if data.vo.avatar}}
+						<img src="{{data.vo.avatar}}" alt="">
+					{{else}}
+						<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png" alt="">
+					{{/if}}
+				</div>
+				<div class="info">
+					<div class="info01">
+						{{if data.vo.isSolve==1}}
+							<span class="status s_red">已解决</span>
+						{{else}}
+							<span class="status">未解决</span>
+						{{/if}}
+
+						<h3>{{data.vo.title}}</h3>
+						<time>{{data.vo.createDt}}</time>
+					</div>
+					<p class="des">{{data.vo.content}}</p>
+					{{if data.vo.imgUrls && data.vo.imgUrls.length>0}}
+						<div class="img_box">
+							{{each data.vo.imgUrls as pic j}}
+								<img src="{{pic | imgUrlFormat:[85,85]}}" data-large="{{pic}}" alt="" onclick="showLargeImg(this.getAttribute('data-large'))">
+							{{/each}}
+						</div>
+					{{/if}}
+
+					{{if data.vo.gjtFeedbackVoCount>0}}
+						<div class="info02">
+							<span class="huifu"><i class="icons"></i>{{data.vo.gjtFeedbackVoCount}}个回复</span>
+						</div>
+					{{/if}}
+				</div>
+			</li>
+
+			{{if data.vo.gjtFeedbackVoList && data.vo.gjtFeedbackVoList.length>0}}
+				<li>
+					<div class="per_img">
+						{{if data.vo.avatar}}
+							<img src="{{data.vo.gjtFeedbackVoList[0].teacherPhotoUrl | imgUrlFormat:[85,85]}}" alt="">
+						{{else}}
+							<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png" alt="">
+						{{/if}}
+					</div>
+					<div class="info">
+						<div class="info01">
+							<h3>{{data.vo.gjtFeedbackVoList[0].teacherName}}</h3>
+							<time>{{data.vo.gjtFeedbackVoList[0].createDt}}</time>
+						</div>
+
+						<p class="des">{{data.vo.gjtFeedbackVoList[0].content}}</p>
+
+						{{if data.vo.gjtFeedbackVoList[0].imgUrls && data.vo.gjtFeedbackVoList[0].imgUrls.length>0}}
+							<div class="img_box">
+								{{each data.vo.gjtFeedbackVoList[0].imgUrls as pic j}}
+									<img src="{{pic | imgUrlFormat:[85,85]}}" onclick="showLargeImg(this.getAttribute('data-large'))" data-large="{{pic}}" alt="">
+								{{/each}}
+							</div>
+						{{/if}}
+
+						<div class="zhuiwen">
+							{{each data.vo.gjtFeedbackVoList as faq index}}
+								{{if index>0}}
+									<div class="msg_box">
+										{{if faq.type=='reply'}}
+		                                	<span>回答：</span>
+		                              	{{else if faq.type='ask'}}
+		                                	<span>追问：</span>
+		                              	{{/if}}
+
+										<div class="msg_info">
+											<p>{{faq.content}}</p>
+											<ul class="img-list-box clearfix">
+												{{each faq.imgUrls as pic j}}
+													<li>
+														<img onclick="showLargeImg(this.getAttribute('data-large'))" data-large="{{pic}}" src="{{pic | imgUrlFormat:[60,50]}}" style="width:100%;height:60px;">
+													</li>
+												{{/each}}
+											</ul>
+										</div>
+										<div style="margin-top:5px;">
+											<time>{{faq.createDt}}</time>
+										</div>
+									</div>
+								{{/if}}
+							{{/each}}
+						</div>
+					</div>
+				</li>
+			{{/if}}
+		</ul>
+		{{if !data.vo.gjtFeedbackVoList || data.vo.gjtFeedbackVoList.length<=0}}
+			<div align="center" style="padding-top:2rem;font-size:.3rem;color: #666;">
+				<i class="weui-icon-info weui-icon_msg" style="font-size: .5rem;"></i>
+				请耐心等待老师回复！
+	        </div>
+		{{/if}}
+	{{else}}
+		<div class="bg-white">
+			<div class="weui-loadmore weui-loadmore_line">
+	            <span class="weui-loadmore__tips">{{message}}</span>
+	        </div>
+		</div>
+	{{/if}}
+</script>
+<script>
+$(function(){
+	var userid='2cdfadb5c357487e969ee17528b753b0';
+	var id=GetQueryStringFn('id');
+	var $container=$('.faq_ctn');
+	var loading = weui.loading('加载中...');
+	//确认解决
+	$('body').on('click','#yjjBtn',function(e){
+		e.preventDefault();
+        weui.confirm('<span style="font-size:0.35rem;">确认该问题已解决？</span>', 
+        	function(){
+        		var loading2 = weui.loading('提交中...')
+        		$.ajax({
+					url: '/wx/feedback/affirmSolve',
+					type: 'POST',
+					dataType: 'json',
+					data: {
+						id:id
+						//userId:userid
+					},
+					success: function(data){
+						if(data.msgCode==200){
+							location.reload();
+						}
+						else{
+							loading2.hide(function(){
+								weui.alert(data.message);
+							});
+						}
+					}
+				});
+        	}
+        );
+	});
+
+    $.ajax({
+		url: '/wx/feedback/askDetail',
+		type: 'GET',
+		dataType: 'json',
+		data: {
+			id:id
+		},
+		success: function(data){
+			$container.html(
+				template('detail-temp',data)
+			);
+
+			if(data.msgCode==200 && data.data && data.data.vo){
+				document.title=data.data.vo.title;
+
+				if(data.data.vo.isSolve==='0'){
+					var list=data.data.vo.gjtFeedbackVoList;
+					if(list && list.length>0){
+			    		
+			    		if(list[list.length-1].type=='reply'){
+			    			$('body').prepend('\
+								<div class="fix_btm_btn">\
+						    		<a href="question_create.html?oper=append&id='+id+'">未解决</a>\
+									<a href="javascript:;" id="yjjBtn">已解决</a>\
+								</div>\
+						    ');
+			    		}
+			    	}
+			    }
+			}
+
+			loading.hide();
+		}
+	});
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1022 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<#list infoList as stu>
+<w:document
+    xmlns:ve="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:o="urn:schemas-microsoft-com:office:office"
+    xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+    xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math"
+    xmlns:v="urn:schemas-microsoft-com:vml"
+    xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
+    xmlns:w10="urn:schemas-microsoft-com:office:word"
+    xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml">
+    <w:body>
+        <w:p w:rsidR="001429BB" w:rsidRPr="00E41DDC" w:rsidRDefault="00526D1A" w:rsidP="00D458A2">
+            <w:pPr>
+                <w:jc w:val="center"/>
+                <w:rPr>
+                    <w:rFonts w:ascii="华文细黑" w:eastAsia="华文细黑" w:hAnsi="华文细黑"/>
+                    <w:b/>
+                    <w:sz w:val="44"/>
+                    <w:szCs w:val="44"/>
+                </w:rPr>
+            </w:pPr>
+            <w:r w:rsidRPr="00E41DDC">
+                <w:rPr>
+                    <w:rFonts w:ascii="华文细黑" w:eastAsia="华文细黑" w:hAnsi="华文细黑"/>
+                    <w:b/>
+                    <w:bCs/>
+                    <w:sz w:val="36"/>
+                    <w:szCs w:val="36"/>
+                </w:rPr>
+                <w:t>${stu.admissionZkz}</w:t>
+            </w:r>
+        </w:p>
+        <w:tbl>
+            <w:tblPr>
+                <w:tblStyle w:val="a5"/>
+                <w:tblW w:w="0" w:type="auto"/>
+                <w:tblLayout w:type="fixed"/>
+                <w:tblLook w:val="04A0"/>
+            </w:tblPr>
+            <w:tblGrid>
+                <w:gridCol w:w="1101"/>
+                <w:gridCol w:w="1645"/>
+                <w:gridCol w:w="1331"/>
+                <w:gridCol w:w="1134"/>
+                <w:gridCol w:w="1276"/>
+                <w:gridCol w:w="1418"/>
+                <w:gridCol w:w="1657"/>
+                <w:gridCol w:w="1426"/>
+            </w:tblGrid>
+            <w:tr w:rsidR="007C1097" w:rsidRPr="00E41DDC" w:rsidTr="006327FA">
+                <w:trPr>
+                    <w:trHeight w:val="567"/>
+                </w:trPr>
+                <w:tc>
+                    <w:tcPr>
+                        <w:tcW w:w="2746" w:type="dxa"/>
+                        <w:gridSpan w:val="2"/>
+                        <w:vMerge w:val="restart"/>
+                        <w:vAlign w:val="center"/>
+                    </w:tcPr>
+                    <w:p w:rsidR="007C1097" w:rsidRPr="00D72261" w:rsidRDefault="00862383" w:rsidP="007C1097">
+                        <w:pPr>
+                            <w:jc w:val="center"/>
+                            <w:rPr>
+                                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                <w:sz w:val="24"/>
+                            </w:rPr>
+                        </w:pPr>
+                        <w:r>
+                            <w:rPr>
+                                <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                <w:noProof/>
+                                <w:sz w:val="24"/>
+                            </w:rPr>
+                            <w:drawing>
+                                <wp:inline distT="0" distB="0" distL="0" distR="0">
+                                    <wp:extent cx="1333500" cy="1609725"/>
+                                    <wp:effectExtent l="19050" t="0" r="0" b="0"/>
+                                    <wp:docPr id="1" name="图片 0" descr="boxed-bg.png"/>
+                                    <wp:cNvGraphicFramePr>
+                                        <a:graphicFrameLocks
+                                            xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" noChangeAspect="1"/>
+                                        </wp:cNvGraphicFramePr>
+                                        <a:graphic
+                                            xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+                                            <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">
+                                                <pic:pic
+                                                    xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">
+                                                    <pic:nvPicPr>
+                                                        <pic:cNvPr id="0" name="boxed-bg.png"/>
+                                                        <pic:cNvPicPr/>
+                                                    </pic:nvPicPr>
+                                                    <pic:blipFill>
+                                                        <a:blip r:embed="${stu.rId}" cstate="print"/>
+                                                        <a:stretch>
+                                                            <a:fillRect/>
+                                                        </a:stretch>
+                                                    </pic:blipFill>
+                                                    <pic:spPr>
+                                                        <a:xfrm>
+                                                            <a:off x="0" y="0"/>
+                                                            <a:ext cx="1330870" cy="1606550"/>
+                                                        </a:xfrm>
+                                                        <a:prstGeom prst="rect">
+                                                            <a:avLst/>
+                                                        </a:prstGeom>
+                                                    </pic:spPr>
+                                                </pic:pic>
+                                            </a:graphicData>
+                                        </a:graphic>
+                                    </wp:inline>
+                                </w:drawing>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1331" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="007C1097" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="007C1097">
+                            <w:pPr>
+                                <w:jc w:val="right"/>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>姓名：</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="6911" w:type="dxa"/>
+                            <w:gridSpan w:val="5"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="007C1097" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>${stu.admissionName}</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                </w:tr>
+                <w:tr w:rsidR="007C1097" w:rsidRPr="00E41DDC" w:rsidTr="006327FA">
+                    <w:trPr>
+                        <w:trHeight w:val="567"/>
+                    </w:trPr>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="2746" w:type="dxa"/>
+                            <w:gridSpan w:val="2"/>
+                            <w:vMerge/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="007C1097" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1331" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="007C1097" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="007C1097">
+                            <w:pPr>
+                                <w:jc w:val="right"/>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>学号：</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="6911" w:type="dxa"/>
+                            <w:gridSpan w:val="5"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="007C1097" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>${stu.stuNumber}</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                </w:tr>
+                <w:tr w:rsidR="007C1097" w:rsidRPr="00E41DDC" w:rsidTr="006327FA">
+                    <w:trPr>
+                        <w:trHeight w:val="567"/>
+                    </w:trPr>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="2746" w:type="dxa"/>
+                            <w:gridSpan w:val="2"/>
+                            <w:vMerge/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="007C1097" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1331" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="007C1097" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="007C1097">
+                            <w:pPr>
+                                <w:jc w:val="right"/>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>考点：</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="6911" w:type="dxa"/>
+                            <w:gridSpan w:val="5"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="007C1097" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>${stu.examPointName}</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                </w:tr>
+                <w:tr w:rsidR="007C1097" w:rsidRPr="00E41DDC" w:rsidTr="006327FA">
+                    <w:trPr>
+                        <w:trHeight w:val="567"/>
+                    </w:trPr>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="2746" w:type="dxa"/>
+                            <w:gridSpan w:val="2"/>
+                            <w:vMerge/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="007C1097" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1331" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="007C1097" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="007C1097">
+                            <w:pPr>
+                                <w:jc w:val="right"/>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>考点地址：</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="6911" w:type="dxa"/>
+                            <w:gridSpan w:val="5"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="007C1097" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>${stu.examAddress}</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                </w:tr>
+                <w:tr w:rsidR="007C1097" w:rsidRPr="00E41DDC" w:rsidTr="006327FA">
+                    <w:trPr>
+                        <w:trHeight w:val="567"/>
+                    </w:trPr>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1101" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="00D458A2" w:rsidRPr="00D72261" w:rsidRDefault="00E41DDC" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:b/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:b/>
+                                </w:rPr>
+                                <w:t>试卷号</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1645" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="00D458A2" w:rsidRPr="00D72261" w:rsidRDefault="00E41DDC" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:b/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:b/>
+                                </w:rPr>
+                                <w:t>考试科目</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1331" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="00D458A2" w:rsidRPr="00D72261" w:rsidRDefault="00E41DDC" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:b/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:b/>
+                                </w:rPr>
+                                <w:t>考试形式</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1134" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="00D458A2" w:rsidRPr="00D72261" w:rsidRDefault="00E41DDC" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:b/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:b/>
+                                </w:rPr>
+                                <w:t>考试方式</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1276" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="00D458A2" w:rsidRPr="00D72261" w:rsidRDefault="00E41DDC" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:b/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:b/>
+                                </w:rPr>
+                                <w:t>考试日期</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1418" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="00D458A2" w:rsidRPr="00D72261" w:rsidRDefault="00E41DDC" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:b/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:b/>
+                                </w:rPr>
+                                <w:t>考试时间</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1657" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="00D458A2" w:rsidRPr="00D72261" w:rsidRDefault="00E41DDC" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:b/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:b/>
+                                </w:rPr>
+                                <w:t>考场及座位号</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1426" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="00D458A2" w:rsidRPr="00D72261" w:rsidRDefault="00E41DDC" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:b/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:b/>
+                                </w:rPr>
+                                <w:t>连考科目</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                </w:tr>
+                <#list ADMISSION as admission>
+                <w:tr w:rsidR="007C1097" w:rsidRPr="00E41DDC" w:rsidTr="006327FA">
+                    <w:trPr>
+                        <w:trHeight w:val="567"/>
+                    </w:trPr>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1101" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="00D458A2" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                </w:rPr>
+                                <w:t>${admission.EXAM_NO}</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1645" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="00D458A2" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                </w:rPr>
+                                <w:t>${admission.COURSE_NAME}</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1331" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="00D458A2" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                </w:rPr>
+                                <w:t>${admission.EXAM_TYPE}</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1134" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="00D458A2" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                </w:rPr>
+                                <w:t>${admission.EXAM_STYLE}</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1276" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="00D458A2" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                </w:rPr>
+                                <w:t>${admission.EXAM_DATE}</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1418" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="00D458A2" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                </w:rPr>
+                                <w:t>${admission.EXAM_TIME}</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1657" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="00D458A2" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                </w:rPr>
+                                <w:t>${admission.SEAT_NO}</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="1426" w:type="dxa"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="00D458A2" w:rsidRPr="00D72261" w:rsidRDefault="007C1097" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                </w:rPr>
+                                <w:t>${admission.PLAN_COUNT}</w:t>
+                            </w:r>
+                        </w:p>
+                    </w:tc>
+                </w:tr>
+                </#list>
+                <w:tr w:rsidR="000E7785" w:rsidRPr="00D72261" w:rsidTr="006327FA">
+                    <w:trPr>
+                        <w:trHeight w:val="567"/>
+                    </w:trPr>
+                    <w:tc>
+                        <w:tcPr>
+                            <w:tcW w:w="10988" w:type="dxa"/>
+                            <w:gridSpan w:val="8"/>
+                            <w:vAlign w:val="center"/>
+                        </w:tcPr>
+                        <w:p w:rsidR="000E7785" w:rsidRPr="00D72261" w:rsidRDefault="000E7785" w:rsidP="00252866">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                        </w:p>
+                        <w:p w:rsidR="00D72261" w:rsidRPr="00D72261" w:rsidRDefault="00D72261" w:rsidP="00D72261">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:color w:val="FF0000"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:color w:val="FF0000"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>考试开始30分钟后，考生不得进入考场</w:t>
+                            </w:r>
+                        </w:p>
+                        <w:p w:rsidR="00D72261" w:rsidRPr="00D72261" w:rsidRDefault="00D72261" w:rsidP="00D72261">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:color w:val="FF0000"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:color w:val="FF0000"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>考生必须带齐身份证、准考证、学生证参加考试,否则不得进入考场</w:t>
+                            </w:r>
+                        </w:p>
+                        <#if stu.type == "8">
+                        <w:p w:rsidR="00D72261" w:rsidRPr="00D72261" w:rsidRDefault="00D72261" w:rsidP="00D72261">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>注：</w:t>
+                            </w:r>
+                        </w:p>
+                        <w:p w:rsidR="00D72261" w:rsidRPr="006327FA" w:rsidRDefault="00D72261" w:rsidP="006327FA">
+                            <w:pPr>
+                                <w:pStyle w:val="a6"/>
+                                <w:numPr>
+                                    <w:ilvl w:val="0"/>
+                                    <w:numId w:val="3"/>
+                                </w:numPr>
+                                <w:ind w:leftChars="100" w:left="630" w:firstLineChars="0"/>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="006327FA">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>新生的学生证在第一场考试前发放，请新生提前半小时联系该考点负责考务工作的教师领取学生证。</w:t>
+                            </w:r>
+                        </w:p>
+                        <w:p w:rsidR="00D72261" w:rsidRPr="006327FA" w:rsidRDefault="00D72261" w:rsidP="006327FA">
+                            <w:pPr>
+                                <w:pStyle w:val="a6"/>
+                                <w:numPr>
+                                    <w:ilvl w:val="0"/>
+                                    <w:numId w:val="3"/>
+                                </w:numPr>
+                                <w:ind w:leftChars="100" w:left="630" w:firstLineChars="0"/>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="006327FA">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>请同一时间段考两科或两科以上的学员，考完每一科交卷的时候，要举手告诉监考教师自己是连考学员，监考教师会安排你下一科场考试。</w:t>
+                            </w:r>
+                        </w:p>
+                        <w:p w:rsidR="00D72261" w:rsidRPr="00D72261" w:rsidRDefault="00D72261" w:rsidP="00D72261">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                        </w:p>
+                        <w:p w:rsidR="00D72261" w:rsidRPr="00D72261" w:rsidRDefault="00D72261" w:rsidP="00D72261">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>关于连考说明如下：</w:t>
+                            </w:r>
+                        </w:p>
+                        <w:p w:rsidR="00D72261" w:rsidRPr="006327FA" w:rsidRDefault="00D72261" w:rsidP="006327FA">
+                            <w:pPr>
+                                <w:pStyle w:val="a6"/>
+                                <w:numPr>
+                                    <w:ilvl w:val="0"/>
+                                    <w:numId w:val="5"/>
+                                </w:numPr>
+                                <w:ind w:leftChars="100" w:left="630" w:firstLineChars="0"/>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="006327FA">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>连考就是指同一日期同一时间段考两科或两科以上。</w:t>
+                            </w:r>
+                        </w:p>
+                        <w:p w:rsidR="00D72261" w:rsidRPr="006327FA" w:rsidRDefault="00D72261" w:rsidP="006327FA">
+                            <w:pPr>
+                                <w:pStyle w:val="a6"/>
+                                <w:numPr>
+                                    <w:ilvl w:val="0"/>
+                                    <w:numId w:val="5"/>
+                                </w:numPr>
+                                <w:ind w:leftChars="100" w:left="630" w:firstLineChars="0"/>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="006327FA">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>查看准考证，仔细查看自己是否有连考科目。</w:t>
+                            </w:r>
+                        </w:p>
+                        <w:p w:rsidR="00D72261" w:rsidRPr="006327FA" w:rsidRDefault="00D72261" w:rsidP="006327FA">
+                            <w:pPr>
+                                <w:pStyle w:val="a6"/>
+                                <w:numPr>
+                                    <w:ilvl w:val="0"/>
+                                    <w:numId w:val="5"/>
+                                </w:numPr>
+                                <w:ind w:leftChars="100" w:left="630" w:firstLineChars="0"/>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="006327FA">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>准考证没有明确标明先考具体连考科目，一般是先考卷号小的科目，请去对应的考室考试。</w:t>
+                            </w:r>
+                        </w:p>
+                        <w:p w:rsidR="00D72261" w:rsidRPr="006327FA" w:rsidRDefault="00D72261" w:rsidP="006327FA">
+                            <w:pPr>
+                                <w:pStyle w:val="a6"/>
+                                <w:numPr>
+                                    <w:ilvl w:val="0"/>
+                                    <w:numId w:val="5"/>
+                                </w:numPr>
+                                <w:ind w:leftChars="100" w:left="630" w:firstLineChars="0"/>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="006327FA">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>连考科目的同学，请告知监考教师，自己有连考科目，交卷时举手告诉监考教师自己须连考的，并告知科目名称。交卷时，请谨记不可走出教室，等待监考教师安排。</w:t>
+                            </w:r>
+                        </w:p>
+                        <w:p w:rsidR="00D72261" w:rsidRPr="00D72261" w:rsidRDefault="00D72261" w:rsidP="00D72261">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                        </w:p>
+                        </#if>
+                        <#if stu.type == "11">
+                        <w:p w:rsidR="00D72261" w:rsidRPr="00D72261" w:rsidRDefault="00D72261" w:rsidP="00D72261">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="00D72261">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>注意事项：</w:t>
+                            </w:r>
+                        </w:p>
+                        <w:p w:rsidR="00D72261" w:rsidRPr="006327FA" w:rsidRDefault="00D72261" w:rsidP="006327FA">
+                            <w:pPr>
+                                <w:pStyle w:val="a6"/>
+                                <w:numPr>
+                                    <w:ilvl w:val="0"/>
+                                    <w:numId w:val="7"/>
+                                </w:numPr>
+                                <w:ind w:leftChars="100" w:left="630" w:firstLineChars="0"/>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="006327FA">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>提前15分钟到达考场，考试开始30分钟后，考生不得进入考场。</w:t>
+                            </w:r>
+                        </w:p>
+                        <w:p w:rsidR="00D72261" w:rsidRPr="006327FA" w:rsidRDefault="00D72261" w:rsidP="006327FA">
+                            <w:pPr>
+                                <w:pStyle w:val="a6"/>
+                                <w:numPr>
+                                    <w:ilvl w:val="0"/>
+                                    <w:numId w:val="7"/>
+                                </w:numPr>
+                                <w:ind w:leftChars="100" w:left="630" w:firstLineChars="0"/>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="006327FA">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>带齐三证，即学生证、准考证和有效身份证件（居民身份证、护照、军官证）参加考试。</w:t>
+                            </w:r>
+                        </w:p>
+                        <w:p w:rsidR="00D72261" w:rsidRPr="006327FA" w:rsidRDefault="00D72261" w:rsidP="006327FA">
+                            <w:pPr>
+                                <w:pStyle w:val="a6"/>
+                                <w:numPr>
+                                    <w:ilvl w:val="0"/>
+                                    <w:numId w:val="7"/>
+                                </w:numPr>
+                                <w:ind w:leftChars="100" w:left="630" w:firstLineChars="0"/>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                            <w:r w:rsidRPr="006327FA">
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋" w:hint="eastAsia"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                                <w:t>考试期间禁止使用手机等通讯工具。</w:t>
+                            </w:r>
+                        </w:p>
+                        <w:p w:rsidR="00D72261" w:rsidRPr="00D72261" w:rsidRDefault="00D72261" w:rsidP="00D72261">
+                            <w:pPr>
+                                <w:rPr>
+                                    <w:rFonts w:ascii="仿宋" w:eastAsia="仿宋" w:hAnsi="仿宋"/>
+                                    <w:sz w:val="24"/>
+                                </w:rPr>
+                            </w:pPr>
+                        </w:p>
+                        </#if>
+                    </w:tc>
+                </w:tr>
+            </w:tbl>
+            <w:p w:rsidR="00D458A2" w:rsidRPr="00E41DDC" w:rsidRDefault="00D458A2">
+                <w:pPr>
+                    <w:rPr>
+                        <w:rFonts w:ascii="华文细黑" w:eastAsia="华文细黑" w:hAnsi="华文细黑"/>
+                    </w:rPr>
+                </w:pPr>
+            </w:p>
+            <w:sectPr w:rsidR="00D458A2" w:rsidRPr="00E41DDC" w:rsidSect="00213A42">
+                <w:pgSz w:w="11906" w:h="16838"/>
+                <w:pgMar w:top="567" w:right="567" w:bottom="567" w:left="567" w:header="851" w:footer="992" w:gutter="0"/>
+                <w:cols w:space="425"/>
+                <w:docGrid w:type="lines" w:linePitch="312"/>
+            </w:sectPr>
+        </w:body>
+    </w:document>
+</#list>

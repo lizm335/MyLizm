@@ -1,0 +1,101 @@
+/*学籍资料的上传按钮样式*/
+.cert-wrap .cert-box {
+  background: #f5f5f5 !important;
+}
+.cert-wrap .cert-box .light-box {
+  display: none;
+}
+.cert-wrap .cert-box .info-img-box {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  cursor: default;
+  text-decoration: none;
+}
+.cert-wrap .cert-box .info-img-box .info-img {
+  width: 100%;
+  height: 100%;
+}
+.cert-wrap .cert-box .img-val {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+.cert-wrap .cert-box .upload-btn {
+  bottom: 0;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  margin-left: 0;
+  background: none;
+  cursor: default;
+  border: 0 none;
+  padding: 0;
+}
+.cert-wrap .cert-box .upload-btn i {
+  background-color: #000;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  position: absolute;
+  opacity: .4;
+  filter: alpha(opacity=40);
+  display: none;
+}
+.cert-wrap .cert-box .upload-btn span {
+  width: 70px;
+  height: 27px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -40px 0 0 -35px;
+  background: url(images/u-upload-icon.png) no-repeat 10px 0px;
+  cursor: pointer;
+  color: #999999;
+  font-size: 16px;
+  padding-top: 53px;
+  text-decoration: none;
+}
+.cert-wrap .cert-box.has-upload .info-img-box:hover .upload-btn {
+  display: block;
+}
+.cert-wrap .cert-box.has-upload .info-img-box:hover .upload-btn i {
+  display: block;
+}
+.cert-wrap .cert-box.has-upload .upload-btn {
+  display: none;
+}
+.cert-wrap .cert-box.has-upload .upload-btn span {
+  background-image: url(images/u-upload-icon-2.png);
+  color: #fff;
+}
+.cert-wrap .cert-box.has-upload .light-box,
+.p-win-cert .light-box {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 38px;
+  line-height: 46px;
+  overflow: hidden;
+  left: 0;
+  bottom: 0;
+  background: url(images/u-upload-bg.png) repeat-x top;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+}
+.p-win-cert {
+  display: inline-block;
+  position: relative;
+  display: inline !ie;
+  zoom: 1 !ie;
+  border: 1px solid #e0e0e0;
+  box-sizing: border-box;
+  border-radius: 5px;
+  overflow: hidden;
+}

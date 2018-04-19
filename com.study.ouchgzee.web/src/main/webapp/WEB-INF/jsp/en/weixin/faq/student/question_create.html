@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0" />
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<meta content="telephone=no" name="format-detection">
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/reset.css"/>
+	<link rel="stylesheet" type="text/css" href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/base.css"/>
+	<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/conversion.750.js"></script>
+
+	<link rel=stylesheet href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/weui.min.css">
+	<link rel=stylesheet href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/wx.css">
+	
+
+</head>
+<body class="gray_body">
+
+<div class="question_mdl">
+	
+</div>
+
+
+
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/zepto.min.js"></script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/zepto.cookie.min.js"></script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/common.js"></script>
+
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/weui.min.js"></script>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/sammyjs/plugins/template.js"></script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/wx.js"></script>
+
+<script type="text/template" id="temp">
+<form data-id="form">
+	{{if oper=='add'}}
+		<div class="quse_tit">
+			<input type="text" placeholder="问题标题" name="title" data-check="1" data-rule=".+" data-msg-empty="请填写问题标题" data-msg-error="请填写请问题标题" style="width:100%;height:100%;">
+		</div>
+	{{/if}}
+
+	{{if id}}
+		<input type="hidden" name="pid" value="{{id}}">
+	{{/if}}
+
+	<div class="ques_ctn">
+		<textarea class="textarea_box" placeholder="请点击这里输入您的要咨询的内容！" name="content" data-check="1" data-rule=".+" data-msg-empty="请填写咨询的内容" data-msg-error="请填写咨询的内容"></textarea>
+		 <div class="weui-cells weui-cells_form" id="uploader">
+		     <div class="weui-cell">
+		         <div class="weui-cell__bd">
+		             <div class="weui-uploader">
+		                 <div class="weui-uploader__bd">
+		                     <ul class="weui-uploader__files" id="uploaderFiles"></ul>
+		                     <div class="weui-uploader__input-box">
+		                         <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" capture="camera" multiple="" />
+		                     </div>
+		                 </div>
+		             </div>
+		         </div>
+		     </div>
+		 </div>
+	</div>
+	
+	<div style="padding:.8rem .3rem .5rem;"><a href="javascript:;" class="white_btn" onclick="submitPost()">提交</a></div>
+</form>
+</script>
+
+<!--图片提交模板-->
+<script type="text/html" id="h-tmp">
+  <html>
+  <head>
+  </head>
+  <body>
+  <form id="submitForm" name="submitForm" method="post" enctype="multipart/form-data" action="http://eefile.gzedu.com/ossupload/uploadInterface.do">
+    <input type="file" name="files" id="file" accept="image/*" multiple>    
+    <input type="hidden" name="formMap.FILE_TYPE" value="files">
+    <input type="hidden" name="formMap.origin" value="{{basePath}}/wx/weixin/faq/uploadIframe.html">
+    <input type="hidden" name="formMap.filecwd" value="/APP038/xj/image">
+    <input type="hidden" name="formMap.ACCESS_KEY_ID" value="b49ca70bac1082b01318bd3cecf317e4">
+    <input type="hidden" name="formMap.ACCESS_KEY_SECRET" value="17b16aedf2f46e32ccfbd6049090925f">
+  </form>
+  </body>
+  </html>
+</script>
+<script>
+var userid='2cdfadb5c357487e969ee17528b753b0';
+var oper=GetQueryStringFn('oper');
+var id=GetQueryStringFn('id');
+
+$('.question_mdl').html(
+	template('temp',{
+		id:id,
+		oper:oper
+	})
+);
+
+if(oper=='add'){
+	document.title="提问";
+}
+else{
+	document.title="追问";
+}
+
+//提交表单
+function submitPost() {
+
+	var $form=$('[data-id="form"]');
+	
+	if( !checkform( $form ) ) return;
+
+	var loading = weui.loading('提交中...');
+
+	if(oper=='add'){
+		$.ajax({
+			url: '/wx/feedback/add',
+			type: 'POST',
+			dataType: 'json',
+			data: $form.serialize(),//$form.serialize()+'&userId='+userid
+			success: function(data){
+				if(data.msgCode==200){
+					weui.alert('提问成功，老师将尽快为你解决该问题',function(){
+						location.href='faq_list.html?orgCode='+sessionStorage.getItem('orgCode')+'&tid=1';
+					});
+				}
+				else{
+					weui.alert(data.message,function(){
+						location.href='faq_list.html?orgCode='+sessionStorage.getItem('orgCode')+'&tid=1';
+					});
+				}
+			},
+			complete:function(){
+				loading.hide();
+			}
+		});
+	}
+	else{
+		$.ajax({
+			url: '/wx/feedback/askAgain',
+			type: 'POST',
+			dataType: 'json',
+			data: $form.serialize(),//$form.serialize()+'&userId='+userid
+			success: function(data){
+				if(data.msgCode==200){
+					weui.alert('追问成功，老师将尽快为你解答',function(){
+						location.href='question_details.html?id='+id;
+					});
+				}
+				else{
+					weui.alert(data.message,function(){
+						location.href='question_details.html?id='+id;
+					});
+				}
+			},
+			complete:function(){
+				loading.hide();
+			}
+		});
+	}
+}
+
+
+;(function(){
+	var count=0;
+
+	var $uploaderFiles = $("#uploaderFiles");
+
+	$uploaderFiles.on('click', '.weui-uploader__file', function(e) {
+		var _this=this;
+		var url = _this.getAttribute('style') || '';
+
+	    if (url) {
+	        url = url.match(/url\((.*?)\)/)[1].replace(/"/g, '');
+	    }
+	    var gallery = weui.gallery(url, {
+	        onDelete: function onDelete() {
+	            weui.confirm('确定删除该图片？', function () {
+	                $(_this).remove();
+	                gallery.hide();
+	            });
+	        }
+	    });
+	});
+
+    $("#uploaderInput").on("click", function(e){
+    	e.preventDefault();
+        createUploadIframe();
+        $('#ifr').contents().find("#file").trigger('click');
+    });
+    //图片回调处理方法（跨域上传图片时，图片上传后需要调用的方法）
+    window.imgCallback=function(ajaxFilelist){
+    	if(ajaxFilelist && ajaxFilelist.resultList && ajaxFilelist.resultList.length>0){
+          $.each(ajaxFilelist.resultList, function(index, node) {
+            var $item=$( '.weui-uploader__file[data-upload-id="'+count+'_'+index+'"]' );
+            $item.removeClass('weui-uploader__file_status').html( '<input type="hidden" name="imgUrls" value="#url#">'.replace(/#url#/g, node.FILE_PATH) )
+          });
+        }
+    }
+
+    window.createUploadIframe=function (){
+		  var ifrm=$('#ifr');
+		  if(ifrm){
+		    ifrm.remove();
+		  }
+		  $('body').append('<iframe id="ifr" name="ifr" src="about:blank" style="display:none;"></iframe>');
+		  ifrm=document.getElementById('ifr');
+		  var doc=ifrm.contentWindow.document;
+
+		  doc.open();
+		  doc.write(template('h-tmp',{basePath:location.protocol+'//'+location.host}));
+		  doc.close();
+
+		  //显示图片
+		  $(ifrm.contentWindow.document).find('#file').on('change', function(e) {
+		    e.preventDefault();
+
+		    var tmpl = '<li class="weui-uploader__file weui-uploader__file_status" style="background-image:url(#url#)"  data-upload-id="#id#"><div class="weui-uploader__file-content"> <i class="weui-loading" style="width:30px;height:30px"></i> </div></li>';
+
+		    var src, url = window.URL || window.webkitURL || window.mozURL, files = e.target.files;
+
+
+		    if (files.length > 5) { // 防止一下子选择过多文件
+		       weui.alert('最多只能上传5张图片，请重新选择');
+		       return;
+		   	}
+
+		    for (var i = 0, len = files.length; i < len; ++i) {
+		        var file = files[i];
+
+		        if (url) {
+		            src = url.createObjectURL(file);
+		        } else {
+		            src = e.target.result;
+		        }
+
+		        $uploaderFiles.append(tmpl.replace('#url#', src).replace('#id#', count+'_'+i));
+		    }
+
+		    var ifrm=document.getElementById('ifr');
+		    var doc=ifrm.contentWindow.document;
+		    
+		    doc.forms.submitForm.submit();
+		  });
+	}
+})();
+</script>
+</body>
+</html>

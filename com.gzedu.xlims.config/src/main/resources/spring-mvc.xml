@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/mvc  
+    http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+    http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<!-- 扫描控制器类 -->
+	<context:component-scan base-package="com.gzedu.xlims.web.aop,com.gzedu.xlims.web.controller,com.gzedu.xlims.webservice.controller">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Component"/>
+		<context:include-filter type="annotation" expression="org.aspectj.lang.annotation.Aspect"/>
+	</context:component-scan>
+
+	<!--配置拦截器, 多个拦截器,顺序执行 -->  
+	<mvc:interceptors>
+	    <mvc:interceptor>    
+	        <mvc:mapping path="/organization/org/**"/>  
+	        <bean class="com.gzedu.xlims.constants.AdminInterceptor"></bean>    
+	    </mvc:interceptor>
+	</mvc:interceptors>
+
+	<!--避免IE执行AJAX时，返回JSON出现下载文件 -->
+	<bean id="mappingJackson2HttpMessageConverter"
+		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>text/html;charset=UTF-8</value>
+				<value>text/json;charset=UTF-8</value>
+				<value>application/json;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+	<!-- 采用SpringMVC自带的JSON转换工具，支持@ResponseBody注解 -->
+	<bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="mappingJackson2HttpMessageConverter" />    <!-- JSON转换器 -->
+			</list>
+		</property>
+	</bean>
+	<!-- jsp视图解析器 -->
+	<bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+		<property name="order" value="1" />
+	</bean>
+	
+	<!-- 配置静态资源 -->
+	<mvc:resources location="/static/" mapping="/static/**" />
+	
+	
+	<!-- 采用注解方式配置MVC -->
+	<mvc:annotation-driven  content-negotiation-manager="contentNegotiationManager">
+		<mvc:argument-resolvers>
+			<bean class="org.springframework.data.web.PageableHandlerMethodArgumentResolver" />
+		</mvc:argument-resolvers>
+	</mvc:annotation-driven>
+	
+	<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+	    <property name="favorPathExtension" value="true" />
+	    <property name="favorParameter" value="true" />
+	    <property name="defaultContentType" value="text/html"/>
+	    <property name="mediaTypes" >
+	        <value>
+	            json=application/json
+	            xml=application/xml
+	        </value>
+	    </property>
+	</bean>
+	<!-- 配置文件上传，如果没有使用文件上传可以不用配置，当然如果不配，那么配置文件中也不必引入上传组件包 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 默认编码 -->
+		<property name="defaultEncoding" value="utf-8" />
+		<!-- 文件大小最大值 -->
+		<property name="maxUploadSize" value="10485760000" />
+		<!-- 内存中的最大值 -->
+		<property name="maxInMemorySize" value="40960" />
+	</bean>
+	
+	<aop:config proxy-target-class="true"></aop:config>
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">  
+	    <property name="securityManager" ref="securityManager"/>  
+	</bean>  
+	
+	<!-- 全局异常配置 start -->     
+	<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">     
+	    <property name="exceptionMappings">     
+	        <props>     
+	            <prop key="java.lang.Exception">error</prop>     
+	            <prop key="java.lang.Throwable">error</prop>      
+	            <prop key="org.apache.shiro.authz.UnauthorizedException">unauthorized</prop>     
+	        </props>     
+	    </property>     
+	    <!-- <property name="statusCodes">     
+	        <props>     
+	            <prop key="errors/error">500</prop>     
+	            <prop key="errors/404">404</prop>     
+	        </props>     
+	    </property> -->     
+	    <!-- 设置日志输出级别，不定义则默认不输出警告等错误日志信息 -->     
+	    <property name="warnLogCategory" value="WARN"></property>     
+	    <!-- 默认错误页面，当找不到上面mappings中指定的异常对应视图时，使用本默认配置 -->     
+	    <property name="defaultErrorView" value="error"></property>     
+	    <!-- 默认HTTP状态码 -->     
+	    <property name="defaultStatusCode" value="500"></property>     
+	</bean>     
+     <!-- 全局异常配置 end -->
+	
+</beans>

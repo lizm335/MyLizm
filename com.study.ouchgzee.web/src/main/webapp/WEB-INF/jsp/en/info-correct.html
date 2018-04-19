@@ -1,0 +1,1300 @@
+<div class="padding10" data-id="info-correct-box">
+  <table width="100%" height="200" class="text-center">
+    <tr>
+      <td valign="middle">
+        
+        <p>
+          <i class="loading"></i>
+          </p>
+          <p class="font22 gray margin_t10">数据加载中...</p>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<!--全局模板-->
+<script type="text/template" id="change-global-temp">
+  {{if author==1}}
+    <ul class="tabs" data-id="chg-tab">
+        <li data-id="tab"><a href="#" class="current"><span class="f14">学生性别、民族的变更</span></a></li>
+        <li data-id="tab"><a href="#"><span class="f14">学生入学文化程度变更</span></a></li>
+        <li data-id="tab"><a href="#"><span class="f14">在籍期间发生的姓名变更</span></a></li>
+        <li data-id="tab"><a href="#"><span class="f14">在籍期间发生的身份证号变更</span></a></li>
+    </ul>
+    <div class="tabs_content">
+        <div class="padding_1l5 padding_r15 padding_t25 padding_b15" data-id="tab-box">
+
+            <div style="height:300px;"></div>
+
+        </div>
+    </div>
+    <div class="overlay"></div>
+  {{else}}
+    <div class="margin_t25">
+      <table style="margin:0 auto;">
+        <tr>
+          <td valign="top" class="padding_r10"><i class="alert-icon alert-icon-0x0"></i></td>
+          <td>
+            <div class="font32 text-orange line-height-1">
+              暂无法申请信息更正！
+            </div>
+            <div style="line-height:1.4" class="font_gray_per60 margin_t10">
+              首个学期不允许申请信息更正，请在下学期再次进行申请！
+            </div>
+          </td>
+        </tr>
+      </table>
+      <div class="margin-t30 text-center">
+        <button type="button" class="btn btn-lg btn-white margin_r10 f14" style="width:150px;" onclick="history.back();">返回</button>
+        <button type="button" class="btn btn-lg f14 btn-orange" data-role="ee-contact" style="width:150px;">我有疑问</button>
+      </div>
+    </div>
+  {{/if}}
+</script>
+
+<!--不同类型内容变更 模板-->
+<script type="text/template" id="gender-change-temp">
+  {{if baseInfo.msgCode==200 && baseInfo.data && baseInfo.data.info && otherInfo.msgCode==200 && otherInfo.data && otherInfo.data.isApplyFor==1}}
+    <div class="padding_b20 text-center border-bottom margin_b25 margin_t15">
+      {{if otherInfo.data.transactionStatus===0 || otherInfo.data.transactionStatus==16}}
+          <i class="alert-icon alert-icon-0x0"></i>
+          <span class="margin_l10 font24 text-orange inline-block vertical-middle">已提交信息更正申请，请等待审核</span> 
+      {{else if otherInfo.data.transactionStatus==3}}
+          <i class="alert-icon alert-icon-0x0"></i>
+          <span class="margin_l10 font24 text-orange inline-block vertical-middle">已提交信息更正申请，待访谈</span>
+      {{else if otherInfo.data.transactionStatus==2}}
+          <i class="alert-icon alert-icon-150x63"></i>
+          <span class="margin_l10 font24 text-red inline-block vertical-middle">信息更正申请审核不通过</span>
+      {{else if otherInfo.data.transactionStatus==1}}
+          <i class="alert-icon alert-icon-56x0"></i>
+          <span class="margin_l10 font24 text-green inline-block vertical-middle">信息更正申请审核通过</span>
+      {{/if}}
+    </div>
+  {{/if}}
+
+  {{include 'person-info-temp' baseInfo}}
+
+  {{if baseInfo.msgCode==200 && baseInfo.data && baseInfo.data.info}}
+
+    {{if otherInfo.msgCode==200 && otherInfo.data}}
+      <!--未提交申请 {{otherInfo.data.isApplyFor}}-->
+      {{if otherInfo.data.isApplyFor==null || otherInfo.data.isApplyFor==0}}
+        <form class="theform">
+          <div class="margin-t30">
+            <div class="text-no-bold sub-title f16 margin_b10">信息更正</div>
+            <input type="hidden" name="studentMsgMoveType" value="{{studentMsgMoveType}}">
+            
+            <!--studentMsgMoveType:0 学生性别、民族的变更-->
+            {{if studentMsgMoveType==0}}
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td width="45%">
+                      <table class="table-gray-th">
+                          <thead>
+                            <tr>
+                              <th>登记信息</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                <td>性别：{{baseInfo.data.info.xbmName}}</td>
+                              </tr>
+                              <tr>
+                                <td>民族：{{baseInfo.data.info.mzm | DictionaryConvert:baseInfo.data.dicNationList}}</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                    </td>
+                    <td width="10%" class="text-nowrap padding20 font24 text-bold font_gray text-center">
+                      --&gt;
+                    </td>
+                    <td width="45%">
+                      <table class="table-gray-th">
+                          <thead>
+                            <tr>
+                              <th>更正信息</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                <td>
+                                  <table width="100%">
+                                    <tr>
+                                      <td width="55" class="nopadding" style="border:0 none;">性别：</td>
+                                      <td class="nopadding" style="border:0 none;">
+                                        <div class="valid-control">
+                                          <select class="form-control form-control-block" datatype="*" nullmsg="请选择性别" name="xbm">
+                                            {{if otherInfo.data.newStudentInfo}}
+                                              <option value="">请选择性别</option>
+                                              <option {{otherInfo.data.newStudentInfo.xbm==1?'selected':''}} value="1">男</option>
+                                              <option {{otherInfo.data.newStudentInfo.xbm==2?'selected':''}} value="2">女</option>
+                                              <option {{otherInfo.data.newStudentInfo.xbm==0?'selected':''}} value="0">未知</option>
+                                            {{else}}
+                                              <option value="">请选择性别</option>
+                                              <option value="1">男</option>
+                                              <option value="2">女</option>
+                                              <option value="0">未知</option>
+                                            {{/if}}
+                                          </select>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <table width="100%">
+                                    <tr>
+                                      <td width="55" class="nopadding" style="border:0 none;">民族：</td>
+                                      <td class="nopadding" style="border:0 none;">
+                                        <div class="valid-control">
+                                          <select class="form-control form-control-block" datatype="*" nullmsg="请选择民族" name="mzm">
+                                            <option value="">请选择民族</option>
+                                            {{if baseInfo.data.dicNationList && baseInfo.data.dicNationList.length>0}}
+                                              {{each baseInfo.data.dicNationList}}
+                                                  <option {{otherInfo.data.newStudentInfo && otherInfo.data.newStudentInfo.mzm==$value.code?'selected':''}} value="{{$value.code}}">{{$value.name}}</option>
+                                              {{/each}}
+                                            {{/if}}
+                                          </select>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>                   
+                          </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+            <!--studentMsgMoveType:1 学生入学文化程度变更-->
+            {{else if studentMsgMoveType==1}}
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td width="45%">
+                      <table class="table-gray-th">
+                          <thead>
+                            <tr>
+                              <th>登记信息</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                <td>原学历层次：{{baseInfo.data.info.exedulevel}}</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                    </td>
+                    <td width="10%" class="text-nowrap padding20 font24 text-bold font_gray text-center">
+                      --&gt;
+                    </td>
+                    <td width="45%">
+                      <table class="table-gray-th">
+                          <thead>
+                            <tr>
+                              <th>更正信息</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                <td>
+                                  <table width="100%">
+                                    <tr>
+                                      <td width="90" class="nopadding" style="border:0 none;">原学历层次：</td>
+                                      <td class="nopadding" style="border:0 none;">
+                                        <div class="valid-control">
+                                          <select class="form-control form-control-block" datatype="*" nullmsg="请选择原学历层次" name="exedulevel">
+                                            <option value="">请选择原学历层次</option>
+                                            {{if baseInfo.data.dicExedulevelList && baseInfo.data.dicExedulevelList.length>0}}
+                                              {{each baseInfo.data.dicExedulevelList}}
+                                                {{if otherInfo.data.newStudentInfo && otherInfo.data.newStudentInfo.exedulevel}}
+                                                  <option value="{{$value.code}}" {{otherInfo.data.newStudentInfo.exedulevel==$value.code?'selected':''}}>{{$value.name}}</option>
+                                                {{else}}
+                                                    <option value="{{$value.code}}">{{$value.name}}</option>
+                                                {{/if}}
+                                              {{/each}}
+                                            {{/if}}
+                                          </select>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>                   
+                          </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            
+            <!--studentMsgMoveType:2 在籍期间发生的姓名变更-->
+            {{else if studentMsgMoveType==2}}
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td width="45%">
+                      <table class="table-gray-th">
+                          <thead>
+                            <tr>
+                              <th>登记信息</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                <td>姓名：{{baseInfo.data.info.xm}}</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                    </td>
+                    <td width="10%" class="text-nowrap padding20 font24 text-bold font_gray text-center">
+                      --&gt;
+                    </td>
+                    <td width="45%">
+                      <table class="table-gray-th">
+                          <thead>
+                            <tr>
+                              <th>更正信息</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                <td>
+                                  <table width="100%">
+                                    <tr>
+                                      <td width="55" class="nopadding" style="border:0 none;">姓名：</td>
+                                      <td class="nopadding" style="border:0 none;">
+                                        <div class="valid-control">
+                                          <input class="form-control form-control-block" type="text" placeholder="请填写姓名" datatype="*" nullmsg="请填写姓名" errormsg="请填写姓名" name="xm" value="{{(otherInfo.data.newStudentInfo && otherInfo.data.newStudentInfo.xm)?otherInfo.data.newStudentInfo.xm:''}}">
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>                   
+                          </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            
+            <!--studentMsgMoveType:3 在籍期间发生的身份证号变更-->
+            {{else if studentMsgMoveType==3}}
+              <table width="100%">
+                <tbody>
+                  <tr>
+                    <td width="45%">
+                      <table class="table-gray-th">
+                          <thead>
+                            <tr>
+                              <th>登记信息</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                <td>身份证号：{{baseInfo.data.info.sfzh}}</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                    </td>
+                    <td width="10%" class="text-nowrap padding20 font24 text-bold font_gray text-center">
+                      --&gt;
+                    </td>
+                    <td width="45%">
+                      <table class="table-gray-th">
+                          <thead>
+                            <tr>
+                              <th>更正信息</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                <td>
+                                  <table width="100%">
+                                    <tr>
+                                      <td width="80" class="nopadding" style="border:0 none;">身份证号：</td>
+                                      <td class="nopadding" style="border:0 none;">
+                                        <div class="valid-control">
+                                          <input class="form-control form-control-block" type="text" placeholder="请填写您的身份证号" datatype="/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/" nullmsg="请填写您的身份证号" errormsg="身份证号输入不合法" name="sfzh" value="{{(otherInfo.data.newStudentInfo && otherInfo.data.newStudentInfo.sfzh)?otherInfo.data.newStudentInfo.sfzh:''}}">
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>                   
+                          </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            {{/if}}
+          </div>
+
+          <!--上传证明-->
+          {{if studentMsgMoveType!=1}}
+            {{include 'prove-correct-temp' otherInfo.data.newStudentInfo}}
+          {{else}}
+            <div class="margin-t30">
+              <div class="text-no-bold sub-title f16 margin_b10">更正证明</div>
+              <div class="section-body border-e0e0e0 padding_t15 padding_b20">
+                
+                <div class="clearfix">
+                    <div class="col-6">
+                      <div class="cert-wrap">
+                        <h4 class="cert-title">学历认证报告/毕业证书</h4>
+                        <div class="valid-control">
+
+                          <div class="cert-box cert-box-4 {{(otherInfo.data.newStudentInfo && otherInfo.data.newStudentInfo.byzz)?'has-upload':''}}">
+                            <a href="javascript:void(0);" class="info-img-box">
+                              {{if otherInfo.data.newStudentInfo && otherInfo.data.newStudentInfo.byzz}}
+                                <img src="{{otherInfo.data.newStudentInfo.byzz | imgUrlFormat:[340,210]}}" class="info-img">
+                              {{/if}}
+                              <div class="upload-btn" data-role="upload-img" data-object='{
+                                "title":"学历认证报告/毕业证书",
+                                "sampleImg":[
+                                  {
+                                    "title":"教育部学历证书电子注册备案表",
+                                    "lgImg":"http://css.gzedu.com//ouchgzee_com/person_center/v3.0.1/temp/u66-lg.png",
+                                    "smImg":"http://css.gzedu.com//ouchgzee_com/person_center/v3.0.1/temp/u66.jpg"
+                                  },
+                                  {
+                                    "title":"中国高等教育学历认证报告",
+                                    "lgImg":"http://css.gzedu.com//ouchgzee_com/person_center/v3.0.1/temp/u64-lg.png",
+                                    "smImg":"http://css.gzedu.com//ouchgzee_com/person_center/v3.0.1/temp/u64.jpg"
+                                  }
+                                ]
+                              }'><i></i><span>点击上传</span></div>
+                            </a>
+                            {{if otherInfo.data.newStudentInfo && otherInfo.data.newStudentInfo.byzz}}
+                              <a href="{{otherInfo.data.newStudentInfo.byzz | imgUrlFormat}}" class="light-box" data-role="fancybox">点击放大</a>
+                            {{else}}
+                              <a href="#" class="light-box" data-role="fancybox">点击放大</a>
+                            {{/if}}
+
+                            <input type="text" class="img-val" datatype="imgurl" nullmsg="请添加学历认证报告/毕业证书照片" errormsg="请添加学历认证报告/毕业证书照片" name="byzz" value="{{(otherInfo.data.newStudentInfo && otherInfo.data.newStudentInfo.byzz)?otherInfo.data.newStudentInfo.byzz:''}}">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="text-orange padding_t20" style="padding-right: 60px;">
+                        专科以上（含专科）学历变更须提供学信网学历网查结果或学历认证报告，专科以下学历变更提供毕业证书。
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          {{/if}}
+
+          {{include 'confirm-sign-temp' otherInfo}}
+
+          <div class="text-center margin-t30">
+            <button type="submit" class="btn btn-lg btn-orange" style="width:200px;">提交申请</button>
+          </div>
+        </form>
+      {{else}}
+        <div class="margin-t30">
+          <div class="text-no-bold sub-title f16 margin_b10">信息更正</div>
+          {{if studentMsgMoveType==0}}
+            <table width="100%">
+              <tbody>
+                <tr>
+                  <td width="45%">
+                    <table class="table-gray-th">
+                        <thead>
+                          <tr>
+                            <th>登记信息</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>性别：{{baseInfo.data.info.xbmName}}</td>
+                            </tr>
+                            <tr>
+                              <td>民族：{{baseInfo.data.info.mzm | DictionaryConvert:baseInfo.data.dicNationList}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </td>
+                  <td width="10%" class="text-nowrap padding20 font24 text-bold font_gray text-center">
+                    --&gt;
+                  </td>
+                  <td width="45%">
+                    <table class="table-gray-th">
+                        <thead>
+                          <tr>
+                            <th>更正信息</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>性别：{{otherInfo.data.newStudentInfo.sex}}</td>
+                            </tr>
+                            <tr>
+                              <td>民族：{{otherInfo.data.newStudentInfo.nation}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          {{else if studentMsgMoveType==1}}
+            <table width="100%">
+              <tbody>
+                <tr>
+                  <td width="45%">
+                    <table class="table-gray-th">
+                        <thead>
+                          <tr>
+                            <th>登记信息</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>原学历层次：{{baseInfo.data.info.exedulevel}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </td>
+                  <td width="10%" class="text-nowrap padding20 font24 text-bold font_gray text-center">
+                    --&gt;
+                  </td>
+                  <td width="45%">
+                    <table class="table-gray-th">
+                        <thead>
+                          <tr>
+                            <th>更正信息</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>原学历层次：{{otherInfo.data.newStudentInfo.exedulevel}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          {{else if studentMsgMoveType==2}}
+            <table width="100%">
+              <tbody>
+                <tr>
+                  <td width="45%">
+                    <table class="table-gray-th">
+                        <thead>
+                          <tr>
+                            <th>登记信息</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>姓名：{{baseInfo.data.info.xm}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </td>
+                  <td width="10%" class="text-nowrap padding20 font24 text-bold font_gray text-center">
+                    --&gt;
+                  </td>
+                  <td width="45%">
+                    <table class="table-gray-th">
+                        <thead>
+                          <tr>
+                            <th>更正信息</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>姓名：{{otherInfo.data.newStudentInfo.xm}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          {{else if studentMsgMoveType==3}}
+            <table width="100%">
+              <tbody>
+                <tr>
+                  <td width="45%">
+                    <table class="table-gray-th">
+                        <thead>
+                          <tr>
+                            <th>登记信息</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>身份证号：{{baseInfo.data.info.sfzh}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </td>
+                  <td width="10%" class="text-nowrap padding20 font24 text-bold font_gray text-center">
+                    --&gt;
+                  </td>
+                  <td width="45%">
+                    <table class="table-gray-th">
+                        <thead>
+                          <tr>
+                            <th>更正信息</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                              <td>身份证号：{{otherInfo.data.newStudentInfo.sfzh}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          {{/if}}
+        </div>
+
+        {{if studentMsgMoveType!=1}}
+          <div class="margin-t30">
+            <div class="text-no-bold sub-title f16 margin_b10">
+              {{if otherInfo.data.newStudentInfo.proveFileType==1}}
+                身份证证明
+              {{else}}
+                其他证明（户籍证明、更正事项告知函）
+              {{/if}}
+            </div>
+            <div class="section-body border-e0e0e0 padding_t20 padding_b20">
+              <div class="clearfix">
+                {{if otherInfo.data.newStudentInfo.proveFileType==1}}
+                  <div class="col-6">
+                    <div class="cert-wrap">
+                      <h4 class="cert-title">身份证照片正面</h4>
+                      <div class="cert-box cert-box-4 has-upload">
+                        <a href="javascript:void(0);" class="info-img-box">
+                          <img class="info-img" src="{{otherInfo.data.newStudentInfo.sfzz | imgUrlFormat:[338,208]}}">
+                        </a>
+                        <a href="{{otherInfo.data.newStudentInfo.sfzz}}" class="light-box" data-role="fancybox">点击放大</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="cert-wrap">
+                      <h4 class="cert-title">身份证照片背面</h4>
+                      <div class="cert-box cert-box-5 has-upload">
+                        <a href="javascript:void(0);" class="info-img-box">
+                          <img class="info-img" src="{{otherInfo.data.newStudentInfo.sfzf | imgUrlFormat:[338,208]}}">
+                        </a>
+                        <a href="{{otherInfo.data.newStudentInfo.sfzf}}" class="light-box" data-role="fancybox">点击放大</a>
+                      </div>
+                    </div>
+                  </div>
+                {{else}}
+                  <div class="col-6">
+                    <div class="cert-wrap">
+                      <div class="cert-box cert-box-4 has-upload">
+                        <a href="javascript:void(0);" class="info-img-box">
+                          <img class="info-img" src="{{otherInfo.data.newStudentInfo.otherProve | imgUrlFormat:[338,208]}}">
+                        </a>
+                        <a href="{{otherInfo.data.newStudentInfo.otherProve}}" class="light-box" data-role="fancybox">点击放大</a>
+                      </div>
+                    </div>
+                  </div>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+        {{else}}
+          <div class="margin-t30">
+            <div class="text-no-bold sub-title f16 margin_b10">
+              更正证明
+            </div>
+            <div class="section-body border-e0e0e0 padding_t20 padding_b20">
+              <div class="clearfix">
+
+                  <div class="col-6">
+                    <div class="cert-wrap">
+                      <div class="cert-box cert-box-4 has-upload">
+                        <a href="javascript:void(0);" class="info-img-box">
+                          <img class="info-img" src="{{otherInfo.data.newStudentInfo.byzz | imgUrlFormat:[338,208]}}">
+                        </a>
+                        <a href="{{otherInfo.data.newStudentInfo.byzz}}" class="light-box" data-role="fancybox">点击放大</a>
+                      </div>
+                    </div>
+                  </div>
+
+              </div>
+            </div>
+          </div>
+        {{/if}}
+
+        <div class="margin-t30">
+          <div class="text-no-bold sub-title f16">签名确认</div>
+          <table class="table-gray-th text-center margin_t10" height="250">
+            <tbody>
+              <tr>
+                <td>
+                  <img src="{{otherInfo.data.newStudentInfo.sign}}">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {{include 'approval-process-temp' otherInfo}}
+
+
+        {{if otherInfo.data.transactionStatus==2}}
+          <div class="text-center margin-t30">
+            <button class="btn btn-lg btn-orange" style="width:200px;" data-role="re-apply">重新申请信息更正</button>
+          </div>
+        {{/if}}
+      {{/if}}
+    {{/if}}
+  {{else}}
+
+  {{/if}}
+
+</script>
+
+<!--/////////公共 模板/////////-->
+
+<!--个人信息 模板-->
+<script type="text/template" id="person-info-temp">
+  <div class="text-no-bold sub-title f16 margin_b10">个人信息</div>
+    <table class="table-gray-th">
+        <tbody>
+          {{if msgCode==200}}
+            {{if data && data.info}}
+              <tr>
+                <th width="10%" class="text-right">姓名</th>
+                <td width="22%">{{data.info.xm}}</td>
+
+                <th width="10%" class="text-right">专业</th>
+                <td>{{data.info.specialtyName}}（{{data.info.ruleCode}}）</td>
+
+                <th width="10%" class="text-right">层次</th>
+                <td width="20%">{{data.info.pyccName}}</td>
+              </tr>
+              <tr>
+                <th class="text-right">身份证</th>
+                <td>{{data.info.sfzh}}</td>
+
+                <th class="text-right">年级</th>
+                <td>{{data.info.yearName}}</td>
+
+                <th class="text-right">学期</th>
+                <td>{{data.info.gradeName}}</td>
+              </tr>
+            {{else}}
+              <tr>
+                <td>
+                  <div class="text-center padding20">
+                      <i class="alert-icon alert-icon-123x63"></i>
+                      <span class="f14">无数据</span>
+                  </div>
+                </td>
+              </tr>
+            {{/if}}
+          {{else}}
+            <tr>
+              <td>
+                <div class="text-center padding20">
+                    <i class="alert-icon alert-icon-123x63"></i>
+                    <span class="f14">{{message}}</span>
+                </div>
+              </td>
+            </tr>
+          {{/if}}
+        </tbody>
+    </table>
+  </div>
+</script>
+
+<!--更正证明(身份证) 模板-->
+<script type="text/template" id="prove-correct-temp">
+  <div class="margin-t30">
+    <div class="text-no-bold sub-title f16 margin_b10">更正证明</div>
+    <div class="section-body border-e0e0e0 padding_t15 padding_b20">
+      <div class="text-center text-orange padding_b10">
+        须提供身份证、有曾用名的户口本或县级以上（含县级）公安部门出具的户籍证明或公安部门出具的主项信息变更说明。
+      </div>
+      <div class="clearfix">
+        <div class="col-6">
+          <div style="width:340px;" class="center-block f14 text-nowrap valid-control">
+            <label>
+              <input type="radio" data-id="id-type" name="proveFileType" {{proveFileType!=2?'checked':''}} value="1"> 中国居民身份证
+            </label>
+            <label class="margin_l15">
+              <input type="radio" data-id="id-type" name="proveFileType" {{proveFileType==2?'checked':''}} value="2"> 其他证明（户籍证明、更正事项告知函）
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="clearfix">
+        <div data-id="info-type" class="{{proveFileType!=2?'':'hide'}}">
+          <div class="col-6 nomargin">
+            <div class="cert-wrap">
+              <h4 class="cert-title">身份证原件正面</h4>
+              <div class="valid-control">
+                <div class="cert-box cert-box-4 {{sfzz?'has-upload':''}}">
+                  <a href="javascript:void(0);" class="info-img-box">
+                    {{if sfzz}}
+                      <img src="{{sfzz | imgUrlFormat:[340,210]}}" class="info-img">
+                    {{/if}}
+                    <div class="upload-btn" data-role="upload-img" data-object='{
+                      "title":"身份证原件正面",
+                      "sampleImg":[
+                        {
+                          "title":"正确示例",
+                          "lgImg":"http://css.gzedu.com//ouchgzee_com/person_center/v3.0.1/temp/sfzz-lg.jpg",
+                          "smImg":"http://css.gzedu.com//ouchgzee_com/person_center/v3.0.1/temp/sfzz.jpg"
+                        },
+                        {
+                          "title":"错误示例",
+                          "lgImg":"http://css.gzedu.com//ouchgzee_com/person_center/v3.0.1/temp/sfz2z.jpg",
+                          "smImg":"http://css.gzedu.com//ouchgzee_com/person_center/v3.0.1/temp/sfz2z.jpg"
+                        }
+                      ]
+                    }'><i></i><span>点击上传</span></div>
+                  </a>
+                  {{if sfzz}}
+                    <a href="{{sfzz | imgUrlFormat}}" class="light-box" data-role="fancybox">点击放大</a>
+                  {{else}}
+                    <a href="#" class="light-box" data-role="fancybox">点击放大</a>
+                  {{/if}}
+
+                  <input type="text" class="img-val" datatype="imgurl" nullmsg="请添加身份证原件正面照片" errormsg="请添加身份证原件正面照片" name="sfzz" value="{{sfzz}}">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 nomargin">
+            <div class="cert-wrap">
+              <h4 class="cert-title">身份证原件背面</h4>
+              <div class="valid-control">
+                <div class="cert-box cert-box-5 {{sfzf?'has-upload':''}}">
+                  <a href="javascript:void(0);" class="info-img-box">
+                    {{if sfzf}}
+                      <img src="{{sfzf | imgUrlFormat:[340,210]}}" class="info-img">
+                    {{/if}}
+                    <div class="upload-btn" data-role="upload-img" data-object='{
+                      "title":"身份证原件反面",
+                      "sampleImg":[
+                        {
+                          "title":"正确示例",
+                          "lgImg":"http://css.gzedu.com//ouchgzee_com/person_center/v3.0.1/temp/sfzf-lg.jpg",
+                          "smImg":"http://css.gzedu.com//ouchgzee_com/person_center/v3.0.1/temp/sfzf.jpg"
+                        },
+                        {
+                          "title":"错误示例",
+                          "lgImg":"http://css.gzedu.com//ouchgzee_com/person_center/v3.0.1/temp/sfz2f.jpg",
+                          "smImg":"http://css.gzedu.com//ouchgzee_com/person_center/v3.0.1/temp/sfz2f.jpg"
+                        }
+                      ]
+                    }'><i></i><span>点击上传</span></div>
+                  </a>
+                  {{if sfzf}}
+                    <a href="{{sfzf | imgUrlFormat}}" class="light-box" data-role="fancybox">点击放大</a>
+                  {{else}}
+                    <a href="#" class="light-box" data-role="fancybox">点击放大</a>
+                  {{/if}}
+                  <input type="text" class="img-val" datatype="imgurl" nullmsg="请添加身份证原件反面照片" errormsg="请添加身份证原件反面照片" value="{{sfzf}}" name="sfzf">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div data-id="info-type" class="{{proveFileType==2?'':'hide'}}">
+          <div class="col-6 nomargin">
+            <div class="cert-wrap">
+              <h4 class="cert-title">原件照片</h4>
+              <div class="valid-control">
+                <div class="cert-box cert-box-4 {{otherProve?'has-upload':''}}">
+                  <a href="javascript:void(0);" class="info-img-box">
+                    {{if otherProve}}
+                      <img src="{{otherProve | imgUrlFormat:[340,210]}}" class="info-img">
+                    {{/if}}
+
+                    <div class="upload-btn" data-role="upload-img" data-object='{
+                      "title":"其他证明",
+                      "sampleImg":[]
+                    }'><i></i><span>点击上传</span></div>
+                  </a>
+                  {{if otherProve}}
+                    <a href="{{otherProve | imgUrlFormat}}" class="light-box" data-role="fancybox">点击放大</a>
+                  {{else}}
+                    <a href="#" class="light-box" data-role="fancybox">点击放大</a>
+                  {{/if}}
+
+                  <input type="text" class="img-val" datatype="imgurl" nullmsg="请添加其他证明照片" errormsg="请添加其他证明照片" value="{{otherProve}}" name="otherProve">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+<!--签名确认 模板-->
+<script type="text/template" id="confirm-sign-temp">
+  <div class="margin-t30">
+    <div class="text-no-bold sub-title f16">签名确认</div>
+    <table class="table-gray-th text-center margin_t10" height="350">
+        <tr>
+          <td valign="middle">
+            <div class="valid-control">
+              {{if data.isApplyFor==null || data.isApplyFor==0}}
+                <div data-id="qrcode-pic-box">
+                  <img src="{{(data.newStudentInfo && data.newStudentInfo.sign)?data.newStudentInfo.sign:''}}" style="max-width:100%">
+                </div>
+
+                <div id="sign-qrcode" class="margin_b10 hide"></div>
+
+                <div class="hide f16" data-id="sign-tips">
+                  请用手机扫一扫输入您的电子签名
+                </div>
+
+                <button type="button" class="btn btn-lg btn-orange border-radius min-width-120" data-role="create-qrcode">重新签名</button>
+
+                <input class="form-control form-control-block" type="hidden" datatype="*" nullmsg="请签名" errormsg="请签名" name="sign">
+    
+              {{else}}
+                
+                <div id="sign-qrcode" class="margin_b10">
+                  <i class="loading"></i>
+                </div>
+
+                <div class="f16" data-id="sign-tips">
+                    请用手机扫一扫入您的电子签名
+                </div>
+
+                <button type="button" class="btn btn-lg btn-orange border-radius min-width-120" data-role="create-qrcode" style="display:none;">重新签名</button>
+
+                <input class="form-control form-control-block" type="hidden" value="{{(data.newStudentInfo && data.newStudentInfo.sign)?data.newStudentInfo.sign:''}}" datatype="*" nullmsg="请签名" errormsg="请签名" name="sign">
+
+              {{/if}}
+              
+              <div class="tooltip yellow_tip t_arrow tooltip-valid" style="margin-bottom:10px;left:47%;"><div class="tooltip-in text-nowrap"></div><span class="t_arrow"><i class="arrow"></i><i class="arrow arrow_inner"></i></span></div>
+            </div>
+          </td>
+        </tr>
+      </table>
+  </div>
+</script>
+
+<!--审批流程 模板-->
+<script type="text/template" id="approval-process-temp">
+  {{if data.schoolRollRransAuditList && data.schoolRollRransAuditList.length>0}}
+    <div class="margin-t30">
+      <div class="text-no-bold sub-title f16 margin_b10">审核流程</div>
+      <div class="padding10 border-e0e0e0">
+        <div class="logistics-box logistics-box-2">
+          {{each data.schoolRollRransAuditList}}
+            <!--学员-->
+            <dl class="{{($index==data.schoolRollRransAuditList.length-1)?'last':''}}">
+              {{if $value.auditOperatoRole==1}}
+                  <dt>{{studentName}}（{{$value.auditOperatoRole | roleConvert}}） <small class="font_gray">{{$value.auditDt}}</small></dt>
+                  <dd class="static gray">{{$value.auditOperatoRole | roleConvert}}申请</dd>
+                  <dd class="icon-order"></dd>
+              {{else}}
+                {{if $value.auditState==0}}
+                    <dt>{{$value.auditOperatoRole | roleConvert}}审批</dt>
+                    <dd class="static gray">待审核</dd>
+                    <dd class="icon-order"></dd>
+                {{else if $value.auditState==1 || $value.auditState==2}}
+                    <dt>{{$value.auditOperatoRole | roleConvert}}审批</dt>
+                    <dd class="static">
+                      {{if $value.auditState==1}}
+                        <span class="text-green">审核通过</span>
+                      {{else if $value.auditState==2}}
+                        <span class="text-red">审核不通过</span>
+                      {{/if}}
+                    </dd>
+                    {{if $value.auditState==1}}
+                      <dd class="icon-order icon-order-green"></dd>
+                    {{else if $value.auditState==2}}
+                      <dd class="icon-order icon-order-red"></dd>
+                    {{/if}}
+                    <dd class="message">
+                      <div class="txt margin_t5 margin_b10">
+                        <div>{{$value.auditContent}}</div>
+                        <div class="margin_t10 text-right gray">
+                          审核人：{{$value.auditOperatoRole | roleConvert}}<br>
+                          {{$value.auditDt}}
+                        </div>
+                      </div>
+                    </dd>
+                {{/if}}
+              {{/if}}
+            </dl>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  {{/if}}
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common','jquery.qrcode'], function ($,template) {
+  template.helper('roleConvert', function (role) {
+    var roleName='学员';
+    role || (role=1);
+    role=parseInt(role);
+    switch(role){
+      case 1:
+        roleName='学员';
+        break;
+      case 2:
+        roleName='班主任';
+        break;
+      case 3:
+        roleName='学习中心管理员';
+        break;
+      case 4:
+        roleName='招生办';
+        break;
+      case 5:
+        roleName='学籍科';
+        break;
+      default:
+        break;
+    }
+    return roleName;
+  });
+
+  $(window).scrollTop(0);
+
+  //查看大图
+  require(['jquery.fancybox'],function(){
+    $('[data-role="fancybox"]').fancybox();
+  });
+
+  var $container=$('[data-id="info-correct-box"]');
+
+  var tabIndex=0;
+
+  ajaxProcess({
+    url:'/pcenter/roll/transaction/checkMessageInfoApplication',//1.28 校验学员是否有申请信息更正资格
+    type:'GET',
+    success:function(authorApplyData){
+      if(authorApplyData.msgCode==200 && authorApplyData.data){
+        //0:不能申请信息更正 1:可以申请信息更正
+        if(authorApplyData.data.isApplication==1){
+          $container.html( template('change-global-temp',{author:1}) );
+
+          initData();
+        }
+        else{
+          $container.html( template('change-global-temp',{author:0}) );
+        }
+      }
+      else{
+        $container.html(template('error-tips-temp',{message:authorApplyData.message}));
+      }
+    },
+    fail:function(errorMsg){
+      $container.html(template('error-tips-temp',{message:errorMsg}));
+    }
+  });
+
+  //初始化页面
+  function initData(){
+    var $tabCntContainer=$('[data-id="tab-box"]',$container);
+
+    var def=$.Deferred();
+
+    $('.overlay',$container).show();
+
+    //获取已经缓存过的学籍信息
+    if(appJSON.studentRecordInfo){
+      def.resolve(appJSON.studentRecordInfo);
+    }
+    else{
+      getBaseInfo()
+      .done(function(renderData){
+        appJSON.studentRecordInfo=renderData;
+        def.resolve(renderData);
+      })
+      .fail(function(XMLHttpRequest, textStatus){
+          $tabCntContainer.html( template('error-tips-temp',{message:textStatus}) )
+          $('.overlay',$container).hide();
+      });
+    }
+
+    def.done(function(renderData){
+      ajaxProcess({
+        //接口 1.12 查看异动详情
+        url:'/pcenter/roll/transaction/getSchoolRollRransAuditList',
+        type:'GET',
+        data:{
+          transactionType:5,
+          studentMsgMoveType:tabIndex
+        },
+        success:function(jsonData){
+          $tabCntContainer.html(template('gender-change-temp',{
+            baseInfo:renderData,
+            otherInfo:$.extend(true, jsonData, {studentName:renderData.data.info.xm}),
+            studentMsgMoveType:tabIndex
+          }));
+
+          //生成二维码
+          createQrcode( (jsonData.data.newStudentInfo && jsonData.data.newStudentInfo.sign && jsonData.data.isApplyFor==1)?true:false );
+
+          //表单验证
+          initValidForm($(".theform",$container), function() {
+              var curform = this;
+              $('[data-role="page-loading"]').show();
+
+              curform.find('.img-val:hidden').remove();
+
+              ajaxProcess({
+                  //1.11 学籍异动信息更正申请
+                  url: '/pcenter/roll/transaction/updateStudentMessage',
+                  type: 'POST',
+                  data: curform.serialize()+'&isApplyFor='+( (jsonData.data || jsonData.data.isApplyFor==null)?0:1 ),
+                  success: function(data) {
+                      if (data.msgCode == 200) {
+                          $.when($.resultDialog(1, '提交成功')).done(function() {
+                              //curRoute.app.refresh();
+                              initData();
+                          });
+                      } else {
+                          $.resultDialog(1, data.message);
+                      }
+                  },
+                  fail: function(errorMsg) {
+                      $.resultDialog(2, '提交失败', 2000);
+                  },
+                  always: function() {
+                      $('[data-role="page-loading"]').hide();
+                  }
+              });
+          },{datatype:{
+              "imgurl":function(gets,obj,curform,regxp){
+                if(!obj.is(':visible')){return true}
+                else if(gets!=''){return true;}
+                else{return false;}
+              }
+            }
+          });
+        },
+        fail:function(errorMsg){
+          $tabCntContainer.html( template('error-tips-temp',{message:errorMsg}) )
+        },
+        always:function() {
+          $('.overlay',$container).hide();
+        }
+      })
+    });
+  }
+
+  function getBaseInfo(){
+    return ajaxProcess({
+      //接口 1.1 学籍基本资料
+      url:'/pcenter/roll/getBaseInfo',
+      type:'GET'
+    });
+  }
+
+  //生成二维码
+  function createQrcode(isSigned){
+    var $qrcodePic=$('[data-id="qrcode-pic-box"]',$container)
+    var $createBtn=$('[data-role="create-qrcode"]',$container);
+    var $signQrcod=$('#sign-qrcode',$container);
+    var $signTips=$('[data-id="sign-tips"]',$container);
+
+    //如果早前已经签名确认过了，就不能再签名了
+    if(isSigned) return;
+
+    if($createBtn.data('recreate')){
+      $signTips.show();
+      $createBtn.hide();
+    }
+
+    if(!$createBtn.data('recreate')){
+      $createBtn.hide().data('recreate',true);
+    }
+
+    $createBtn.prop('disabled',true).addClass('disabled').text('二维码生成中...')
+
+    $signQrcod.html('<i class="loading"></i>');
+    $signTips.hide();
+
+    //获取签名二维码
+      ajaxProcess({
+        url:'/pcenter/qrcode/getToken',
+        type:'GET',
+        success:function(data){
+          //清除计时器
+          $.each(window['timerCollectors'], function(i, e) {
+            if(e){
+              clearInterval(e);
+            }
+          });         
+          if( data.data && data.data.obj){
+            $createBtn.prop('disabled',false).removeClass('disabled').text('重新签名');
+            $qrcodePic.hide();
+            $signTips.show();
+            //如果是IE8及以下的IE浏览器，使用table渲染类型
+            var qrcodeRenderType=($('html').hasClass('ie8') || $('html').hasClass('ie67'))?"table":"canvas";
+
+            //console.log('http://'+location.host+'/pcenter/qrcode/mobile-signup.html?token='+(data.data.obj))
+
+            $signQrcod.empty().qrcode({
+              render : qrcodeRenderType,
+              width : 230,
+              height : 230,
+              text  : 'http://'+location.host+'/pcenter/qrcode/mobile-signup.html?token='+(data.data.obj)
+            }).show();
+
+            // 每隔1秒检测是否签名
+            var signInt = setInterval(function () {
+              // 获取当前时间戳(以s为单位)
+              var timestamp = Date.parse(new Date());
+              timestamp = timestamp / 1000;
+              
+              ajaxProcess({
+                url:'/pcenter/qrcode/signCheck',
+                type:'GET',
+                data:{token:data.data.obj,timestamp:timestamp},
+                success:function(data){
+                  if(data.data && data.data.obj) {
+                      clearInterval(signInt); 
+                      $('[name="sign"]',$container).val(data.data.obj).next('.tooltip').hide();
+                      $signQrcod.html('<img src="'+data.data.obj+'" style="max-width:100%;">');
+                      $signTips.hide();
+                      $createBtn.show();
+                      $('[data-id="step4-submit"]',$container).show();
+                  }
+                }
+              })
+            }, 1000);
+
+            window['timerCollectors'].push(signInt);
+
+            $container.data('timerCollectors',signInt);
+          }
+        },
+        fail:function(error){
+          $createBtn.prop('disabled',false).removeClass('disabled').text('二维码生成出错，重新生成');
+          //清除计时器
+          $.each(window['timerCollectors'], function(i, e) {
+            if(e){
+              clearInterval(e);
+            }
+          });
+        }
+      });
+  }
+
+  //更正证明 类型选择
+  $container.on('click','[data-id="id-type"]',function(event) {
+    var index=$('[data-id="id-type"]',$container).index(this);
+    
+    $('[data-id="info-type"]',$container).hide().eq(index).show();
+  })
+
+  //重新申请
+  .on('click','[data-role="re-apply"]',function(event) {
+    var $pop=$.alertDialog({
+        width:340,
+        height:270,
+        content:[
+          '<i class="alert-icon alert-icon-0x0 margin_r10"></i>',
+            '<span class="font18 text-orange vertical-middle inline-block">确定要重新申请信息更正？</span>'
+        ].join(''),
+        okCss:'btn btn-normal btn-orange margin_l15 min-width-100',
+        cancelCss:'btn btn-normal btn-gray min-width-100',
+        ok:function(){
+
+          var $pageLoading=$('[data-role="page-loading"]');
+
+          $pageLoading.show();
+          ajaxProcess({
+            //接口 1.15 重新提交异动申请
+            url:'/pcenter/roll/transaction/againSubmit',
+            type:'POST',
+            data:{
+              transactionType:5,
+              studentMsgMoveType:tabIndex
+            },
+            success:function(data){
+              if(data.msgCode==200){
+                curRoute.app.refresh();
+              }
+              else{
+                $.resultDialog(0,data.message);
+              }
+            },
+            fail:function(errorMsg){
+              $.resultDialog(2,errorMsg,2000);
+            },
+            always:function(){
+              $pageLoading.hide();
+            }
+          });
+
+          $.closeDialog(this);
+          
+        }
+    });
+  })
+
+  //点击上传  
+  .on('click','[data-role="upload-img"]',function(event) {
+    var data=$(this).attr('data-object');
+    data=$.parseJSON(data);
+
+    $('.cert-box').removeClass('actived');
+    $(this).closest('.cert-box').addClass('actived');
+
+    if( $.type(data)=="object" ){
+      $.mydialog({
+        id:'pop2',
+        width:980,
+        zIndex:1000,
+        height:500,
+        urlData:data,
+        content: 'pop-upload-picture.html'
+      });
+    }
+  })
+
+  //生成二维码
+  .on('click','[data-role="create-qrcode"]',function(event) {
+    createQrcode();
+  })
+
+  //选项卡
+  .on('click', '[data-id="chg-tab"] > li', function(event) {
+    event.preventDefault();
+    var index=$(this).index();
+
+    if(tabIndex==index) return;
+
+    tabIndex=index;
+
+    $('[data-id="chg-tab"] a',$container).removeClass('current');
+
+    $(this).children('a').addClass('current');
+
+    $('.overlay',$container).show();
+
+    //清除该页面的其它计时器
+    clearInterval( $container.data('timerCollectors') );
+
+    initData();
+  });
+});
+</script>

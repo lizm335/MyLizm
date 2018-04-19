@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<!-- <ref bean="checkCourseTrigger" /> --> <!--  现在更改为制作平台直接触发 -->
+				<ref bean="confirmOrderTrigger" />
+				<ref bean="cleanSessionIdTrigger" />
+			</list>
+		</property>
+	</bean>
+
+
+	<bean id="checkCourseTask" class="com.gzedu.xlims.web.common.task.CheckCourseTask" ></bean>
+	<bean id="checkCourseBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="checkCourseTask" /> <!-- 任务执行类 -->
+		<property name="targetMethod" value="checkTask" /><!-- 方法名 -->
+		<property name="concurrent" value="true" />
+	</bean>
+	<bean id="checkCourseTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="checkCourseBean" />
+		<!-- <property name="cronExpression" value="0 */2 * * ?" /> --><!-- 每分钟 -->
+		<property name="cronExpression" value="0 0 2 * * ?" /><!-- 每天凌晨2点触发一次 -->
+	</bean>
+	
+		
+	<bean id="confirmOrderTask" class="com.gzedu.xlims.web.common.task.ConfirmOrderTask" ></bean>
+	<bean id="confirmOrderBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="confirmOrderTask" /> <!-- 任务执行类 -->
+		<property name="targetMethod" value="timingAffirmTask" /><!-- 方法名 -->
+		<property name="concurrent" value="true" />
+	</bean>
+	<bean id="confirmOrderTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="confirmOrderBean" />
+		<!-- <property name="cronExpression" value="0 */2 * * ?" />  -->  <!-- 每分钟 -->
+		<property name="cronExpression" value="0 0 2 * * ?" /><!-- 每天凌晨2点触发一次 -->
+	</bean>
+	
+	<bean id="cleanSessionIdTask" class="com.gzedu.xlims.web.common.task.CleanSessionIdTask" ></bean>
+	<bean id="cleanSessionIdBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="cleanSessionIdTask" /> <!-- 任务执行类 -->
+		<property name="targetMethod" value="cleanMemcachedKey" /><!-- 方法名 -->
+		<property name="concurrent" value="true" />
+	</bean>
+	<bean id="cleanSessionIdTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="cleanSessionIdBean" />
+		<property name="cronExpression" value="0 */10 * * * ?" /><!-- 每30分钟执行一次 -->
+	</bean>
+
+</beans>

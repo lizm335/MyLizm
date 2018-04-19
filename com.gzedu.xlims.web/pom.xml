@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.gzedu.xlims</groupId>
+		<artifactId>com.gzedu.xlims</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>com.gzedu.xlims.web</artifactId>
+	<packaging>war</packaging>
+	<name>com.gzedu.xlims.web Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<servlet.version>3.1.0</servlet.version>
+		<jsp-api.version>2.0</jsp-api.version>
+	</properties>
+	
+	<dependencies>
+		<!-- servlet -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${servlet.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>${jsp-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.gzedu.xlims</groupId>
+			<artifactId>com.gzedu.xlims.service</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gzedu.xlims</groupId>
+			<artifactId>com.gzedu.xlims.biz</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gzedu.xlims</groupId>
+			<artifactId>com.gzedu.xlims.config</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gzedu.xlims</groupId>
+			<artifactId>com.gzedu.xlims.webservice</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gzedu.xlims</groupId>
+			<artifactId>com.gzedu.xlims.third</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- CORS java web服务器跨域访问支持 -->
+		<dependency>
+			<groupId>com.thetransactioncompany</groupId>
+			<artifactId>cors-filter</artifactId>
+			<version>2.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.thetransactioncompany</groupId>
+			<artifactId>java-property-utils</artifactId>
+			<version>1.10</version>
+		</dependency>
+	</dependencies>
+	
+	<build>
+		<!-- <finalName>txllms.gzedu.com</finalName> -->
+		<finalName>${xllms.build.name}</finalName>
+		<plugins>
+			<plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <port>8080</port>
+                    <path>/</path>
+                    <uriEncoding>UTF-8</uriEncoding>
+                    <server>tomcat7</server>
+                </configuration>
+            </plugin>
+		</plugins>
+	</build>
+</project>
+

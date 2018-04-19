@@ -1,0 +1,1400 @@
+<div data-id="apply-progress">
+	
+	<table width="100%" height="400" class="text-center" data-id="loading-tbl">
+		<tr>
+			<td valign="middle">
+				
+				<p>
+					<i class="loading"></i>
+			    </p>
+			    <p class="font22 gray margin_t10">数据加载中...</p>
+			</td>
+		</tr>
+	</table>
+	
+	<div data-id="apply-progress-bar" class="hide">
+		
+	</div>
+	<div data-id="apply-result" class="hide">
+		
+	</div>	
+</div>
+
+<!--进度条-->
+<script type="text/template" id="progress-temp">
+	<div class="margin_t25 margin_b25">
+		<div class="progress-box">
+			<div class="progress-bar"><i></i></div>
+			<div class="progress-list">
+				<dl style="width: 160px;margin-left: -80px;">
+					<dd class="dot">1</dd>
+					<dt>社会实践申请</dt>
+					<dd class="txt">{{applyBeginDt}} 至 {{applyEndDt}}</dd>
+				</dl>
+				<dl style="width: 140px;margin-left: -70px;">
+					<dd class="dot">2</dd>
+					<dt>提交社会实践报告初稿</dt>
+					<dd class="txt">{{submitPracticeEndDt}}</dd>
+				</dl>
+				<dl>
+					<dd class="dot">3</dd>
+					<dt>定稿</dt>
+					<dd class="txt">{{confirmPracticeEndDt}}截止</dd>
+				</dl>
+				<dl>
+					<dd class="dot">4</dd>
+					<dt>评定成绩</dt>
+					<dd class="txt">{{reviewDt}}截止</dd>
+				</dl>
+				<dl>
+					<dd class="dot">5</dd>
+					<dt>寄送定稿</dt>
+				</dl>
+				<dl>
+					<dd class="dot">6</dd>
+					<dt>完成社会实践</dt>
+					<dd class="txt"></dd>
+				</dl>
+			</div>
+		</div>
+	</div>
+</script>
+
+<!--/////////////////各步骤////////////////-->
+
+<!--右侧 老师信息 内容-->
+<script type="text/template" id="teacher-panel-temp">
+	<div class="u-user-img">
+		<div class="u-inner pos-rel">
+			{{if guideTeacherZp}}
+				<img class="photo" src="{{guideTeacherZp | imgUrlFormat:[120,120]}}" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png'">
+			{{else}}
+				<img class="photo" src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png">
+			{{/if}}		  
+		</div>
+	</div>
+	<p class="font20 margin_t10">{{guideTeacherName}}</p>
+	<p class="gray">指导老师</p>
+	<!--
+		<p class="margin_t10">
+			<a class="btn btn-normal btn-green" target="_blank" data-role="ee-contact" href="/pcenter/common/eechat?teacherId={{guideTeacherId}}"><span>联系老师</span></a>
+		</p>
+	-->
+</script>
+
+<!--提交留言表单 内容-->
+<script type="text/template" id="submit-form-temp">
+	<form class="theform">
+		<input type="hidden" name="applyId" value="{{applyId}}">
+
+		{{if latestRecord && latestRecord.isStudent==1}}
+			<input type="hidden" name="recordId" value="{{latestRecord.recordId}}">
+		{{/if}}
+
+        <table width="100%" class="u-tbl">
+          	<tbody>
+              <tr>
+                <td width="80" class="padding_r20 padding_t15" valign="top">
+                  上传文档
+                </td>
+                <td>
+                  	<div class="typeset">
+                        <div class="fixed padding_t5 valid-control">
+                          <button type="button" class="btn btn-normal btn-gray" data-role="upload-btn">选择文件</button>
+                        </div>
+                        <div class="adaptive">
+                          <p class="gray margin_l10 f12" style="line-height:14px;">	
+                          	请上传word文档，限doc、docx、wps格式，<br>建议文档命名格式
+							为：姓名-专业（层级）-社会实践名称，<br>如：李XX-连锁经营（本）-沃尔玛卖场商品布局与陈列分析
+							</p>
+                        </div>
+                 	</div>
+                 	<div data-id="attachment-box">
+                 		{{if latestRecord && latestRecord.isStudent==1 && latestRecord.attachment && latestRecord.attachment}}
+							<span class="u-upload-file margin_t10 margin_r10">
+								<a href="javascript:;" class="oh">{{latestRecord.attachmentName}}</a>
+								<b data-role="remove-attachment">x</b>
+								<input type="hidden" name="attachment" value="{{latestRecord.attachment}}">
+								<input type="hidden" name="attachmentName" value="{{latestRecord.attachmentName}}"></span>
+						{{/if}}
+                 	</div>
+                </td>
+              </tr>
+              <tr>
+                <td valign="top" class="padding_r20">
+                  留言老师
+                </td>
+                <td>
+                  <div class="form valid-control">
+                    <textarea class="form-control form-control-block" rows="5" cols="30" placeholder="李XX-连锁经营（本）-沃尔玛卖场商品布局与陈列分析，请老师查阅。" datatype="*" nullmsg="请填写留言" errormsg="请填写留言" name="content">{{(latestRecord && latestRecord.isStudent==1)?latestRecord.content:''}}</textarea>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td valign="top" class="font16 txt_r padding_r20">
+                  
+                </td>
+                <td>
+                  <button type="submit" class="btn btn-normal btn-orange min-width-100">提交</button>
+                  {{if status==1}}
+                  	<span class="gray margin_l10 f12">上传成功后，指导老师会对你上传的社会实践初稿进行指导</span>
+                  {{else if status==3}}
+                  	<span class="gray margin_l10 f12">上传成功后，指导老师会对你上传的论文初稿进行指导</span>
+                  {{/if}}
+                  
+                </td>
+              </tr>
+          	</tbody>
+        </table>
+    </form>
+</script>
+
+<!--步骤：社会实践申请-->
+<script type="text/template" id="writing-apply-temp">
+	<div class="center-block" style="width:650px;margin-top:70px;margin-bottom:40px;">
+		<!--申请社会实践-->
+		{{if tempBlockId==0}}
+			<form id="form1">
+				<input type="hidden" name="practicePlanId" value="{{practicePlanId}}">
+
+				<div class="text-center margin-t30">
+					{{if isNotBegin}}
+						<button type="button" class="btn btn-lg btn-orange disabled" disabled>暂未开放社会实践申请
+						</button>
+					{{else}}
+						<button type="button" class="btn btn-lg btn-orange" style="width:200px;" data-role="apply">申请社会实践
+						</button>
+					{{/if}}
+				</div>
+			</form>
+		<!--没有申请本学期社会实践-->
+		{{else if tempBlockId==1}}
+			<div class="text-center">
+				<div>
+					<i class="alert-icon alert-icon-0x0 vertical-middle"></i>
+					<span class="inline-block font20 margin_l10 vertical-middle line-height-1 text-left">
+						本期暂无申请社会实践
+					</span>
+				</div>
+			</div>
+		<!--已申请本学期社会实践-->
+		{{else if tempBlockId==2}}
+			<div class="text-center">
+				<div>
+					<i class="alert-icon alert-icon-56x0 vertical-middle"></i>
+					<span class="inline-block font20 margin_l10 vertical-middle line-height-1 text-left">
+						你已申请本学期社会实践，请等待分配指导老师！
+					</span>
+				</div>
+				{{if isShowCancelBtn}}
+					<div class="margin_t15">
+						<button type="button" class="btn btn-lg btn-orange min-width-120" data-role="cancel">
+							取消申请
+						</button>
+					</div>
+				{{/if}}
+			</div>
+		{{/if}}
+
+		{{if tempBlockId==0 || tempBlockId==2}}
+			<div class="panel-tips tips-yellow padding10 gray margin-t30 f12" style="line-height:1.5">
+				<div class="typeset">
+					<div class="fixed nomargin">
+						注：
+					</div>
+					<div class="adaptive">
+						<ol class="ol-decimal">
+			              <li><span class="font_red">毕业论文和社会实践是学员毕业前的最重要环节</span>，决定了学员能否顺利毕业并拿到毕业证书 ，建议学员根据教学安排，本学期参加论文的写作，申请后我们会为同学安排一对一的专业指导老师，全程指导开题，写作初稿，终稿，帮助同学顺利通过。</li>
+			              <li><span class="font_red">如果错过申请时间，就需要下学期再启动毕业论文和社会实践写作</span>，获得毕业证书的时间也会延迟，不要再犹豫了，现在就申请吧！ </li>
+			              <li>申请时间：需要在本学期写作论文的同学，<span class="font_red">请务必在{{applyEndDt}}截止前提交论文写作申请</span>。</li>
+			              <li><span class="font_red">各专业论文选题和格式要求（必看）：</span><a class="font_blue" href="#" data-role="download-list"><u>下载附件</u></a></li>
+			          </ol>
+					</div>
+				</div>
+			</div>
+		{{/if}}
+	</div>
+</script>
+
+<!--步骤：提交社会实践报告初稿-->
+<script type="text/template" id="submit-first-draft-temp">
+	<div class="u-box clearfix">
+        <div class="u-sidebar text-center">
+          {{include 'teacher-panel-temp' applyData}}
+        </div>
+        <div class="u-content">
+        	{{if isNotOverdue}}
+        		<h3 class="f18 margin_b20 text-no-bold sub-title">提交社会实践报告初稿</h3>
+	            <div class="panel-tips tips-yellow padding10 gray margin_t20 margin_b20 f12">
+	                温馨提示：请在{{submitPracticeEndDt}}截止前提交社会实践初稿；
+	                <span class="font_red">各专业论文选题和格式要求（必看）：</span><a class="font_blue" href="#" data-role="download-list"><u>下载附件</u></a>
+	            </div>
+	            <div class="text-center" style="margin:50px 0;">
+	            	<button type="button" class="btn btn-lg btn-orange" data-id="upload-report" style="width:200px;" data-applyid="{{formData.applyId}}" title="报告初稿" data-url="/pcenter/practice/submitPractice">提交社会实践报告初稿</button>
+	            </div>
+	            <div class="border-e0e0e0 margin_b20 padding_t15 padding_b15 padding_l25 padding_r25">
+	            	<form class="theform">
+						<input type="hidden" name="applyId" value="{{formData.applyId}}">
+
+				        <table width="100%" class="u-tbl">
+				          	<tbody>
+				              <tr>
+				                <td valign="top" class="padding_r20">
+				                  留言老师
+				                </td>
+				                <td>
+				                  <div class="form valid-control">
+				                    <textarea class="form-control form-control-block" rows="5" cols="50" placeholder="请输入留言~！" datatype="*" nullmsg="请填写留言" errormsg="请填写留言" name="content"></textarea>
+				                  </div>
+				                </td>
+				              </tr>
+				              <tr>
+				                <td valign="top" class="font16 txt_r padding_r20">
+				                  
+				                </td>
+				                <td>
+				                  <button type="submit" class="btn btn-normal btn-orange min-width-100">发表</button>
+				                </td>
+				              </tr>
+				          	</tbody>
+				        </table>
+				    </form>
+	            </div>
+	            
+            {{else}}
+            	<table width="100%" height="300">
+					<tr>
+						<td valign="middle">
+							<div class="text-center">
+								<div>
+									<i class="alert-icon alert-icon-0x0 vertical-middle"></i>
+									<span class="inline-block font20 margin_l10 vertical-middle line-height-1 text-left">
+										社会实践报告初稿时间已过，请留意下一期的申请时间！
+									</span>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>	            
+			{{/if}}
+
+			<div data-id="comments-teacher"></div>
+        </div>
+    </div>
+</script>
+
+	<!--留言列表-->
+	<script type="text/template" id="comments-teacher-list">
+		<div class="u-comments">
+			<ul class="u-comments-list">
+				{{each msgData}}                	
+		            <li>
+		              	<div class="typeset"> 
+		                    <div class="fixed">
+		                    	{{if $value.isStudent==1}}
+		                    		{{if $value.studentZp}}
+			                      		<img src="{{$value.studentZp | imgUrlFormat:[120,120]}}" class="circle" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png'">
+			                      	{{else}}
+			                      		<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png" class="circle">
+			                      	{{/if}}
+
+			                      	<p class="text-center margin_t5">{{$value.studentName}}</p>
+		                    	{{else}}
+			                    	{{if $value.teacherZp}}
+			                      		<img src="{{$value.teacherZp | imgUrlFormat:[60,60]}}" class="circle" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png'">
+			                      	{{else}}
+			                      		<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png" class="circle">
+			                      	{{/if}}
+
+			                      	<p class="text-center margin_t5">{{$value.teacherName}}老师</p>
+			                    {{/if}}                   
+		                    </div>             
+		                    <div class="adaptive">               
+		                      <div class="line-height-1">{{$value.content}}</div>
+		                      {{if $value.attachment && $value.attachmentName}}
+			                      <p class="margin_t10">
+			                        <span class="u-upload-file">
+			                          <a target="_blank" href="{{$value.attachment}}">{{$value.attachmentName}}</a>
+			                        </span>
+			                      </p>
+		                      {{/if}}
+		                      <p class="gray font12 position-absolute" style="right: 20px;bottom: 15px;">{{$value.date}}</p>
+		                    </div>
+		             	</div>
+		            </li>
+		        {{/each}}
+		    </ul>
+		</div>
+	</script>
+
+<!--步骤：定稿-->
+<script type="text/template" id="confirm-thesis-temp">
+	<div class="u-box clearfix">
+        <div class="u-sidebar text-center">
+          {{include 'teacher-panel-temp' applyData}}
+        </div>
+        <div class="u-content">
+        	{{if applyData.status==2}}
+    			<div class="text-center margin_b25">
+					<p class="padding10">
+					<i class="alert-icon alert-icon-56x0 vertical-middle"></i>
+					<span class="font20 margin_l10 vertical-middle">你已提交了社会实践报告初稿</span>
+					</p>
+					<p class="gray6 f16">请等待指导老师审阅后根据老师的意见进行修改定稿</p>
+				</div>
+			{{else if applyData.status==3}}
+				<div class="text-center margin_b25">
+					<p class="padding10">
+					<i class="alert-icon alert-icon-56x0 vertical-middle"></i>
+					<span class="font20 margin_l10 vertical-middle">你的社会实践报告已定稿，请等待指导老师评分！</span>
+					</p>
+				</div>
+			{{/if}}
+			<div class="panel-tips tips-yellow padding10 gray margin_t20 margin_b20 f12">
+                温馨提示 <br><span class="font_red">各专业论文选题和格式要求（必看）：</span><a class="font_blue" href="#" data-role="download-list"><u>下载附件</u></a>
+            </div>
+            <div class="u-comments">
+              <ul class="u-comments-list">
+              	{{if applyData.status==2}}
+	                {{each msgData}}                	
+		                <li>
+		                  	<div class="typeset"> 
+			                    <div class="fixed">
+			                    	{{if $value.isStudent==1}}
+			                    		{{if $value.studentZp}}
+				                      		<img src="{{$value.studentZp | imgUrlFormat:[120,120]}}" class="circle" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png'">
+				                      	{{else}}
+				                      		<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png" class="circle">
+				                      	{{/if}}
+
+				                      	<p class="text-center margin_t5">{{$value.studentName}}</p>
+			                    	{{else}}
+				                    	{{if $value.teacherZp}}
+				                      		<img src="{{$value.teacherZp | imgUrlFormat:[60,60]}}" class="circle" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png'">
+				                      	{{else}}
+				                      		<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png" class="circle">
+				                      	{{/if}}
+
+				                      	<p class="text-center margin_t5">{{$value.teacherName}}老师</p>
+				                    {{/if}}                   
+			                    </div>             
+			                    <div class="adaptive">               
+			                      <div class="line-height-1">{{$value.content}}</div>
+			                      {{if $value.attachment && $value.attachmentName}}
+				                      <p class="margin_t10">
+				                        <span class="u-upload-file">
+				                          <a target="_blank" href="{{$value.attachment}}">{{$value.attachmentName}}</a>
+				                        </span>
+				                      </p>
+			                      {{/if}}
+			                      <p class="gray font12 position-absolute" style="right: 20px;bottom: 15px;">{{$value.date}}</p>
+			                    </div>
+		                 	</div>
+		                 	{{if $index==0}}
+		                 		{{if $value.isStudent==1}}
+		                 			<div class="u-edit" data-role="edit-faq">修改</div>
+		                 		{{else}}
+		                 			<div class="u-edit" data-role="edit-faq">回复</div>
+		                 		{{/if}}
+		                 	{{/if}}
+		                </li>
+		                {{if $index==0}}
+			                <li class="no-bg hide" data-id="faq-box">
+			                	{{include 'submit-form-temp' formData}}
+			                </li>
+		                {{/if}}
+	                {{/each}}
+                {{else if applyData.status==3}}
+                	<li>
+	                  	<div class="typeset"> 
+		                    <div class="fixed">
+		                    	{{if msgData[0].teacherZp}}
+		                      		<img src="{{msgData[0].teacherZp | imgUrlFormat:[60,60]}}" class="circle" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png'">
+		                      	{{else}}
+		                      		<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png" class="circle">
+		                      	{{/if}}
+
+		                      	<p class="text-center margin_t5">{{msgData[0].teacherName}}老师</p>                 
+		                    </div>             
+		                    <div class="adaptive">
+		                      
+		                      <div class="line-height-1">{{msgData[0].content}}</div>
+		                      {{if msgData[0].attachment && msgData[0].attachmentName}}
+			                      <p class="margin_t10">
+			                        <span class="u-upload-file">
+			                          <a target="_blank" href="{{msgData[0].attachment}}">{{msgData[0].attachmentName}}</a>
+			                        </span>
+			                      </p>
+		                      {{/if}}
+		                      
+		                      <p class="gray font12 position-absolute" style="right: 20px;bottom: 15px;">{{msgData[0].date}}</p>
+		                    </div>
+	                 	</div>
+	                </li>
+                {{/if}}
+              </ul>
+            </div>
+        </div>
+    </div>
+</script>
+
+<!--步骤：评定成绩-->
+<script type="text/template" id="thesis-first-evaluate-temp">
+	<div class="u-box clearfix">
+        <div class="u-sidebar text-center">
+          {{include 'teacher-panel-temp' applyData}}
+        </div>
+        <div class="u-content">
+        	<table width="100%" height="300">
+				<tr>
+					<td valign="middle">
+						<div class="text-center">
+			              <p class="padding10">
+			                <i class="alert-icon alert-icon-56x0 vertical-middle"></i>
+			                <span class="font20 margin_l10 vertical-middle">恭喜你，成绩已评定</span>
+			              </p>
+			              <p class="gray6 f16">您本次的实践成绩：<b class="text-orange">{{applyData.reviewScore}}</b> 分</p>
+
+			              <div class="margin_t25">
+			              	<button type="button" class="btn btn-md btn-orange" data-role="send-finalized" style="width:200px;">下一步，寄送定稿</button>
+			              </div>
+			            </div>
+					</td>
+				</tr>
+			</table>
+
+			<div data-id="comments-teacher"></div>
+        </div>
+    </div>
+</script>
+
+<!--步骤：寄送定稿-->
+<script type="text/template" id="send-final-manuscript-temp">
+	<div class="u-box clearfix">
+        <div class="u-sidebar text-center">
+          {{include 'teacher-panel-temp' applyData}}
+        </div>
+        <div class="u-content">
+        	<p class="padding10 text-center">
+		        <i class="alert-icon alert-icon-0x0 vertical-middle"></i>
+		        <span class="font20 margin_l10 vertical-middle">
+		        	已定稿，请等待学院的邮寄通知
+		        </span>
+		    </p>
+		    <!--
+		    <div class="border-e0e0e0 padding15 margin_t10">
+		    	<div>
+		    		请于<span class="text-red">12月25号</span>之前按照下方附件要求，寄送到学院！
+		    	</div>
+		    	<div class="margin_t10 text-center">
+		    		<a target="_blank" href="/static/resources/新-毕业论文和社会实践打印和邮寄要求（新版）.rar" class="btn btn-normal btn-gray">毕业论文和社会实践打印和邮寄要求(点击下载)</a>
+		    	</div>
+		    	<div class="margin_t10 f12">
+		    		<span class="gray">（注：统一寄送以下地址等待学院初评。为了顺利接收您的论文定稿，建议使用 <u class="text-red">顺丰快递、韵达快递、邮政快递、百世快递</u>。）</span>
+		    	</div>
+		    </div>
+
+		    <div class="panel margin_t10">
+		    	<div class="panel-header">
+		    		<b>收货信息</b>
+		    	</div>
+		    	<div class="panel-body">
+		    		<p>邮编：510091</p>
+		    		<p>联系人：实验学院教学部</p>
+		    		<p>电话：13450442458</p>
+		    		<p>地址：广州市越秀区麓景西路41号广州广播电视大学6号楼7楼</p>
+		    	</div>
+		    </div>
+        	
+        	
+		    <div class="border-e0e0e0 padding15 margin_t10">
+		    	<div>
+		    		论文指导老师评语和评分会登记到以下评审表内。
+		    		<br>
+		    		请务必在此处下载您的毕业论文和毕业设计（论文）评审表，否则视为不通过！
+		    	</div>
+		    	<div class="margin_t10">
+		    		<button type="button" class="btn btn-normal btn-gray margin_r10" style="width:230px;">社会实践报告下载打印</button>
+		    		<button type="button" class="btn btn-normal btn-gray" style="width:230px;">社会实践考核表下载打印</button>
+		    	</div>
+		    	<div class="margin_t10 f12">
+		    		<span class="gray">（注：根据要求下载打印社会实践报告和社会实践考核表，统一寄送以下地址等待学院初评。为了顺利接收您的论文定稿，建议使用<u class="text-red">顺丰快递</u>。）</span>
+		    		<a href="/static/resources/毕业论文和社会实践打印和邮寄要求.rar" target="_blank" class="text-blue"><u>详细打印及填写要求请点击下载</u></a>
+		    		<div class="text-red">社会实践、毕业论文定稿可一同寄送，填写同一个快递单号</div>
+		    	</div>
+		    </div>
+
+		    <div class="panel margin_t10">
+		    	<div class="panel-header">
+		    		<b>收货信息</b>
+		    	</div>
+		    	<div class="panel-body">
+		    		<p>邮编：510091</p>
+		    		<p>联系人：高老师</p>
+		    		<p>电话：待定</p>
+		    		<p>地址：广州市越秀区麓景西路41号，广州市广播电视大学麓湖校区6号楼7楼</p>
+		    	</div>
+		    </div>
+
+		    <form class="theform">
+			    <div class="panel margin_t10">
+			    	<div class="panel-header">
+			    		<input type="hidden" name="applyId" value="{{applyId}}">
+			    		<table width="100%">
+				    		<tbody>
+				    			<tr>
+				    				<td width="60" class="padding_r10">
+				    					快递单号
+				    				</td>
+				    				<td class="padding_r10">
+				    					<div class="valid-control">
+				    						<input class="form-control form-control-block" type="text" placeholder="请输入您的快递单号" datatype="*" nullmsg="请填写快递单号" errormsg="请填写快递单号" name="expressNumber" value="{{expressNumber}}">
+				    					</div>
+				    				</td>
+				    				<td width="60" class="padding_r10">
+				    					快递公司
+				    				</td>
+				    				<td width="225">
+				    					<div class="valid-control">
+					    					<select name="expressCompany" class="form-control form-control-block" data-id="express-sel" datatype="*" nullmsg="请选择快递公司" errormsg="请选择快递公司" disabled>
+					    						<option value=''>请选择快递公司</option>
+					    					</select>
+				    					</div>
+				    				</td>
+				    			</tr>
+				    		</tbody>
+				    	</table>
+			    	</div>
+			    	<div class="panel-body text-center">
+			    		<button type="submit" class="btn btn-md btn-orange min-width-120">提交</button>
+			    		<button type="button" class="btn btn-md btn-gray min-width-120 margin_l10" data-role="view-logistics">查看快递信息</button>
+			    	</div>
+			    </div>
+		    </form>
+		    -->
+
+		    <div data-id="comments-teacher" class="margin_t20"></div>
+        </div>
+    </div>	
+</script>
+
+<!--步骤：完成社会实践-->
+<script type="text/template" id="finish-writing-temp">
+	<div style="margin-top:70px;">
+		<div class="text-center">
+			{{if score>=60}}
+	          <p class="padding10">
+	            <i class="alert-icon alert-icon-56x0 vertical-middle"></i>
+	            <span class="font20 margin_l10 vertical-middle">恭喜您！已通过社会实践写作</span>
+	          </p>
+	          
+	          <p class="gray6 f16">社会实践成绩为：<b class="text-orange">{{score}}</b> 分</p>
+	         	
+			{{else if score<60 && score>0}}
+	          <p class="padding10">
+	            <i class="alert-icon alert-icon-0x0 vertical-middle"></i>
+	            <span class="font20 margin_l10 vertical-middle">很遗憾，本期社会实践尚不通过</span>
+	          </p>
+	          <p class="gray6 f16">社会实践成绩为：<b class="text-orange">{{score}}</b> 分，请留意下一期的申请时间！</p>
+	        {{else if score==0}}
+		    	<div class="text-center">
+		          <p class="padding10">
+		            <i class="alert-icon alert-icon-0x0 vertical-middle"></i>
+		            <span class="font20 margin_l10 vertical-middle">请等待学院录入分数</span>
+		          </p>
+		        </div>
+	        {{/if}}
+        </div>
+	</div>
+</script>
+
+<!--查看物流 模板-->
+<script type="text/template" id="logistics-temp">
+    <div class="padding10 position-relative">
+        <div class="padding15 bg-fafafa">
+            <p>货运单号：{{expressNumber}}</p>
+            <p>快递名称：{{expressName}}</p>
+        </div>
+        <div class="logistics-box scroll-box f12">
+        {{each data}}
+            <dl class="{{$index==0?'first':($index==data.length-1?'last':'')}}">
+                <dt class="{{$index==0?'font_green':''}}">{{$value.context}}</dt>
+                <dd class="gray">{{$value.time}}</dd>
+                <dd class="icon-order"></dd>
+            </dl>            
+        {{/each}}
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common','Validform'], function ($,template) {
+	var $container=$('[data-id="apply-progress"]');
+	var $loadingTbl=$('[data-id="loading-tbl"]',$container);
+	var $progressBar=$('[data-id="apply-progress-bar"]',$container);
+	var $progressContent=$('[data-id="apply-result"]',$container);
+		
+	var tempData={
+		practicePlanId:'',//实践计划Id
+		applyId:''//实践申请Id
+	}
+
+	//渲染进度条
+	function reanderProgressBar(CurrentPlanData){
+		var status=CurrentPlanData.status;
+		$('.progress-box',$container).data('CurrentPlanData',CurrentPlanData).each(function(i,e){
+			var that=this;
+			var $dl=$(that).find('dl');
+			var length=$dl.length;
+			$dl.each(function(index, el) {
+				if(status==index){
+					$(this).addClass('on');
+				}
+				if(index<=status){
+					$(this).addClass('on actived');
+				}
+
+				$(this).css('left',index*(100/(length-1))+"%");
+
+				if($(this).hasClass('on')){
+					$(that).find(".progress-bar i").width($(this).position().left)
+				}
+			});
+		});
+	}
+
+	//内容显示
+	function contentShow(CurrentPlanData){
+		$loadingTbl.hide();
+
+		$progressBar.show();
+		reanderProgressBar(CurrentPlanData);
+
+		$progressContent.show();
+	}
+
+	//内容渲染
+	var jqxhr=ajaxProcess({
+		//接口 1.5.1 社会实践写作-查询当前实践计划
+  		url:'/pcenter/practice/queryCurrentPlan',
+  		type:'GET',
+  		success:function(renderData){
+  			if(renderData.msgCode==200 && renderData.data){
+  				tempData.practicePlanId=renderData.data.practicePlanId;
+
+  				var renderHtml = template('progress-temp',renderData.data);
+
+            	$progressBar.html( renderHtml );
+
+				queryPracticeApply(tempData.practicePlanId)
+		  		.done(function(json){
+					if(json.msgCode==200 && json.data){
+						tempData.applyId=json.data.applyId;
+						
+					}
+					switchProgress(renderData.data,json);
+				});
+  			}
+  			else{
+  				$container.html( template('no-data-tips-temp',{message:renderData.message}) );
+  			}
+  		},
+  		fail:function(errorMessage){
+  			$container.html( template('error-tips-temp',{message:errorMessage}) );
+  		}
+  	});
+
+  	//查询实践申请
+  	function queryPracticeApply(practicePlanId){
+  		var xhr=ajaxProcess({
+			//接口 1.5.2 社会实践写作-查询实践申请
+	  		url:'/pcenter/practice/queryPracticeApply',
+	  		type:'GET',
+	  		data:{
+	  			practicePlanId:practicePlanId
+	  		},
+	  		fail:function(errorMessage){
+	  			$container.html( template('error-tips-temp',{message:'数据出错'}) );
+	  			console.log('接口"/pcenter/practice/queryPracticeApply"错误：'+errorMessage);
+	  		}
+	  	});
+
+	  	return xhr;
+  	}
+
+  	//显示指导记录
+  	function showComments(){
+  		ajaxProcess({
+      		url:'/pcenter/practice/queryGuideRecord',//1.5.6 社会实践写作-查询指导记录
+      		type:'GET',
+      		data:{
+      			applyId:tempData.applyId
+      		},
+      		success:function(queryGuideRecord){
+      			
+		        $('[data-id="comments-teacher"]',$container).html( 
+  					template('comments-teacher-list',
+  						{
+  							msgData:queryGuideRecord.data
+  						}
+  					)
+  				);
+  			}
+  		});
+  	}
+
+  	/*选择不同的流程处理方法
+  		@CurrentPlanData:社会实践计划json数据
+  		@queryPracticeData：接口1.5.2返回的数据
+  	*/
+  	function switchProgress(CurrentPlanData,queryPracticeData){
+  		var status=CurrentPlanData.status;
+
+  		status || (status=0);
+  		switch(status){
+  			case 0://社会实践申请
+				//校验日期的合法性
+  				if(dateTimeValidation(CurrentPlanData.applyBeginDt) && dateTimeValidation(CurrentPlanData.applyEndDt) && dateTimeValidation(CurrentPlanData.systemDt)){
+
+  					//是否已到了申请日期
+	  				var isNotBegin=compareDateTime(CurrentPlanData.applyBeginDt , CurrentPlanData.systemDt);
+
+	  				//是否没有逾期
+	  				var isNotOverdue=!compareDateTime(CurrentPlanData.systemDt , CurrentPlanData.applyEndDt);
+	  				//论文已申请
+					if(queryPracticeData.msgCode==200){
+						$progressContent.html( 
+							template('writing-apply-temp',{
+								tempBlockId:2,
+								applyEndDt:CurrentPlanData.applyEndDt,
+								isShowCancelBtn:isNotOverdue
+							}) 
+						);
+					}
+					//论文未申请
+					else{
+						$progressContent.html( 
+							template('writing-apply-temp',
+								(
+									isNotOverdue?
+									{
+										practicePlanId:tempData.practicePlanId,
+										applyEndDt:CurrentPlanData.applyEndDt,
+										tempBlockId:0,
+										isNotBegin:isNotBegin
+									}:
+									{
+										tempBlockId:1
+									}
+								)
+								
+							)
+						);
+					}
+				}
+				else{
+					$progressContent.html( 
+						template('no-data-tips-temp',{message:'日期不格式不合法'})
+					);
+				}
+				
+  				break;
+  			case 1://提交社会实践报告初稿
+  				$progressContent.html( 
+  					template('loading-tips-temp',
+  						{
+  							msg:'数据加载中'
+  						}
+  					)
+  				);
+  				//校验日期的合法性
+  				if(dateTimeValidation(CurrentPlanData.submitPracticeEndDt) && dateTimeValidation(CurrentPlanData.systemDt)){
+
+	  				//是否没有逾期
+	  				var isNotOverdue=!compareDateTime(CurrentPlanData.systemDt , CurrentPlanData.submitPracticeEndDt);
+
+	  				$progressContent.html( 
+	  					template('submit-first-draft-temp',
+	  						{
+	  							isNotOverdue:isNotOverdue,
+	  							submitPracticeEndDt:CurrentPlanData.submitPracticeEndDt,
+	  							applyData:queryPracticeData.data,
+	  							formData:{
+	  								applyId:tempData.applyId,
+	  								status:status
+	  							}
+	  						}
+	  					)
+	  				);
+
+	  				showComments();
+
+			  		validForm(function(){
+	  					var $form=this;
+	  					var $pageLoading=$('[data-role="page-loading"]');
+	  					$pageLoading.show();
+	  					ajaxProcess({
+				      		url:'/pcenter/practice/submitPractice',//1.5.5 社会实践写作-提交初稿
+				      		type:'POST',
+				      		data:$(".theform",$container).serialize(),
+				      		success:function(data){
+						        if(data.msgCode==200){
+						        	$.when($.resultDialog(1,'提交成功'))
+						        	.done(function(){
+						        		curRoute.app.refresh();
+			                		});
+						        }
+						        else{
+						        	$.resultDialog(2,data.message);
+						        }
+				      		},
+				      		fail:function(errorMsg){
+				      			$.resultDialog(2,errorMsg,2000);
+				      		},
+				      		always:function(){
+				      			$pageLoading.hide();
+				      		}
+				      	})
+	  				});
+
+			  		/*
+	  				validForm(function(){
+	  					var $form=this;
+	  					var $pageLoading=$('[data-role="page-loading"]');
+	  					//校验附件
+	  					if($form.find('.u-upload-file').length<=0){
+	  						$('[data-role="upload-btn"]',$form).next('.tooltip').show().children('.tooltip-in').text('请上传社会实践报告初稿');
+	  						$pageLoading.hide();
+	  					}
+	  					
+	  					else{
+		  					$pageLoading.show();
+		  					ajaxProcess({
+					      		url:'/pcenter/practice/submitPractice',//1.5.5 社会实践写作-提交初稿
+					      		type:'POST',
+					      		data:$form.serialize(),
+					      		success:function(data){
+							        if(data.msgCode==200){
+							        	$.when($.resultDialog(1,'提交成功'))
+							        	.done(function(){
+							        		curRoute.app.refresh();
+				                		});
+							        }
+							        else{
+							        	$.resultDialog(2,data.message);
+							        }
+					      		},
+					      		fail:function(errorMsg){
+					      			$.resultDialog(2,errorMsg,2000);
+					      		},
+					      		always:function(){
+					      			$pageLoading.hide();
+					      		}
+					      	})
+				      	}
+				      	
+	  				});
+	  				*/
+				}
+				else{
+					$progressContent.html( 
+						template('no-data-tips-temp',{message:'日期不格式不合法'})
+					);
+				}
+
+  				break;
+  			case 2://定稿
+  				$progressContent.html( 
+  					template('loading-tips-temp',
+  						{
+  							msg:'数据加载中'
+  						}
+  					)
+  				);
+
+  				ajaxProcess({
+		      		url:'/pcenter/practice/queryGuideRecord',//1.5.6 社会实践写作-查询指导记录
+		      		type:'GET',
+		      		data:{
+		      			applyId:tempData.applyId
+		      		},
+		      		success:function(queryGuideRecord){			      			
+		      			
+				        $progressContent.html( 
+		  					template('confirm-thesis-temp',
+		  						{
+		  							applyData:queryPracticeData.data,
+		  							msgData:queryGuideRecord.data,
+		  							formData:{
+		  								applyId:tempData.applyId,
+		  								latestRecord:queryGuideRecord.data[0]
+		  							}
+		  						}
+		  					)
+		  				);
+
+		  				validForm(function(){
+		  					var $form=this;
+		  					ajaxProcess({
+					      		url:'/pcenter/practice/submitPractice',//1.5.5 社会实践写作-提交初稿
+					      		type:'POST',
+					      		data:$form.serialize(),
+					      		success:function(data){
+							        if(data.msgCode==200){
+							        	$.when($.resultDialog(1,'提交成功'))
+							        	.done(function(){
+							        		curRoute.app.refresh();
+				                		});
+							        }
+							        else{
+							        	$.resultDialog(2,data.message);
+							        }
+					      		},
+					      		fail:function(errorMsg){
+					      			$.resultDialog(2,errorMsg,2000);
+					      		},
+					      		always:function(){
+					      			$('[data-role="page-loading"]').hide();
+					      		}
+					      	})
+					      	
+		  				});
+		      		},
+		      		fail:function(errorMsg){
+		      			$progressContent.html( template('error-tips-temp',{message:'数据出错'}) );
+		      		}
+		      	});
+
+  				break;
+  			case 3://评定成绩
+  				$progressContent.html( 
+  					template('thesis-first-evaluate-temp',
+  						{
+  							applyData:queryPracticeData.data
+  						}
+  					)
+  				);
+
+  				showComments();
+
+  				$container.on('click', '[data-role="send-finalized"]', function(event) {
+  					$('[data-role="page-loading"]').show();
+  					ajaxProcess({
+			      		url:'/pcenter/practice/sendPractice',//1.5.10 社会实践写作-寄送定稿
+			      		type:'POST',
+			      		data:{applyId:tempData.applyId},
+			      		success:function(data){
+					        if(data.msgCode==200){
+					        	curRoute.app.refresh();
+					        }
+					        else{
+					        	$.resultDialog(2,data.message);
+					        }
+			      		},
+			      		fail:function(errorMsg){
+			      			$.resultDialog(2,errorMsg,2000);
+			      		},
+			      		always:function(){
+			      			$('[data-role="page-loading"]').hide();
+			      		}
+			      	})
+  				});
+
+  				break;
+  			case 4://寄送定稿
+  				$progressContent.html( 
+  					template('send-final-manuscript-temp',
+  						$.extend(true,
+  							{
+  								applyId:tempData.applyId,
+  								applyData:queryPracticeData.data
+  							}, queryPracticeData.data)
+  						
+  					)
+  				);
+
+  				showComments();
+
+  				/*
+
+	  				ajaxProcess({
+			      		url:'/pcenter/thesis/queryExpress',//1.4.10 论文写作-查询快递公司列表
+			      		type:'GET',
+			      		success:function(queryExpress){
+			      			var renderHtml='';
+			      			if(queryExpress.msgCode==200 && queryExpress.data && queryExpress.data.length>0){
+				      			var render=template.compile([
+				      				'{{each data}}',
+				      					'<option value="{{$value.value}}" {{expressCompany==$value.value?"selected":""}}>',
+				      						'{{$value.name}}',
+				      					'</option>',
+				      				'{{/each}}'
+				      			].join(''));
+				      			var renderHtml=render(
+				      				$.extend(true, queryExpress, {
+				      					expressCompany:queryPracticeData.data.expressCompany
+				      				})
+				      			)
+			      			}
+			      			$('[data-id="express-sel"]',$progressContent).append(renderHtml).prop('disabled', false);
+
+			      			//查看物流
+							$container.on('click', '[data-role="view-logistics"]', function(event) {
+								if(!vForm.check()) return;
+
+								var pop=$.mydialog({
+						            id : 'express-pop',
+						            width : 480,
+						            height : 400,
+						            zIndex : 1110,
+						            html : true,
+						            htmlConfig:{
+						              title: '物流状态',
+						              button:[
+						                {
+						                name: '关闭',
+						                  btnClass:'btn btn-normal btn-gray min-width-100',
+						                  callback:function(ev){
+						                    $.closeDialog(pop);
+						                  }
+						                }         
+						              ]
+						            },
+						            content: '<div class="overlay bg-center"></div>',
+						            onLoad:function(){
+						              this.wrapper.find('.u-panel-body').addClass('scroll-box overlay-wrapper').height(this.height-36-$(".u-panel-footer",pop).height());
+						            }
+						        });
+
+								var $expressCompany=$('[name="expressCompany"]',$container);
+
+								var expressName=$expressCompany.get(0).options[$expressCompany.get(0).selectedIndex].text;
+								var expressNumber=$('[name="expressNumber"]',$container).val();							    
+
+							    ajaxProcess({
+						            url:'/pcenter/thesis/queryLogistics',//1.4.12 论文写作-查询物流信息
+						            type:'GET',
+						            data:{
+						            	expressCompany:$expressCompany.val(),
+						            	expressNumber:expressNumber
+						            },
+						            success:function(renderData){
+						                var shtml='';
+						                if(renderData.msgCode==200){
+						                    if( renderData.data ){
+						                        shtml=template('logistics-temp',
+											    	$.extend(true, renderData, 
+											    		{
+											    			expressName:expressName,
+											    			expressNumber:expressNumber
+											    		}
+											    	)
+										    	);
+						                    }
+						                    else{
+						                        shtml='<div class="text-center padding_t10"><i class="alert-icon alert-icon-123x63"></i> <span class="f14">无数据</span></div>';
+						                    }
+						                }
+						                else{
+						                    shtml='<div class="text-center padding_t10"><i class="alert-icon alert-icon-123x63"></i> <span class="f14">'+renderData.message+'</span></div>';
+						                }
+
+						                $('.u-panel-body',pop).html(shtml);
+						            },
+						            always:function(){
+						                $('.u-panel-body',pop).children('.overlay').remove();
+						            }
+						        });
+							    
+							})
+			      		},
+			      		fail:function(errorMsg){
+			      			
+			      		}
+			      	});
+
+			      	var vForm=validForm(function(){
+			      		var $form=this;
+	  					ajaxProcess({
+				      		url:'/pcenter/practice/submitExpress',//1.5.8 社会实践写作-提交快递信息
+				      		type:'POST',
+				      		data:$form.serialize(),
+				      		success:function(data){
+						        if(data.msgCode==200){
+						        	$.when($.resultDialog(1,'提交成功'))
+						        	.done(function(){
+						        		curRoute.app.refresh();
+			                		});
+						        }
+						        else{
+						        	$.resultDialog(2,data.message);
+						        }
+				      		},
+				      		fail:function(errorMsg){
+				      			$.resultDialog(2,errorMsg,2000);
+				      		},
+				      		always:function(){
+				      			$('[data-role="page-loading"]').hide();
+				      		}
+				      	})
+	  				});
+  				*/
+
+  				break;
+  			case 5://完成社会实践
+  				$progressContent.html( 
+					template('finish-writing-temp',queryPracticeData.data)
+				);
+
+  				break;
+  			default:
+  				break;
+  		}
+  		contentShow(CurrentPlanData);
+  	}	  	
+
+	//下载附件
+	$container.on('click','[data-role="download-list"]',function(event) {
+		event.preventDefault();
+
+		var $pop=$.alertDialog({
+			title:'下载专业论文选题和格式要求',
+			width:550,
+		    height:400,
+		    content:'<i class="loading"></i>',
+		    ok:false,
+		    cancelLabel:'关闭',
+		    cancelCss:'btn btn-normal btn-gray min-width-100'
+		});
+
+		$.ajax({
+          url: 'downlist-sample.html',
+          cache:true,
+          dataType: 'html'
+        })
+        .done(function(data){
+            $('.u-panel-body',$pop).html(data);
+        });
+	})
+
+	//提交社会实践申请
+	.on('click','[data-role="apply"]',function(event) {
+		var CurrentPlanData=$('.progress-box',$container).data('CurrentPlanData');
+		var $pop=$.alertDialog({
+			width:340,
+		    height:250,
+		    cancelCss:'btn btn-normal btn-gray min-width-100',
+		    okCss:'btn btn-normal btn-orange margin_l15 min-width-100',
+		    ok:function(){
+		    	
+		    	var $pageLoading=$('[data-role="page-loading"]').show();
+		    	ajaxProcess({
+		    		//1.5.3 社会实践写作-申请实践写作
+		      		url:'/pcenter/practice/apply',
+		      		type:'POST',
+		      		data:$("#form1").serialize(),
+		      		success:function(data){
+				        if(data.msgCode==200){     	
+				        	$.when(
+				        		$.resultDialog(1,'社会实践写作申请成功')
+				        	)
+			                .done(function(){
+			                    //curRoute.app.refresh();
+			                    tempData.applyId=data.data.applyId;
+			                    $progressContent.html( 
+									template('writing-apply-temp',{
+										tempBlockId:2,
+										applyEndDt:CurrentPlanData.applyEndDt,
+										isShowCancelBtn:true
+									}) 
+								);
+			                });	
+				        }
+				        else{
+				        	$.resultDialog(0,data.message);
+				        }
+		      		},
+		      		fail:function(errorMsg){
+		      			$.resultDialog(2,errorMsg,3000);
+		      		},
+		      		always:function(){
+		      			$pageLoading.hide();
+		      		}
+		      	});
+		      	
+		    	$.closeDialog($pop);
+		    },
+		    content:[
+		    	'<i class="alert-icon alert-icon-0x0 vertical-middle"></i>',
+		    	'<span class="inline-block vertical-middle margin_l10 f18">确认提交社会实践写作申请？</span>'
+		    ].join('')
+		});
+	})
+
+	//取消社会实践申请
+	.on('click','[data-role="cancel"]',function(event) {
+		var CurrentPlanData=$('.progress-box',$container).data('CurrentPlanData');
+		var $pop=$.alertDialog({
+			width:400,
+		    height:250,
+		    cancelCss:'btn btn-normal btn-gray min-width-100',
+		    okCss:'btn btn-normal btn-orange margin_l15 min-width-100',
+		    ok:function(){
+		    	var $pageLoading=$('[data-role="page-loading"]').show();
+		    	
+		    	ajaxProcess({
+		    		//1.5.4 社会实践写作-取消申请实践写作
+		      		url:'/pcenter/practice/cancelApply',
+		      		type:'POST',
+		      		data:{
+		      			applyId:tempData.applyId
+		      		},
+		      		success:function(data){
+				        if(data.msgCode==200){
+				        	$.when(
+				        		$.resultDialog(1,'<span class="f16">社会实践写作申请成功取消</span>')
+				        	)
+			                .done(function(){
+			                    //curRoute.app.refresh();
+			                    $progressContent.html( 
+									template('writing-apply-temp',
+										{
+											practicePlanId:tempData.practicePlanId,
+											applyEndDt:CurrentPlanData.applyEndDt,
+											tempBlockId:0,
+											isNotBegin:false
+										}
+									)
+								);
+			                });					        	
+				        }
+				        else{
+				        	$.resultDialog(0,data.message);
+				        }
+		      		},
+		      		fail:function(errorMsg){
+		      			$.resultDialog(2,errorMsg,3000);
+		      			$.closeDialog($pop);
+		      		},
+		      		always:function(){
+		      			$pageLoading.hide();
+		      		}
+		      	});
+
+		      	$.closeDialog($pop);
+		    },
+		    content:[
+		    	'<i class="alert-icon alert-icon-0x0 vertical-middle"></i>',
+		    	'<span class="inline-block vertical-middle margin_l10 f18">是否确定取消社会实践写作申请？</span>'
+		    ].join('')
+		});
+	});
+
+	//表单验证
+	function validForm(ajaxProcessFunc){
+	  JPlaceHolder.init();
+
+	  $('.valid-control',$container).each(function(index, el) {
+	  	if($(this).children('.tooltip').length<=0){
+	  		$(this).append([
+			    '<div class="tooltip yellow_tip t_arrow tooltip-valid">',
+			      '<div class="tooltip-in text-nowrap"></div>',
+			      '<span class="t_arrow"><i class="arrow"></i><i class="arrow arrow_inner"></i></span>',
+			    '</div>'
+			].join(''));
+	  	}
+	  });
+
+	  $.Tipmsg.r='';
+	  return $(".theform",$container).Validform({
+	    //showAllError:true,
+	    ajaxPost:true,
+	    tiptype:function(msg,o,cssctl){
+	      if(!o.obj.is("form")){
+	        var objtip=o.obj.closest('.valid-control').find(".tooltip");
+	        switch(o.type){
+	            case 3:
+	              objtip.children('.tooltip-in').text(msg).parent().show();
+	              break;
+	            default:
+	              objtip.children('.tooltip-in').text('').parent().hide();
+	              break;
+	          }
+	      }
+	    },
+	    beforeSubmit:function(curform){
+	      	$('[data-role="page-loading"]').show();
+
+	      	ajaxProcessFunc.call(curform);
+	      	
+
+	      	return false;
+	    },
+	    callback:function(data){
+	      //data 后台返回的数据对象结果
+	        
+	    }
+	  });
+	};
+
+	//上传附件
+	$container.on('click', '[data-role="upload-btn"]', function(event) {
+		var _this=this;
+		uploadFile({
+			filetype:'doc|docx|wps',
+			ok:function(filelist){
+	            if(filelist){
+	            	if(filelist.length>0){
+	              		var src=filelist[0].SFileName;
+	              		var filename=filelist[0].CFileName;
+	              		var temp=[
+	              			'<span class="u-upload-file margin_t10 margin_r10">',
+		                        '<a href="javascript:;" class="oh">{1}</a>',
+		                        '<b data-role="remove-attachment">x</b>',
+		                        '<input type="hidden" name="attachment" value="{0}">',
+		                        '<input type="hidden" name="attachmentName" value="{1}">',
+		                    '</span>'
+	              		].join('');
+	              		temp=temp.format(src,filename);
+
+	              		$(_this).next('.tooltip').hide();
+
+	              		$('[data-id="attachment-box"]',$container).html(temp)
+	              	}	              
+	            }
+	            $.closeDialog(this);
+			}
+		});
+	})
+	//删除附件
+	.on('click', '[data-role="remove-attachment"]', function(event) {
+		event.preventDefault();
+		$(this).parent().remove();
+	})
+	//留言
+	.on('click', '[data-role="edit-faq"]', function(event) {
+		event.preventDefault();
+
+		$('[data-id="faq-box"]',$container).slideDown();
+	})
+	//上传开题报告-弹窗
+	.on('click', '[data-id="upload-report"]', function(event) {
+		event.preventDefault();
+		var _this=this;
+		$.mydialog({
+		  id:'upload-report',
+		  width:640,
+		  zIndex:1000,
+		  height:450,
+		  urlData:{
+		  	url:$(_this).data('url'),
+		  	applyId:$(_this).data('applyid'),
+		  	title:_this.title,
+		  	type:0 //1：论文写作；0：社会实践
+		  },
+		  content: 'pop-upload-report.html'
+		});
+	});
+
+});
+</script>

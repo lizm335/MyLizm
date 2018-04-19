@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0" />
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<meta content="telephone=no" name="format-detection">
+	<title>有问题找老师</title>
+	<link rel="stylesheet" type="text/css" href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/reset.css"/>
+	<link rel="stylesheet" type="text/css" href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/base.css"/>
+	<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/conversion.750.js"></script>
+
+	<link rel=stylesheet href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/weui.min.css">
+	<link rel=stylesheet href="http://css.gzedu.com/oucnet_cn/gkzx_mobile/style/wx.css">
+	
+
+</head>
+<body class="gray_body">
+
+
+<header class="faq_tag">
+	
+</header>
+
+<article class="faq_ctn" id="faq_ctn">
+			
+</article>
+	
+
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/zepto.min.js"></script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/public/zepto.cookie.min.js"></script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/common.js"></script>
+
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/weui.min.js"></script>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/sammyjs/plugins/template.js"></script>
+<script src="http://css.gzedu.com/oucnet_cn/gkzx_mobile/js/wx.js"></script>
+
+<!-- 站长统计 -->
+<div style="display:none;">
+	<script src="https://s22.cnzz.com/z_stat.php?id=1272380732&web_id=1272380732" language="JavaScript"></script>
+</div>
+
+<!--常见问题 模板-->
+<script type="text/template" id="common-faq-temp">
+	<div class="search_mdl">
+		<form id="searchForm" action="javascript:return true;">
+			<input type="search" name="search" id="search" value="">
+			<p class="tip"><i class="icons"></i>输入你遇到的问题的关键字</p>
+			<button type="button" class="search_btn" id="searchBtn"><i class="icons"></i></button>
+		</form>
+	</div>
+
+	{{if msgCode==200 && data.oftenTypeList && data.oftenTypeList.length>0}}
+		<div data-id="faq-list-box">
+			{{include 'common-faq-list-temp' data}}
+		</div>
+	{{else}}
+		{{include 'no-data-temp'}}
+	{{/if}}
+</script>
+
+<script type="text/template" id="common-faq-list-temp">
+	{{if hasFAQ}}
+		{{each oftenTypeList as v1 i}}
+			{{if v1.oftenTypeMapList && v1.oftenTypeMapList.length>0}}
+				<dl class="faq_list_dl {{v1.isFirstSeenChild?'cur':''}}">
+					<dt>
+						<i class="tri icons"></i>
+						
+						{{v1.name}}
+					</dt>
+					<dd class="faq_list">
+						{{each v1.oftenTypeMapList as v2 j}}
+							<a href="faq_details.html?id={{v2.id}}" onclick='_czc.push(["_trackEvent", "常见问题", "问题详情", "{{v2.title}}"]);'>{{j+1}}、{{v2.title}}</a>
+						{{/each}}
+					</dd>
+				</dl>
+			{{/if}}
+		{{/each}}
+	{{else}}
+		{{include 'no-data-temp'}}
+	{{/if}}
+</script>
+
+<script type="text/template" id="no-data-temp">
+	<div align="center" style="padding-top:2rem;font-size:.3rem;color: #666;">
+		<i class="weui-icon-info weui-icon_msg" style="font-size: .5rem;"></i>
+		{{message?message:'暂无相关问题！'}}
+    </div>
+</script>
+
+<!--我的问题 模板-->
+<script type="text/template" id="my-faq-temp">
+	{{if msgCode==200 && data}}
+		{{if data.pageInfo && data.pageInfo.content && data.pageInfo.content.length>0}}
+			<div data-id="pull-up-load-data">
+				<ul class="my_ques_list my_ques_list2">
+					{{include 'my-faq-list-temp' data.pageInfo}}
+				</ul>
+				{{if data.pageInfo.content.length>=8}}
+					<div class="weui-loadmore-reset">
+			            <i class="weui-loading"></i>
+			        </div>
+		        {{/if}}
+			</div>
+		{{else}}
+			<div align="center" style="padding: 2em;">
+			  	<i class="weui-icon-warn" style="font-size: 1.5rem;"></i>
+			  	<div style="margin-top: 1em;font-size: .4rem;color: #888;">您暂未提问</div>
+			</div>
+		{{/if}}
+	{{else}}
+		<div align="center" style="padding: 2em;">
+		  	<i class="weui-icon-warn" style="font-size: 1.5rem;"></i>
+		  	<div style="margin-top: 1em;font-size: .4rem;color: #888;">{{message}}</div>
+		</div>
+	{{/if}}
+</script>
+
+<script type="text/template" id="my-faq-list-temp">
+	{{each content as node i}}
+		<li>
+			<a class="panel-link-box" href="question_details.html?id={{node.id}}">
+				<div class="per_img">
+					{{if node.avatar}}
+						<img src="{{node.avatar}}" alt="">
+					{{else}}
+						<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/upload_p.png" alt="">
+					{{/if}}
+				</div>
+				<div class="info">
+					<div class="info01">
+						{{if node.isSolve==0}}
+							<span class="status">未解决</span>
+						{{else if node.isSolve==1}}
+							<span class="status s_red">已解决</span>
+						{{/if}}
+						
+						<h3>{{node.title}}</h3>
+						<time>{{node.createDt}}</time>
+					</div>
+					<p class="des">{{node.content}}</p>
+					{{if node.imgUrls && node.imgUrls.length>0}}
+						<div class="img_box">
+							{{each node.imgUrls as pic j}}
+								<img src="{{pic | imgUrlFormat:[85,85]}}" data-role="img-fancybox" data-large="{{pic}}" alt="">
+							{{/each}}
+						</div>
+					{{/if}}
+
+					{{if node.gjtFeedbackVoCount>0}}
+						<div class="info02">
+							<span class="huifu"><i class="icons"></i>{{node.gjtFeedbackVoCount}}个回复</span>
+						</div>
+					{{/if}}
+				</div>
+			</a>
+		</li>
+	{{/each}}
+</script>
+
+<!--我要提问 模板-->
+<script type="text/template" id="asking-temp">
+<iframe src='https://webchat.7moor.com/wapchat.html?accessId={{accessId}}&fromUrl=wx&otherParams={"nickName":"{{nickname}}"}&clientId={{openid}}' width="100%;" height="100%" frameborder="0" scrolling="no"></iframe>
+</script>
+<script>
+$(function(){
+	var userid='2cdfadb5c357487e969ee17528b753b0';
+
+	var chatAccessId='5ce69f50-0731-11e8-9337-81e156236a04';//客服系统id
+
+	var nickname=sessionStorage.getItem( 'nickname' );
+	var openid=sessionStorage.getItem( 'openid' );
+
+	var orgCode=GetQueryStringFn('orgCode');
+	var tabID=GetQueryStringFn('tid');
+	(tabID && !isNaN(tabID)) || (tabID=0);
+	tabID=parseInt(tabID);
+
+	sessionStorage.setItem('orgCode',orgCode);
+
+	var tabTemp='\
+		<a class="{{tabID==0?\'cur\':\'\'}}" href="faq_list.html?orgCode={{orgCode}}&tid=0"><i class="icons ico01"></i>常见问题</a>\
+	';
+
+	if(!sessionStorage.getItem('student-isBindUser')){
+		tabTemp=tabTemp+'<a href="/wx/studentOauth/to?orgCode='+orgCode+'&url='+
+				encodeURIComponent('/wx/weixin/faq/transfer.html?path='+encodeURIComponent('/wx/weixin/faq/student/faq_list.html?orgCode='+orgCode+'&tid=1')
+				)+
+				'" class="{{tabID==1?\'cur\':\'\'}}"><i class="icons ico04"></i>我的问题</a>';
+
+		tabTemp=tabTemp+'<a href="/wx/studentOauth/to?orgCode='+orgCode+'&url='+
+				encodeURIComponent('/wx/weixin/faq/transfer.html?onlineTab=2&path='+encodeURIComponent('/wx/weixin/faq/student/faq_list.html?orgCode='+orgCode+'&tid=2')
+				)+
+				'" class="{{tabID==2?\'cur\':\'\'}}"><i class="icons ico04"></i>在线服务</a>';
+	}
+	else{
+		var hasPermissionOperation=sessionStorage.getItem('hasPermissionOperation');
+		if(hasPermissionOperation==0){
+			tabTemp=tabTemp+'<a class="{{tabID==1?\'cur\':\'\'}}" href="javascript:;" onclick="weui.alert(\'非常抱歉，该功能只提供给正式学员使用！\')"><i class="icons ico04"></i>我的问题</span>';
+		}
+		else{
+			tabTemp=tabTemp+'<a class="{{tabID==1?\'cur\':\'\'}}" href="faq_list.html?orgCode={{orgCode}}&tid=1"><i class="icons ico04"></i>我的问题</span>';
+		}
+
+		tabTemp=tabTemp+'<a class="{{tabID==2?\'cur\':\'\'}}" href="faq_list.html?orgCode={{orgCode}}&tid=2"><i class="icons ico02"></i>在线服务</span>';
+	}
+
+
+	var render=template.compile(tabTemp);
+	$('.faq_tag').html( render({orgCode:orgCode,tabID:tabID}) );
+
+	//选项卡切换
+	
+	;(function(){
+		var $container=$('#faq_ctn');
+		var loading;
+
+		//常见问题
+		if(tabID==0){
+			loading = weui.loading('加载中...');
+			//1.1.1答疑常见问题列表（新）
+			$.ajax({
+				url: '/wx/feedback/oftenList',
+				type: 'GET',
+				dataType: 'json',
+				data: {
+					orgCode:orgCode
+				},
+				success: function(data){
+					if(data.msgCode==200 && data.data && data.data.oftenTypeList && data.data.oftenTypeList.length>0){
+						$.each(data.data.oftenTypeList, function(index, node) {
+							if(node.oftenTypeMapList && node.oftenTypeMapList.length>0){
+								node.isFirstSeenChild=true;
+								data.data.hasFAQ=true;
+								return false;
+							}
+						});
+					}
+
+					$container.html(
+						template('common-faq-temp',data)
+					);
+
+					$('.tw_btn').remove();
+
+					//已授权
+					if(!sessionStorage.getItem('student-isBindUser')){
+						$container.before('<a href="/wx/studentOauth/to?orgCode='+orgCode+'&url='+
+							encodeURIComponent('/wx/weixin/faq/transfer.html?path='+encodeURIComponent('/wx/weixin/faq/student/question_create.html?oper=add')
+							)+
+							'" class="tw_btn">我要提问</a>');
+					}
+					else{
+						var hasPermissionOperation=sessionStorage.getItem('hasPermissionOperation');
+						//是否有权限访问 常见问题的下方的“我要提问”和“我的问题”
+						if(hasPermissionOperation==0){
+							$container.before('<a href="javascript:;" onclick="weui.alert(\'非常抱歉，该功能只提供给正式学员使用！\')" class="tw_btn">我要提问</a>');
+						}
+						else{
+							$container.before('<a href="question_create.html?oper=add" class="tw_btn">我要提问</a>');
+						}
+					}
+
+					loading.hide();
+				}
+			});
+		}
+		//我的问题
+		else if(tabID==1){
+			loading = weui.loading('加载中...');
+			$.ajax({
+				url: '/wx/feedback/list',
+				type: 'GET',
+				dataType: 'json',
+				data: {
+					pageNumber:1,
+					pageSize:8
+					//userId:userid
+				},
+				success: function(data){
+					$container.html(
+						template('my-faq-temp',data)
+					);
+
+					if(data.msgCode==200 && data.data && data.data.pageInfo){
+						$('[data-id="pull-up-load-data"]').data('pagination',{
+							currentPage:1,
+							totalPages:data.data.pageInfo.totalPages,
+							loading:false
+						});
+
+						if(data.data.pageInfo.totalPages>1){
+							$container.on('scroll',function(event) {
+								loadPage($container);
+							});
+						}
+					}
+
+					loading.hide();
+				}
+			});
+
+			$('.tw_btn').remove();
+
+			$container.before('<a href="question_create.html?oper=add" class="tw_btn">我要提问</a>');
+
+			loading.hide();
+		}
+		//在线服务
+		else if(tabID==2){
+			loading = weui.loading('连接中...');
+			var ifm='<iframe id="service-online-check-iframe" name="service-online-check-iframe" src="../service-online-check-iframe.html" accessId="'+chatAccessId+'" style="display:none;"></iframe>';
+
+			if(window.frames['service-online-check-iframexx']){
+				$('#service-online-check-iframe').remove();
+			}
+
+			$('body').append(ifm);
+			
+		}
+
+		//检测客服是否在线的回调方法
+		window.chatOnlineCallback=function(result){
+			if(typeof(result)=='undefined') return;
+
+			if(result){
+				console.info('客服在线');
+
+				$container.html(
+					template('asking-temp',{
+						accessId:chatAccessId,
+						nickname:nickname,
+						openid:openid
+					})
+				);
+
+				$container.prev('.tw_btn').remove()
+
+				loading.hide();
+			}
+			else{
+				console.info('客服离线');
+				location.href='/wx/weixin/faq/student/question_create.html?oper=add';
+			}
+
+			$('#service-online-check-iframe').remove();
+		}
+
+	})();
+
+	//搜索交互
+	$(document).on('focus','#search',function(){
+		$(this).siblings('.tip').hide();
+		$(this).siblings('.search_btn').css('display','block');
+	})
+	.on('blur','#search',function(){
+		if($(this).val() == ''){
+			$(this).siblings('.tip').show();
+			$(this).siblings('.search_btn').css('display','none');	
+		};
+	})
+
+	//搜索表单
+	.on('submit','#searchForm',function(event){
+		event.preventDefault();
+		var $container=$('#faq_ctn');
+		var loading = weui.loading('搜索中...');
+		$.ajax({
+			url: '/wx/feedback/oftenList',
+			type: 'GET',
+			dataType: 'json',
+			data: {
+				title:$.trim(document.getElementById('search').value),
+				orgCode:orgCode
+			},
+			success: function(data){
+				if(data.msgCode==200 && data.data && data.data.oftenTypeList && data.data.oftenTypeList.length>0){
+					$.each(data.data.oftenTypeList, function(index, node) {
+						if(node.oftenTypeMapList && node.oftenTypeMapList.length>0){
+							node.isFirstSeenChild=true;
+							data.data.hasFAQ=true;
+							return false;
+						}
+					});
+
+					$container.find('[data-id="faq-list-box"]').html(
+						template('common-faq-list-temp',data.data)
+					);
+				}
+				else{
+					$container.find('[data-id="faq-list-box"]').html(
+						template('no-data-temp',{message:data.message})
+					)
+				}
+
+				$('#search').val('').blur();
+
+				loading.hide();
+			}
+		});
+	})
+
+	//提交搜索
+	.on('click','#searchBtn',function(){
+		//var searchTxt = escape($('#search').val());
+		//window.location.href = 'order_search.html?search='+ searchTxt;
+		$('#searchForm').submit();
+	});
+
+	function loadPage($container){
+		var $pager=$('[data-id="pull-up-load-data"]',$container);
+		var pageData=$pager.data('pagination');
+
+		if(pageData.loading){
+			return;
+		}
+
+		if(pageData.currentPage<pageData.totalPages){
+
+			var hasArriveBottom=$container.scrollTop()+$container.height()>=$pager.height()-50;
+
+			if(hasArriveBottom){
+
+				pageData.loading=true;
+
+				$pager.data('pagination',pageData);
+
+				if(pageData.currentPage<pageData.totalPages){
+					++pageData.currentPage;
+				}
+
+				var options={
+					pageNumber: pageData.currentPage,
+					pageSize:8
+					//userId:userid
+				}
+
+				$.ajax({
+					url: '/wx/feedback/list',
+					type: 'GET',
+					dataType: 'json',
+					data: options,
+					success: function(data){
+						var rData=data.data;
+
+						pageData.loading=false;
+
+						$pager.data('pagination',pageData);
+
+						if(data.msgCode==200 && rData && rData.pageInfo && rData.pageInfo.content && rData.pageInfo.content.length>0){
+							$pager.children('.my_ques_list').append(
+								template('my-faq-list-temp',data.data.pageInfo)
+							);
+						}
+					}
+				});
+
+			}
+		}
+		else{
+			$pager.children('.weui-loadmore-reset').hide();
+			$container.off('scroll');
+		}
+		
+	}
+	
+	
+	
+	$('#faq_ctn').on('click','.faq_list_dl dt',function(){
+		if(!$(this).parent().hasClass('cur')){
+			$(this).parent().addClass('cur');
+		}else{
+			$(this).parent().removeClass('cur');
+		}
+	});
+
+
+	var winHeight = $(window).height();  //获取当前页面高度
+	$(window).on({
+		resize:function () {
+		    var thisHeight = $(this).height();
+		    if ( winHeight - thisHeight > 140 ) {
+		        //键盘弹出
+		        document.querySelector('.tw_btn').setAttribute('inputing','')
+		    } else {
+		        //键盘收起
+		        document.querySelector('.tw_btn').removeAttribute('inputing')
+		    }
+		}
+		,orientationchange:function(event) {
+			setTimeout(function(){
+				var $w=$(window);
+				winHeight = $w.height();
+				$w.resize();
+			},500);
+		}
+	});
+});	
+</script>
+
+</body>
+</html>

@@ -1,0 +1,253 @@
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ include file="/WEB-INF/jsp/common/taglibs.jsp"%>
+
+<!DOCTYPE html>
+<html class="reset">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>管理系统</title>
+
+<%@ include file="/WEB-INF/jsp/common/jslibs.jsp"%>
+
+</head>
+<body class="inner-page-body">
+
+<section class="content-header">
+	<ol class="breadcrumb">
+		<li><a href="#"><i class="fa fa-home"></i> 首页</a></li>
+		<li class="active">教材发放</li>
+	</ol>
+</section>
+<section class="content">
+	<form id="listForm" class="form-horizontal">
+	<div class="box">
+	    <div class="box-body">
+	        <div class="row pad-t15">
+	          <div class="col-sm-4">
+	            <div class="form-group">
+	              <label class="control-label col-sm-3 text-nowrap">姓名</label>
+	              <div class="col-sm-9">
+	                <input type="text" class="form-control" name="search_LIKE_xm" value="${param.search_LIKE_xm}">
+	              </div>
+	            </div>
+	          </div>
+	          <div class="col-sm-4">
+	            <div class="form-group">
+	              <label class="control-label col-sm-3 text-nowrap">学号</label>
+	              <div class="col-sm-9">
+	                <input type="text" class="form-control" name="search_LIKE_xh" value="${param.search_LIKE_xh}">
+	              </div>
+	            </div>
+	          </div>
+	          <div class="col-sm-4">
+	            <div class="form-group">
+	              <label class="control-label col-sm-3 text-nowrap">年级</label>
+	              <div class="col-sm-9">
+					<select name="search_EQ_nj" class="selectpicker show-tick form-control" data-size="5" data-live-search="true">
+						<option value="" selected='selected'>请选择</option>
+						<c:forEach items="${gradeMap}" var="grade">
+							<option value="${grade.key}"  <c:if test="${grade.key==param['search_EQ_nj']}">selected='selected'</c:if>>${grade.value}</option>
+						</c:forEach>
+					</select>
+	              </div>
+	            </div>
+	          </div>
+
+	          <div class="col-sm-4">
+	            <div class="form-group">
+	              <label class="control-label col-sm-3 text-nowrap">层次</label>
+	              <div class="col-sm-9">
+					<select name="search_EQ_pycc" class="selectpicker show-tick form-control" data-size="5" data-live-search="true">
+						<option value="" selected='selected'>请选择</option>
+						<c:forEach items="${trainingLevelMap}" var="trainingLevel">
+							<option value="${trainingLevel.key}"  <c:if test="${trainingLevel.key==param['search_EQ_pycc']}">selected='selected'</c:if>>${trainingLevel.value}</option>
+						</c:forEach>
+					</select>
+	              </div>
+	            </div>
+	          </div>
+	          <div class="col-sm-4">
+	            <div class="form-group">
+	              <label class="control-label col-sm-3 text-nowrap">专业</label>
+	              <div class="col-sm-9">
+					<select name="search_EQ_major" class="selectpicker show-tick form-control" data-size="5" data-live-search="true">
+						<option value="" selected='selected'>请选择</option>
+						<c:forEach items="${specialtyMap}" var="specialty">
+							<option value="${specialty.key}"  <c:if test="${specialty.key==param['search_EQ_major']}">selected='selected'</c:if>>${specialty.value}</option>
+						</c:forEach>
+					</select>
+	              </div>
+	            </div>
+	          </div>
+	          <div class="col-sm-4">
+	            <div class="form-group">
+	              <label class="control-label col-sm-3 text-nowrap">当前状态</label>
+	              <div class="col-sm-9">
+	                <select name="search_EQ_status" class="selectpicker form-control">
+						<option value="" selected="selected">全部</option>
+						<option value="-1" <c:if test="${param['search_EQ_status'] == -1}">selected="selected"</c:if> >未就绪</option>
+						<option value="1" <c:if test="${param['search_EQ_status'] == 1}">selected="selected"</c:if> >待配送</option>
+						<option value="2" <c:if test="${param['search_EQ_status'] == 2}">selected="selected"</c:if> >配送中</option>
+						<option value="3" <c:if test="${param['search_EQ_status'] == 3}">selected="selected"</c:if> >已签收</option>
+					</select>
+	              </div>
+	            </div>
+	          </div>
+	        </div>
+	    </div><!-- /.box-body -->
+	    <div class="box-footer">
+	      <div class="pull-right"><button type="reset" class="btn min-width-90px btn-default">重置</button></div>
+	      <div class="pull-right margin_r15"><button type="submit" class="btn min-width-90px btn-primary">搜索</button></div>
+	    </div><!-- /.box-footer-->
+	</div>
+	<div class="box margin-bottom-none">
+		<div class="box-header with-border">
+			<h3 class="box-title pad-t5">教材发放列表</h3>
+			<div class="pull-right no-margin">
+				<a class="btn btn-default btn-sm btn-import margin-r-5"><i class="fa fa-fw fa-sign-in"></i> 批量导入运单号</a>
+				<a class="btn btn-default btn-sm btn-export1 margin-r-5"><i class="fa fa-fw fa-sign-out"></i> 导出待发教材订单</a>
+				<a class="btn btn-default btn-sm btn-export2"><i class="fa fa-fw fa-sign-out"></i> 导出待签收教材订单</a>
+			</div>
+		</div>
+		<div class="box-body">
+			<div class="filter-tabs clearfix">
+				<ul class="list-unstyled">
+					<li <c:if test="${empty param['search_EQ_status']}">class="actived"</c:if>>全部(${notReady + notDistribute + distributing + signed})</li>
+					<li <c:if test="${param['search_EQ_status'] == -1}">class="actived"</c:if>>未就绪(${notReady})</li>
+					<li <c:if test="${param['search_EQ_status'] == 1}">class="actived"</c:if>>待配送(${notDistribute})</li>
+					<li <c:if test="${param['search_EQ_status'] == 2}">class="actived"</c:if>>配送中(${distributing})</li>
+					<li <c:if test="${param['search_EQ_status'] == 3}">class="actived"</c:if>>已签收(${signed})</li>
+				</ul>
+			</div>
+			<div class="table-responsive">
+				<table class="table table-bordered table-striped vertical-mid table-font text-center">
+					<thead>
+		              <tr>
+		                <th>姓名</th>
+		                <th>学号</th>
+		                <th>报读信息</th>
+		                <th>已发教材</th>
+		                <th>剩余待发</th>
+		                <th>当前待发</th>
+		                <th>当前状态</th>
+		                <th>操作</th>
+		              </tr>
+		            </thead>
+		            <tbody>
+		            	<c:choose>
+		            		<c:when test="${not empty pageInfo.content}">
+								<c:forEach items="${pageInfo.content}" var="entity">
+									<c:if test="${not empty entity}">
+						            	<tr>
+						            		<td>
+						            			${entity.studentName}
+						            		</td>
+						            		<td>
+						            			${entity.studentCode}
+						            		</td>
+						            		<td>
+				                              	<div class="text-left">
+					                              	年级：${entity.grade}<br>
+					                              	层次：${entity.trainingLevel}<br>
+					                              	专业：${entity.specialtyName}
+				                              	</div>
+						            		</td>
+						            		<td>
+						            			${entity.hadDistributeCount}
+						            		</td>
+						            		<td>
+						            			${entity.willDistributeCount}
+						            		</td>
+						            		<td>
+						            			${entity.currentDistributeCount}
+						            		</td>
+						            		<td>
+						            			<c:choose>
+						            				<c:when test="${entity.status == 0}">
+						            					<span class="text-muted">未就绪</span>
+						            				</c:when>
+						            				<c:when test="${entity.status == 1}">
+						            					<span class="text-yellow">待配送</span>
+						            				</c:when>
+						            				<c:when test="${entity.status == 2}">
+						            					<span class="text-light-blue">配送中</span>
+						            				</c:when>
+						            				<c:when test="${entity.status == 3}">
+						            					<span class="text-green">已签收</span>
+						            				</c:when>
+						            				<c:otherwise>--</c:otherwise>
+						            			</c:choose>
+						            		</td>
+						            		<td>
+						            			<a href="view/${entity.studentId}" class="operion-item" data-toggle="tooltip" title="查看详情"><i class="fa fa-fw fa-view-more"></i></a>
+						            		</td>
+						            	</tr>
+						            </c:if>
+						        </c:forEach>
+						    </c:when>
+							<c:otherwise>
+								<tr>
+									<td align="center" colspan="8">暂无数据</td>
+								</tr>
+							</c:otherwise>
+						</c:choose>
+		            </tbody>
+				</table>
+			</div>
+			<tags:pagination page="${pageInfo}" paginationSize="5" />
+		</div>
+	</div>
+	</form>
+</section>
+
+<%@ include file="/WEB-INF/jsp/common/footer.jsp"%>
+
+<script type="text/javascript">
+
+$(function(){
+	//批量导入
+	$(".btn-import").click(function(event) {
+		var actionName = ctx+"/textbookDistribute/importWaybillCode";
+		var downloadFileUrl = ctx+"/excelImport/downloadModel?name=运单号导入表.xls";
+		var content1 = "为了方便你的工作，我们已经准备好了《运单号导入表》的标准模板<br>你可以点击下面的下载按钮，下载标准模板。"
+		var content2 = "请选择你要导入的《运单号导入表》";
+		excelImport(actionName, "file", "textbookDistribute", downloadFileUrl, null, "批量导入运单号", null, null, null, content1, content2);
+	});
+	
+	//批量导出
+	$(".btn-export1").click(function(event) {
+		$.mydialog({
+		  id:'export',
+		  width:600,
+		  height:460,
+		  zIndex:11000,
+		  content: 'url:queryCurrentDistributeInfo'
+		});
+	});
+	
+	$(".btn-export2").click(function(event) {
+		window.location.href=ctx+'/textbookDistribute/exportNotSign';
+	});
+
+	// filter tabs
+	$(".filter-tabs li").click(function(event) {
+		var $li = $(this);
+		$(".filter-tabs li").each(function(index, el) {
+			if (el == $li.context && index == 0) {
+				window.location.href = "list";
+			} else if (el == $li.context && index == 1) {
+				window.location.href = "list?search_EQ_status=-1";
+			} else if (el == $li.context && index == 2) {
+				window.location.href = "list?search_EQ_status=1";
+			} else if (el == $li.context && index == 3) {
+				window.location.href = "list?search_EQ_status=2";
+			} else if (el == $li.context && index == 4) {
+				window.location.href = "list?search_EQ_status=3";
+			}
+		});
+	});
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+</head>
+<body class="body-pop">
+<div class="u-panel">
+	<div class="u-panel-head">
+	    预约考点
+	    <span class="pop-close" data-role="pop-close"></span>
+  	</div>
+  	<div class="u-panel-body scroll-box">
+      <div style="width:85%;" class="center-block">
+        <div class="text-center" style="padding:30px 0;">
+            <i class="alert-icon alert-icon-56x0 margin_r10"></i>
+            <span class="font24 text-green vertical-middle inline-block">已预约</span>
+        </div>
+
+        <table class="table-gray-th">
+          <tr>
+            <th width="25%" class="text-right">学期</th>
+            <td>2016春第二学期</td>
+          </tr>
+          <tr>
+            <th class="text-right">考点名称</th>
+            <td>东莞市总工会考点</td>
+          </tr>
+          <tr>
+            <th class="text-right">考点区域</th>
+            <td>广东省-东莞市</td>
+          </tr>
+          <tr>
+            <th class="text-right">考点地址</th>
+            <td>东莞市莞城街道田心路一号城区职校三楼303、304室</td>
+          </tr>
+          <tr>
+            <th class="text-right">可预约时段</th>
+            <td>2016-05-01至2016-06-01</td>
+          </tr>
+        </table>
+        <div class="alert-panel padding10 margin_t10 font12 gray">
+          <ol class="ol-decimal">
+            <li>请在预约考试时间内进行考点预约，过期将不能进行自主预约考点操作</li>
+            <li>错过了预约时间段没有预约考点的学员，若仍想预约考点，请联系你的班主任</li>
+            <li>若考点预约暂未开放，请留意考点开放预约通知或短信</li>
+          </ol>
+        </div>
+      </div>
+  	</div>
+  	<div class="u-panel-footer">
+  		<div class="in" align="right">
+  			<button class="btn btn-md btn-gray" data-role="close" style="width:100px;">关闭</button>
+  			<button class="btn btn-md btn-orange margin_l15" data-role="sure" style="width:100px;">修改考点</button>
+  		</div>
+  	</div>
+</div>
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+<script type="text/javascript">
+require(['jquery','common'], function ($) {
+  //“x”关闭窗口
+  $('[data-role="pop-close"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  //关闭窗口
+  $('[data-role="close"]').on('click', function(event) {
+    event.preventDefault();
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  //确定
+  $('[data-role="sure"]').on('click', function(event) {
+    event.preventDefault();
+    
+    parent.$.mydialog({
+      id:'confirm',
+      width:340,
+      height:270,
+      zIndex:1110,
+      html:true,
+      htmlConfig:{
+        title:'提示',
+        button:[
+          {
+            name:'取消',
+            btnClass:'btn btn-normal btn-gray',
+            callback:function(ev){
+              var $box=parent.$('[data-pop-id="confirm"]');
+              parent.$.closeDialog($box);
+            }
+          },
+          {
+            name:'确定',
+            btnClass:'btn btn-normal btn-orange margin_l15',
+            callback:function(ev){
+              var $box=parent.$('[data-pop-id="confirm"]');
+              parent.$.mydialog({
+                id:'select-place',
+                width:640,
+                height:570,
+                content: 'pop-dating-exam-place-select-place.html'
+              });
+              parent.$.closeDialog($box);
+              parent.$.closeDialog(frameElement.api);
+
+            }
+          }          
+        ]
+      },
+      content: [
+        '<table class="text-center" width="100%" height="100%">',
+          '<tr>',
+            '<td valgin="middle">',
+              '<i class="alert-icon alert-icon-0x0 margin_r10"></i>',
+              '<span class="font18 text-orange vertical-middle inline-block">确定修改预约考点？</span>',
+            '</td>',
+          '</tr>',
+        '</table>'
+      ].join(''),
+      onLoad:function(){
+        var $box=parent.$('[data-pop-id="'+this.id+'"]');
+        parent.$('.u-panel-body',$box).height(this.height-36-parent.$(".u-panel-footer",$box).height());
+      }
+    });
+  });
+
+  if($(frameElement).height()>0){
+    $('.scroll-box').height($(frameElement).height()-90);
+  }
+});
+</script>
+</body>
+</html>

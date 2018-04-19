@@ -1,0 +1,105 @@
+<div class="padding10" data-id="english-degree-signup">
+  <div class="alert-panel padding15 font_gray">
+    <table width="100%">
+      <tbody>
+        <tr>
+          <td align="center" valign="top" width="110">
+            <div class="font16">报名说明:</div>
+            <i class="alert-icon alert-icon-0x0"></i>
+          </td>
+          <td>
+            <ul>
+              <li>
+                第一、必须获得正式学号并且第二学年开始方可报名。
+              </li>
+              <li>第二、必须是本科学员。</li>
+              <li>第三、已毕业、已申请毕业学员不可 报名。</li>
+              <li>第四、工商管理、市场营销专业考试费按100元/人次收取，其它专业按70元/人次收取</li>
+              <li>第五、凡是学位英语考试发现有作弊记录的考生不予报考，如作弊学生继续报考，一概不退考试费用，并取消相应考试成绩</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="progress-tp">
+    <ol>
+      <li style="left:0%;">学员报名</li>
+      <li style="left:33.33%;">缴考试费</li>
+      <li style="left:66.67%;">上传照片</li>
+      <li style="left:100%;">报名成功</li>
+    </ol>
+  </div>
+  <div class="text-center">
+    <button type="button" class="btn btn-md btn-green border-radius min-width-120 disabled" data-role="signup" data-title="立即报名" disabled>立即报名</button>
+  </div>
+</div>
+
+<style type="text/css">
+  .progress-tp{
+    padding: 50px;
+  }
+  .progress-tp ol{
+    margin: 54px 60px;
+    height: 0;
+    border-top: 1px dashed #ccc;
+    position: relative;
+  }
+  .progress-tp li{
+    font-size: 25px;
+    color: #fff;
+    width: 116px;
+    height: 106px;
+    background-color: #999999;
+    color: #fff;
+    line-height: 108px;
+    text-align: center;
+    border: #666 1px solid;
+    position: absolute;
+    top: 50%;
+    margin-top: -54px;
+    margin-left: -58px;
+    border-radius: 100%;
+  }
+</style>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+  var $container=$('[data-id="english-degree-signup"]');
+
+  /*
+    var studentBaseInfo=$('body').data('studentBaseInfo');
+    var def=$.Deferred();
+    var $sign=$('[data-role="signup"]',$container);
+
+    if(studentBaseInfo){
+      def.resolve(studentBaseInfo);
+    }
+    else{
+      ajaxProcess({
+          url:'/pcenter/gjtUser/edit',
+          type:'GET',
+          success:function(renderData){
+            def.resolve(renderData.data);
+          },
+          fail:function(errorMessage){
+            def.reject();
+          }
+      });
+    }
+
+    def
+    .done(function(studentBaseInfo){
+      $sign.text('立即报名').removeClass('disabled').prop('disabled', false)
+      .on('click', function(event) {
+        window.open('http://eomp.oucnet.cn/eejy/xuewei/xuewei.html?studentId='+studentBaseInfo['studentId']);
+      });
+    })
+    .fail(function(){
+      $sign.text('数据加载失败');
+    });
+  */
+  
+});
+</script>

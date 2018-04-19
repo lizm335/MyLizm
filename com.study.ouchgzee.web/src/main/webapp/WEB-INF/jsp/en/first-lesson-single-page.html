@@ -1,0 +1,159 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>开学第一堂课-学习中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+</head>
+<body class="bg-white">
+<div class="first-less-banner"></div>
+
+<div class="first-less">
+    <div class="center-block">
+        <div class="text-center">
+          <div class="inline-block">
+            <h1 class="title">
+              <i></i>
+              <span>开学第一课</span>
+            </h1>
+          </div>
+        </div>
+
+        <div class="font18 margin_t20 margin_b20">
+          国家开放大学（广州）实验学院率先推进国家开放大学的办学模式改革，推进“六网融通”人才培养模式的改革，探索与行业协会、院校、大型企事业单位合作办学新模式，以大力开展非学历继续教育、稳步发展学历教育为主要任务，旨在提升行业、企业在职人员的素质和能力。
+        </div>
+
+        <div data-id="container">
+
+        </div>
+        
+    </div>
+</div>
+<div class="overlay bg-center hide" data-role="page-loading"></div>
+
+<script type="text/template" id="temp">
+  {{if videoList && videoList.length>0}}
+    {{each videoList}}
+      <div id="video{{$index}}" class="bg-fafafa margin-t30" style="height:400px;">
+
+      </div>
+      <h2 class="text-center text-no-bold font18 margin_t15">{{$value.title}}</h2>
+    {{/each}}
+
+    <div class="text-center" style="margin-top:50px;">
+      <a href="/" class="btn btn-lg btn-orange border-radius" style="width:200px;">进入学习</a>
+    </div>
+
+    <div class="margin_t15 text-orange text-center">
+      <i class="icon icon-145x31"></i>
+      温馨提示：以上指引视频可在进入学习后“学习指引”栏目中再次观看
+    </div>
+  {{/if}}
+</script>
+
+<script type="text/template" id="error-tips-temp">
+  <div class="text-center padding10">
+    <i class="alert-icon alert-icon-0x125 margin_r5"></i>
+    <span class="text-orange font16">{{message}}</span>
+  </div>
+</script>
+
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+
+<script type="text/javascript" src="http://eefile.download.eenet.com/configdata/wskeee/common/js/wskeee.min.js"></script>
+<script type="text/javascript" src="http://eefile.download.eenet.com//configdata/wskeee/eplayer/js/min/eplayer.min.js"></script>
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+  //创建一个播放器
+  var flashvars = {};
+  flashvars["file"] = '';
+  flashvars["preview"] = "";                      //预览图
+  flashvars["skinpath"] = "assets/skin.swf";      //使用的皮肤
+  flashvars["start"] = 0;                //开始跳播时间(s秒)
+  flashvars["autoPlay"] = false;                   //开始自动播放
+  flashvars["controlbar"] = "bottom";             //控制条显示方式:none/float/bottom
+  flashvars["controlbar.hide"] = "";              //控制条隐藏按钮 stopButton|normalscreenButton|fullscreenButton|muteButton|unmuteButton
+  flashvars["volume"] = 0.7;                      //播放器声音
+  flashvars["doubleClickEnabled"] = true;         //双击全屏 启用/禁用
+  flashvars["time_notification"]  = 60;           //时间通知间隔
+
+  //广告
+  flashvars["adForce"]  = false           // 是否强制观看广告 true/false
+  flashvars["adTime"]  = 0                // 广告时间
+  flashvars["adWorld"]  = "广告时间{t}秒"   // 广告词 {t} 将替换成数字
+  flashvars["adCloseWorld"]  = "关闭"      // 关闭按钮文字
+  flashvars["adPauseShow"]  = true        // 视频暂停时播放广告
+  flashvars["adEndShow"]  = false         // 视频结束时播放广告
+  flashvars["adWidth"]  = NaN             // 广告宽 ,自动留NaN
+  flashvars["adHeight"]  = NaN            // 广告高 ,自动留NaN
+  flashvars["adFile"]  = ""               // 广告路径，多个广告可用"|"分隔
+  flashvars["adLink"]  = ""               // 广告连接，多个可用"|"分隔
+
+  var paramArray=[];
+  var param1={};
+  var param2={};
+
+  var $container=$('[data-id="container"]');
+  var $pageLoading=$('[data-role="page-loading"]');
+
+  $pageLoading.show();
+  ajaxProcess({
+    url:'/pcenter/course/querySpecialtyVedio',//5.0 开学第一堂课
+    type:'GET',
+    success:function(renderData){
+      if(renderData.msgCode==200 && renderData.data){
+          $container.html(
+            template('temp',renderData.data)
+          );
+
+          if(renderData.data.videoList && renderData.data.videoList.length>0){
+
+            $.each(renderData.data.videoList, function(index, val) {
+                
+              paramArray.push({});
+
+              $.extend(paramArray[index], flashvars, {file:val.video,autoPlay:(index==0?true:false)});
+
+              new Wskeee.EPlayer("video"+index,"100%","100%",paramArray[index],null);
+
+            });
+
+          }
+      }
+      else{
+        $container.html(
+          template('error-tips-temp',{message:renderData.message})
+        );
+      }
+    },
+    fail:function(errorMsg){
+      $container.html(
+        template('error-tips-temp',{message:errorMsg})
+      );
+      
+    },
+    always:function(){
+      $pageLoading.hide();
+    }
+  })
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<div class="padding20" data-id="live-container">
+	<div style="height:300px;"></div>
+	<div class="overlay bg-center"></div>
+</div>
+
+<script type="text/template" id="live-content-temp">
+	{{if newlyList && newlyList.length>0}}
+		<div class="clearfix padding_b20">
+			<div class="text-no-bold sub-title clearfix">
+				<a href="#/zbliebiao" class="fr">更多>></a>
+				<span class="font16">近期直播</span>
+			</div>
+			<ul class="broadcast-list">
+				{{each newlyList}}
+					<li>
+						<div class="inner">
+							<div class="bc-img">
+								<a href="#/zbjianjie?id={{$value.id}}" title="{{$value.lessonName}}">
+									{{if $value.imgUrl}}
+										<img src="{{$value.imgUrl | imgUrlFormat:[260,180]}}" class="vertical-middle" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/broadcast-default.jpg'">
+									{{else}}
+										<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/broadcast-default.jpg" class="vertical-middle">
+									{{/if}}
+								</a>
+								<div class="bc-helper">
+									<i class="mark"></i>
+									<div class="txt clearfix">
+										{{$value.status | createBarText:[$value.startTime,$value.endTime,$value.joinNum]}}
+									</div>
+								</div>
+							</div>
+							<div class="title" title="{{$value.lessonName}}">{{$value.lessonName}}</div>
+						</div>
+					</li>
+				{{/each}}
+			</ul>
+		</div>
+	{{/if}}
+
+	{{if pastList && pastList.length>0}}
+		<div class="clearfix">
+			<div class="text-no-bold sub-title clearfix">
+				<a href="#/zbliebiao" class="fr">更多>></a>
+				<span class="font16">往期录播</span>
+			</div>
+			<div class="broadcast-list-box">
+				<ul class="broadcast-list">
+					{{each pastList}}
+						<li>
+							<div class="inner">
+								<div class="bc-img">
+									<a href="#/zbjianjie?id={{$value.id}}" title="{{$value.lessonName}}">
+										{{if $value.imgUrl}}
+											<img src="{{$value.imgUrl | imgUrlFormat:[260,180]}}" class="vertical-middle" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/broadcast-default.jpg'">
+										{{else}}
+											<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/broadcast-default.jpg" class="vertical-middle">
+										{{/if}}
+									</a>
+									<div class="bc-helper">
+										<i class="mark"></i>
+										<div class="txt clearfix">
+											{{$value.status | createBarText:[$value.startTime,$value.endTime,$value.joinNum]}}
+										</div>
+									</div>
+								</div>
+								<div class="title" title="{{$value.lessonName}}">{{$value.lessonName}}</div>
+							</div>
+						</li>
+					{{/each}}
+				</ul>
+			</div>
+		</div>
+	{{/if}}
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+	template.helper('createBarText', function (status,args) {
+		var startTime=args[0],
+			endTime=args[1],
+			joinNum=args[2];
+		var result='';
+
+		//日期格式检测
+		if( !dateTimeValidation(startTime) && !dateTimeValidation(endTime) ){
+			return result;
+		}
+
+		//已结束
+		if(status==2){
+			result='\
+						<div class="bc-count">{0}</div>\
+						<div class="oh">{1} 已结束</div>\
+					'.format(
+						joinNum,
+						fomateDateMD(endTime)
+					);
+		}
+		//直播中
+		else if(status==1){
+			result='\
+						<div class="bc-count">{0}</div>\
+						<div class="oh">直播中 {1}~{2}</div>\
+					'.format(
+						joinNum,
+						fomateTime(startTime),
+						fomateTime(endTime)
+					);
+		}
+		//未开始
+		else if(status==0){
+			var now=new Date();
+			var start=new Date( startTime.replace(/-/g,'\/') );
+			//如果是今天
+			if( 
+				start.getFullYear()==now.getFullYear() && 
+				start.getMonth()==now.getMonth() &&
+				start.getDate()==now.getDate()
+			){
+				result='\
+							<div class="oh">即将开始 今天 {0}~{1}</div>\
+						'.format(
+							fomateTime(startTime),
+							fomateTime(endTime)
+						);
+			}
+			else{
+				result='\
+							<div class="oh">{0} {1}~{2}</div>\
+						'.format(
+							fomateDateMD(startTime),
+							fomateTime(startTime),
+							fomateTime(endTime)
+						);
+			}
+		}
+
+		return result;
+    });
+
+    function fomateDateMD(strDate){
+    	if( !dateTimeValidation(strDate) ){
+			return '--';
+		}
+		else{
+			var date=new Date(strDate.replace(/-/g,'\/'));
+			var y=date.getFullYear(),
+				m=date.getMonth()+1,
+				d=date.getDate();
+
+			return y+'-'+( m<10?('0'+m):m )+'-'+( d<10?('0'+d):d );
+		}
+    }
+
+    function fomateTime(strDate){
+		if( !dateTimeValidation(strDate) ){
+			return '--';
+		}
+		else{
+			var date=new Date(strDate.replace(/-/g,'\/'));
+			var hh=date.getHours();
+			var mm=date.getMinutes();
+
+			return ( hh<10?('0'+hh):hh )+':'+( mm<10?('0'+mm):mm );
+		}
+    };
+
+	var $container=$('[data-id="live-container"]');
+
+	ajaxProcess({
+		//6.0 近期直播，往期直播
+  		url:'/pcenter/course/queryLiveVideoForIndex',
+  		type:'GET',
+  		success:function(renderData){
+  			if(renderData.msgCode==200 && renderData.data){
+  				var render=template.compile( $('#live-content-temp').html(),{escape:false} );
+  				$container.html( render(renderData.data) );
+  			}
+  			else{
+  				$container.html( template('no-data-tips-temp',{message:'暂无直播内容'}) );
+  			}
+  		},
+  		fail:function(textStatus){
+  			$container.html( template('error-tips-temp',{message:textStatus}) );
+  		}
+  	})
+	
+});
+</script>

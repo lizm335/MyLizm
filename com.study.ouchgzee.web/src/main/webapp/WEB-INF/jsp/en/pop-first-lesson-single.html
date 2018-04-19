@@ -1,0 +1,210 @@
+<!doctype html>
+<!--[if lte IE 7]><html class="ie67"><![endif]-->
+<!--[if IE 8]><html class="ie8"><![endif]-->
+<!--[if gte IE 9]><html><![endif]-->
+<!--[if !IE]><!--><html><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="renderer" content="webkit">
+<title>个人中心</title>
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/common/v2/common.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/style.css" />
+<link type="text/css" rel="stylesheet" href="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/style/page.css">
+<!--[if lt IE 9]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/resetHTML5_forIE.js"></script>
+<![endif]-->
+
+<!--[if lte IE 6]>
+<script type="text/javascript" src="http://css.gzedu.com/common/js/DD_belatedPNG_0.0.8a.js"></script>
+<script>
+  DD_belatedPNG.fix('.bg_png');
+</script>
+<![endif]-->
+<style type="text/css">
+html,body{
+  height: 100%;
+  overflow: hidden;
+}
+object{
+  vertical-align: middle;
+}
+</style>
+</head>
+<body class="body-pop">
+<div class="u-panel ">
+    <div class="u-panel-body scroll-box">
+      <div class="first-less text-center padding_t15">
+        <h1 class="title" style="width:100%;">
+          <i style="background: #ccc;"></i>
+          <span>开学第一课</span>
+        </h1>
+      </div>
+      <div data-id="container" style="padding:15px 20px;">
+        
+      </div>
+    </div>
+    <div class="u-panel-footer">
+      <div class="in" align="right">
+        <button type="button" class="btn btn-md btn-orange" data-role="sure" style="width:100px;">进入学习</button>
+      </div>
+    </div>
+    <div class="overlay bg-center" style="display:none;"></div>
+</div>
+
+<script type="text/template" id="temp">
+  <div class="font16 margin_b20">
+    国家开放大学（广州）实验学院率先推进国家开放大学的办学模式改革，推进“六网融通”人才培养模式的改革，探索与行业协会、院校、大型企事业单位合作办学新模式，以大力开展非学历继续教育、稳步发展学历教育为主要任务，旨在提升行业、企业在职人员的素质和能力。
+  </div>
+  {{if videoList && videoList.length>0}}
+    <div class="border-e0e0e0">
+      <table width="100%">
+        <tr>
+          <td width="75%">
+            <div id="video1" class="bg-fafafa" style="height:310px;">
+              
+            </div>
+          </td>
+          <td valign="top">
+            <ul>
+              {{each videoList}}
+                <li data-role="video-tab" class="as-link border-bottom padding10" data-video-url="{{$value.video}}" style="{{$index==0?'background:#ccc;':''}}">
+                  {{$value.title}}
+                </li>
+              {{/each}}
+            </ul>
+          </td>
+        </tr>
+      </table>
+    </div>
+  {{/if}}
+  <div class="margin_t15 text-orange text-center">
+      <i class="icon icon-145x31"></i>
+      温馨提示：以上指引视频可在进入学习后“学习指引”栏目中再次观看
+  </div>
+</script>
+
+<script src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/require.js" data-require-path="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/js/"></script>
+
+<script type="text/javascript" src="http://eefile.download.eenet.com/configdata/wskeee/common/js/wskeee.min.js"></script>
+<script type="text/javascript" src="http://eefile.download.eenet.com//configdata/wskeee/eplayer/js/min/eplayer.min.js"></script>
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+  var frmData=frameElement.data;
+
+  var $pageLoading=$('.overlay');
+  var $container=$('[data-id="container"]');
+  //创建一个播放器
+  var flashvars = {};
+    flashvars["file"] = '';
+    flashvars["preview"] = "";                      //预览图
+    flashvars["skinpath"] = "assets/skin.swf";      //使用的皮肤
+    flashvars["start"] = 0;                //开始跳播时间(s秒)
+    flashvars["autoPlay"] = false;                   //开始自动播放
+    flashvars["controlbar"] = "bottom";             //控制条显示方式:none/float/bottom
+    flashvars["controlbar.hide"] = "";              //控制条隐藏按钮 stopButton|normalscreenButton|fullscreenButton|muteButton|unmuteButton
+    flashvars["volume"] = 0.7;                      //播放器声音
+    flashvars["doubleClickEnabled"] = true;         //双击全屏 启用/禁用
+    flashvars["time_notification"]  = 60;           //时间通知间隔
+
+    //广告
+    flashvars["adForce"]  = false           // 是否强制观看广告 true/false
+    flashvars["adTime"]  = 0                // 广告时间
+    flashvars["adWorld"]  = "广告时间{t}秒"   // 广告词 {t} 将替换成数字
+    flashvars["adCloseWorld"]  = "关闭"      // 关闭按钮文字
+    flashvars["adPauseShow"]  = true        // 视频暂停时播放广告
+    flashvars["adEndShow"]  = false         // 视频结束时播放广告
+    flashvars["adWidth"]  = NaN             // 广告宽 ,自动留NaN
+    flashvars["adHeight"]  = NaN            // 广告高 ,自动留NaN
+    flashvars["adFile"]  = ""               // 广告路径，多个广告可用"|"分隔
+    flashvars["adLink"]  = ""               // 广告连接，多个可用"|"分隔
+
+  var param1={};
+
+  function createVideo(url){
+    $('#video1').empty();
+
+    $.extend(param1, flashvars, {file:url,autoPlay:true});
+
+    var v1=new Wskeee.EPlayer("video1","100%","100%", param1 ,null);
+  }
+
+
+  //进入学习
+  $('[data-role="sure"]').on('click', function(event) {
+    
+    
+    parent.$.closeDialog(frameElement.api);
+  });
+
+  //选项卡
+  $('body').on('click', '[data-role="video-tab"]', function(event) {
+    var url=$(this).data('video-url');
+    createVideo(url);
+
+    $(this).css({
+      'background': '#ccc'
+    }).siblings().css({
+      'background': '#fff'
+    });
+  });
+
+  //页面初始化
+  $container.html(
+    template('temp',frmData)
+  );
+
+  if(frmData.videoList.length>0){
+    createVideo(frmData.videoList[0].video);
+
+    //设置学员为 已观看视频状态
+    ajaxProcess({
+        url:'/pcenter/course/saveViewVedioRecord',//5.1 保存学员查看开学第一堂课视频记录
+        type:'GET'
+    });
+  }
+  /*
+  ajaxProcess({
+    url:'/pcenter/course/querySpecialtyVedio',//5.0 开学第一堂课
+    type:'GET',
+    success:function(renderData){
+      if(renderData.msgCode==200 && renderData.data){
+          $container.html(
+            template('temp',renderData.data)
+          );
+
+          if(renderData.data.videoList && renderData.data.videoList.length>0){
+            createVideo(renderData.data.videoList[0].video);
+
+            setTimeout(function(){
+              top.$.cookie('hasWatchVideo',true);          
+            },1000)
+
+          }
+      }
+      else{
+        $container.html(
+          template('error-tips-temp',{message:renderData.message})
+        );
+      }
+    },
+    fail:function(errorMsg){
+      $container.html(
+        template('error-tips-temp',{message:errorMsg})
+      );
+      
+    },
+    always:function(){
+      $pageLoading.hide();
+    }
+  });
+  */
+
+
+  if($(frameElement).height()>0){
+    $('.scroll-box').height($(frameElement).height()-54);
+  }
+});
+</script>
+</body>
+</html>

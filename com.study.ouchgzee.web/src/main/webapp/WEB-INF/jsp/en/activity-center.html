@@ -1,0 +1,306 @@
+<div class="main-box">
+	<div class="wrap-box clearfix">
+		<div class="main">
+			<div class="bg-white border-e0e0e0">
+				<div class="teacher_title">
+					<a class="btn btn-normal btn-gray fr" href="#/xuexi">
+						<i class="icon icon-175x0 margin_r5"></i>返回首页
+					</a>
+					<h2><i class="icon icon-0x32"></i>活动中心</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="main-box">
+	<div class="wrap-box clearfix">
+		<div class="main">
+			<div class="bg-white border-e0e0e0 overlay-wrapper" data-id="activity-center">
+				<table width="100%" height="350">
+					<tr>
+						<td valign="middle" class="text-center">
+							<p>
+								<i class="loading"></i>
+						    </p>
+						    <p class="font22 gray margin_t10">数据加载中...</p>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>		
+</div>
+
+<!--全局 模板-->
+<script type="text/template" id="global-tpl">
+	<div class="submenu clearfix">
+		<div class="submenu-toggle" style="display:none;">
+	    	<i class="toggle-mark"></i>
+	    	<div class="toggle-in">
+	    		<span class="toggle-label">更多</span>
+	    		<i class="toggle-icon"></i>
+	    	</div>
+	    </div>
+		<div class="submenu-tabs-box margin_l20 margin_r20">
+			<div class="tabs-box-in clearfix">
+			    <ul class="tabs-list">
+			      <li class="active">
+			        <a href="#" data-code="">全部({{totalTypeCount}})</a>
+			      </li>
+			      {{each infoTypeList}}
+				      <li data-code="{{$value.code}}">
+				        <a href="#">{{$value.name}}({{$value.typeCount}})</a>
+				      </li>
+			      {{/each}}
+			    </ul>
+		    </div>
+	    </div>
+	</div>
+	<div class="tabs-content" id="tabs-content-box">
+		<div class="bzr_subnav padding_t20">
+			<form data-id="form">
+				{{include 'form-tpl'}}
+			</form>
+		</div>
+		<div data-role="type-content">
+			<div data-role="item-list-container">
+		        <div style="height:300px;"></div>
+		    </div>
+		</div>
+	</div>
+</script>
+
+<script type="text/html" id="form-tpl">
+	<div class="subnav_btn fl" data-role="type-tab">
+		<a href="#" class="active">未读（<span data-id="not-read">0</span>）</a>
+		<a href="#">已读（<span data-id="has-read">0</span>）</a>
+	</div>
+
+	<div class="bzr_searchInput fr margin_l10">
+		<input class="form-control input-search" placeholder="请输入关键词搜索" name="infoTheme" style="width:250px;">
+	</div>
+	<!--子分类-->
+	<div class="fr" data-id="filter-box">
+
+	</div>
+
+	<input type="hidden" name="isEnabled" value="0">
+	<input type="hidden" name="infoType" value="{{infoType}}">
+</script>
+
+<!--列表 模板-->
+<script type="text/template" id="list-render-temp">
+	{{if pageInfo.totalElements>0}}
+		<ul class="activity-list">
+			{{each pageInfo.content}}
+				<li class="item clearfix">
+					<div class="img-box">
+						<a href="#/hdzhongxinxq?id={{$value.messageId}}">
+							{{if $value.coverUrl}}
+								<img src="{{$value.coverUrl | imgUrlFormat:[240,144]}}" alt="{{$value.infoTheme}}" onerror="this.src='http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/act-default.jpg'">
+							{{else}}
+								<img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/act-default.jpg" alt="{{$value.infoTheme}}">
+							{{/if}}
+						</a>
+					</div>
+					<div class="cnt">
+						<h3 class="title">
+							{{if $value.isStick==1}}
+								<span class="label label-warning">置顶</span>
+							{{/if}}
+							<a href="#/hdzhongxinxq?id={{$value.messageId}}">{{$value.infoTheme}}</a>
+						</h3>
+						<div class="base-info">
+							<span>类型：{{$value.infoType}}</span>
+							<span>分类：{{$value.typeClassify}}</span>
+							<span>发布：{{$value.putUserName}}</span>
+							<span>时间：{{$value.createdDt}}</span>
+						</div>
+						<div class="txt">
+							{{$value.infoContent}}
+						</div>
+						<div class="status-info">
+							<span><i class="icon icon-0x144"></i>{{$value.readTotal}}</span>
+							<span><i class="icon icon-162x68"></i>{{$value.commentCount}}</span>
+							<span><i class="icon icon-23x144"></i>{{$value.likeCount}}</span>
+						</div>
+					</div>
+				</li>
+			{{/each}}
+		</ul>
+	{{/if}}
+</script>
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+	var $box=$('[data-id="activity-center"]'), $container;
+
+	//数据初始化
+	ajaxProcess({
+        url:'/pcenter/home/message/findInfoType',
+        type:'GET',
+        success:function(renderData){
+        	var rData=renderData.data;
+            if(renderData.msgCode==200 && rData){
+                $box.html( template('global-tpl',rData) );
+
+                $container=$('[data-role="type-content"]',$box);
+
+                fixTabs();
+
+                genarateHtml();
+            }
+        },
+        fail:function(errorMessage){
+            $box.html( '<div class="padding_t25">'+template('error-tips-temp',{message:errorMessage})+'</div>' );
+        }
+    });
+
+    //选项卡调整
+    function fixTabs(){
+    	var $submenuToggle=$('.submenu-toggle',$box)
+    		,$submenuTabsBox=$('.submenu-tabs-box',$box)
+    		,$tabsList=$('.tabs-list',$submenuTabsBox);
+
+    	if($tabsList.width()>$submenuTabsBox.width()-$submenuToggle.width()+20){
+	    	$submenuToggle.show();
+	    }
+    }
+
+
+    //生成分页
+	function genarateHtml(filterType){
+		var $form=$('[data-id="form"]');
+		var elForm=$form.get(0);
+	    return new myPagination({
+		    form: $form,
+		    ajaxUrl: '/pcenter/home/message/list', 
+		    $Container: $container,
+		    pageSize: 5,
+		    boxCss:'padding_l20 padding_r20 padding_t25 padding_b25 text-right',
+		    callback: function(renderData) {
+		    	var $notRead = $('[data-id="not-read"]',$box),
+		    		$hasRead = $('[data-id="has-read"]',$box);
+
+		        var $listWrap = $('[data-role="item-list-container"]');
+
+		        $listWrap.append('<div class="overlay bg-center"></div>');
+		        if (renderData.msgCode == 200) {
+		            if (renderData.data) {
+		            	var rData=renderData.data;
+		            	//子分类显示
+		            	if(rData.classifyList && rData.classifyList.length>0){
+	                    	var $filterSel=$('[data-role="sel-filter-note"]',$box);
+	                    	var tpl='\
+	                    			<select class="form-control" style="width:200px;" data-role="sel-filter-note" name="classifyType">\
+										<option value="">全部分类</option>\
+										{{each classifyList}}\
+											{{if $value.id==filterSel}}\
+												<option value="{{$value.id}}" selected>{{$value.name}}</option>\
+											{{else}}\
+												<option value="{{$value.id}}">{{$value.name}}</option>\
+											{{/if}}\
+										{{/each}}\
+									</select>\
+		                    	';
+
+	                    	var render2=template.compile(tpl);
+	                    	var optionHtml=render2(
+	                    		$.extend({}, rData, {filterSel:$filterSel.val()})
+	                    	);
+	                    	$('[data-id="filter-box"]',$box).html(optionHtml);
+	                    	
+	                    }
+	                    else{
+	                    	$('[data-id="filter-box"]',$box).empty();
+	                    }
+
+	                    //列表数据
+		                if (rData.pageInfo && rData.pageInfo.totalElements > 0) {
+		                	var render=template.compile( $('#list-render-temp').html(),{escape:false} );
+		                    var renderHtml = render(rData);
+		                    $listWrap.html(renderHtml);
+		                    
+		                } else {
+		                    if (elForm.classifyType && elForm.classifyType.value != '' && elForm.infoTheme && elForm.infoTheme.value) {
+		                        $listWrap.html(window['noDataTips']);
+		                    } else {
+		                        var renderHtml = template('no-data-tips-temp', {
+		                            message: '暂无相关活动'
+		                        });
+		                        $listWrap.html(renderHtml);
+		                    }
+		                }
+
+		                //未读/已读
+	                    $notRead.text(rData.unreadCount);
+	                    $hasRead.text(rData.readCount);
+		            } else {
+		                $listWrap.html(window['noDataTips']);
+
+		                $notRead.text(0);
+	                    $hasRead.text(0);
+		            }
+		        } else {
+		            $listWrap.html( '<div class="padding_t25">'+template('error-tips-temp',{message:renderData.message})+'</div>' );
+		            $listWrap.next('[data-role="page-box"]').remove();
+
+		            $notRead.text(0);
+	                $hasRead.text(0);
+		        }
+		    }
+		}).createHtml()
+	}
+
+
+    $box
+    //子分类
+    .on('click','.submenu-toggle', function(event) {
+    	var $p=$(this).parent();
+    	if($p.hasClass('actived')){
+    		$p.removeClass('actived');
+    	}
+    	else{
+    		$p.addClass('actived');
+    	}
+    })
+    //大分类 tab
+    .on('click', '.submenu-tabs-box li', function(event) {
+    	event.preventDefault();
+    	var index=$(this).index();
+
+    	var curIndex=$('.submenu-tabs-box li',$box).index($('.submenu-tabs-box li.active',$box));
+
+    	$(this).addClass('active').siblings('li').removeClass('active');
+
+    	if(index==curIndex) return;//点击同一大分类就不往下执行
+
+    	var $form=$('[data-id="form"]',$box);
+
+    	$form.html(template('form-tpl',{infoType:$(this).data('code')}));
+
+    	genarateHtml();
+    })
+    //未读/已读
+    .on('click', '[data-role="type-tab"] a', function(event) {
+    	event.preventDefault();
+    	var index=$(this).index();
+    	$(this).addClass('active').siblings().removeClass('active');
+    	$('[name="isEnabled"]',$box).val(index);
+    	genarateHtml();
+    })
+
+    //回车搜索
+    .on('keydown', '.input-search' ,function(event) {
+    	var self=this;
+        if(event.which==13){
+          genarateHtml();
+        }
+    })
+
+    //下拉筛选
+    .on('change', '[data-role="sel-filter-note"]', function(event) {
+    	genarateHtml();
+    });
+    
+});
+</script>

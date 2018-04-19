@@ -1,0 +1,696 @@
+<div data-id="mark-container">
+	<div class="padding_t20 padding_l20 padding_r20" data-id="score-static-box">
+	</div>
+	<div class="overlay-wrapper" data-id="mark-static-data">
+		<!--成绩与学分-->
+		<div data-id="mark-tabs">
+			
+		</div>
+		<div class="tabs-content padding20">
+			<div data-id="mark-content">
+				<div style="height:100px;"></div>
+			</div>
+		</div>
+		<div class="overlay bg-center"></div>
+	</div>
+</div>
+
+<!--选项卡 模板-->
+<script type="text/template" id="mark-tabs-temp">
+	{{if schoolModel==='0' || schoolModel==5}}
+		<ul class="tabs1 tabs-list clearfix" data-id="tabs-box">
+			<li class="active" data-rel="mark-temp">
+				<a href="#">
+					成绩详情
+				</a>
+			</li>
+			<li data-rel="point-temp">
+				<a href="#">
+					学分详情
+				</a>
+			</li>
+		</ul>
+	{{/if}}
+</script>
+<!--成绩详情 模板-->
+<script type="text/template" id="mark-temp">
+	{{if msgCode==200}}
+        {{if data && data.length>0}}
+        	{{if schoolModel==5}}
+        		<table cellspacing="0" class="table-basic vertical-middle text-center f12">
+			      <thead>
+			        	<tr>
+				          	<th width="8%">学期</th>
+				          	<th>课程信息</th>
+					        <th width="7%">已获学分</th>
+					        <th width="7%">考试类型</th>
+					        <th width="7%">形考比例</th>
+					        <th width="7%">学习进度</th>
+					        <th width="7%">学习成绩</th>
+					        <th width="7%">考试成绩</th>
+					        <th width="6%">总成绩</th>
+					        <th width="6%">状态</th>
+					        <th width="7%">考试次数</th>
+					        <th width="9%">操作</th>
+			        	</tr>
+			        </thead>
+			        <tbody>
+			        	{{each data as TERMSList index}}
+			        		{{each TERMSList.TERM as TERMITEN index2}}
+						        <tr>
+						          {{if index2==0}}
+						          	<td rowspan="{{TERMSList.TERM.length}}">{{TERMSList.TERM_NAME}}</td>
+						          {{/if}}
+						          <!--SCORE_STATE 0 未通过 1 已通过 2 学习中 3 登记中,4 未学习-->
+
+						          <td>
+						          	<ul class="text-left">
+						          		<li>课程名称：{{TERMITEN.KCMC}}<li>
+						          		<li>课程模块：{{TERMITEN.KCLBM_NAME}}<li>
+						          		<li>课程学分：{{TERMITEN.XF}}<li>
+						          		<!--<li>选课类型：(字段缺失)<li>-->
+						          	</ul>
+						          </td>
+						          <td>
+						          	{{if TERMITEN.SCORE_STATE==='0' || TERMITEN.SCORE_STATE==='1'}}
+						          		{{TERMITEN.GET_POINT | NumberConvert}}
+						          	{{else}}
+						          		--
+						          	{{/if}}
+						          </td>
+
+						          <td>
+						          	<!--考试状态是  已通过 或 未通过 或 登记中-->
+						          	{{if TERMITEN.SCORE_STATE==='0' || TERMITEN.SCORE_STATE==='1' || TERMITEN.SCORE_STATE==='3'}}
+						          		{{TERMITEN.KSFS_NAME?TERMITEN.KSFS_NAME:'--'}}
+						          	{{else}}
+						          		--
+						          	{{/if}}
+						          </td>
+						          <td>
+						          	{{if TERMITEN.SCORE_STATE==='0' || TERMITEN.SCORE_STATE==='1' || TERMITEN.SCORE_STATE==='3'}}
+						          		{{if TERMITEN.XK_PERCENT}}
+						          			{{TERMITEN.XK_PERCENT | NumberConvert}}%
+							          	{{else}}
+							          		--
+							          	{{/if}}
+						          	{{else}}
+						          		--
+						          	{{/if}}						          	
+						          </td>
+						          <td>
+						          	{{if TERMITEN.SCORE_STATE==='4'}}
+						          		--
+						          	{{else}}
+						          		{{if TERMITEN.PROGRESS}}
+						          			{{TERMITEN.PROGRESS | NumberConvert}}%
+							          	{{else}}
+							          		--
+							          	{{/if}}
+						          	{{/if}}
+						          </td>
+						          <td>
+						          	{{if TERMITEN.SCORE_STATE==='4'}}
+						          		--
+						          	{{else}}
+						          		{{if TERMITEN.STUDY_SCORE}}
+						          			{{TERMITEN.STUDY_SCORE | NumberConvert}}
+							          	{{else}}
+							          		--
+							          	{{/if}}
+						          	{{/if}}
+						          </td>
+						          <td>
+						          	{{if TERMITEN.SCORE_STATE==='0' || TERMITEN.SCORE_STATE==='1' || TERMITEN.SCORE_STATE==='3'}}
+						          		{{TERMITEN.EXAM_SCORE | NumberConvert}}
+						          	{{else}}
+						          		--
+						          	{{/if}}
+						          </td>
+						          <td>
+						          	{{if TERMITEN.SCORE_STATE==='0' || TERMITEN.SCORE_STATE==='1'}}
+						          		{{TERMITEN.SUM_SCORE | NumberConvert}}
+						          	{{else}}
+						          		--
+						          	{{/if}}
+						          </td>
+						          <td>
+						          	{{TERMITEN.SCORE_STATE | StateNumConvert2Str}}
+						          </td>
+						          <td>{{TERMITEN.EXAM_NUM | NumberConvert}}</td>
+						          <td>	
+						          	{{if TERMITEN.EXAM_NUM>0}}
+						          		<a href="#" class="text-blue" data-role="view-history" data-plan-id="{{TERMITEN.TEACH_PLAN_ID}}">查看历史成绩</a>
+						          	{{else}}
+						          		--
+						          	{{/if}}
+						          </td>
+						        </tr>
+				        	{{/each}}
+				        {{/each}}
+			      	</tbody>
+			    </table>
+        	{{else}}
+				<table cellspacing="0" class="table-basic vertical-middle text-center f12">
+			      <thead>
+			        	<tr>
+			        	  <!--非院校模式-->
+				          {{if schoolModel==='0' }}
+				          	<th width="8%">学期</th>
+				          	<th width="10%">课程模块</th>
+				          	<th>课程名称</th>
+				          	<th width="7%">考试类型</th>
+					        <th width="5%">学分</th>
+					        <th width="8%">已获得学分</th>
+					        <th width="7%">形考比例</th>
+					        <th width="7%">学习进度</th>
+					        <th width="7%">学习成绩</th>
+					        <th width="7%">考试成绩</th>
+					        <th width="6%">总成绩</th>
+					        <th width="7%">状态</th>
+					        <th width="7%">考试次数</th>
+					        <th width="6%">操作</th>
+					      {{else}}
+					      	<th width="8%">学期</th>
+					      	<th width="12%">课程模块</th>
+				          	<th>课程名称</th>
+					      	<th width="10%">考试类型</th>
+					      	<th width="7%">形考比例</th>
+					      	{{if schoolModel==1 }}
+					      		<th width="7%">学习进度</th>
+					      	{{/if}}
+				          	<th width="7%">学习成绩</th>
+				          	<th width="7%">考试成绩</th>
+				          	<th width="6%">总成绩</th>
+				          	<th width="7%">状态</th>
+				          	<th width="7%">考试次数</th>
+				          	<th width="10%">操作</th>
+				          {{/if}}
+				          
+			        	</tr>
+			        </thead>
+			        <tbody>
+			        	{{each data as TERMSList index}}
+			        		{{each TERMSList.TERM as TERMITEN index2}}
+						        <tr>
+						          {{if index2==0}}
+						          	<td rowspan="{{TERMSList.TERM.length}}">{{TERMSList.TERM_NAME}}</td>
+						          {{/if}}
+						          <!--SCORE_STATE 0 未通过 1 已通过 2 学习中 3 登记中,4 未学习-->
+						          <td>{{TERMITEN.KCLBM_NAME}}</td>
+						          <td>{{TERMITEN.KCMC}}</td>
+						          <td>
+						          	<!--考试状态是  已通过 或 未通过 或 登记中-->
+						          	{{if TERMITEN.SCORE_STATE==='0' || TERMITEN.SCORE_STATE==='1' || TERMITEN.SCORE_STATE==='3'}}
+						          		{{TERMITEN.KSFS_NAME?TERMITEN.KSFS_NAME:'--'}}
+						          	{{else}}
+						          		--
+						          	{{/if}}
+						          </td>
+
+						          <!--TERMSList.IS_CURRENT=='Y' 代表该学期已经开放-->
+						          <!--非院校模式-->
+						          {{if schoolModel==='0' }}
+							          <td>{{TERMITEN.XF}}</td>
+							          <td>
+							          	{{if TERMITEN.SCORE_STATE==='0' || TERMITEN.SCORE_STATE==='1'}}
+							          		{{TERMITEN.GET_POINT | NumberConvert}}
+							          	{{else}}
+							          		--
+							          	{{/if}}
+							          </td>
+
+							          <td>
+							          	{{if TERMITEN.SCORE_STATE==='0' || TERMITEN.SCORE_STATE==='1' || TERMITEN.SCORE_STATE==='3'}}
+							          		{{if TERMITEN.XK_PERCENT}}
+							          			{{TERMITEN.XK_PERCENT | NumberConvert}}%
+								          	{{else}}
+								          		--
+								          	{{/if}}
+							          	{{else}}
+							          		--
+							          	{{/if}}						          	
+							          </td>
+
+							          <td>
+							          	{{if TERMITEN.SCORE_STATE==='4'}}
+							          		--
+							          	{{else}}
+							          		{{if TERMITEN.PROGRESS}}
+							          			{{TERMITEN.PROGRESS | NumberConvert}}%
+								          	{{else}}
+								          		--
+								          	{{/if}}
+							          	{{/if}}
+							          </td>
+
+							          <td>
+							          	{{if TERMITEN.SCORE_STATE==='4'}}
+							          		--
+							          	{{else}}
+							          		{{if TERMITEN.STUDY_SCORE}}
+							          			{{TERMITEN.STUDY_SCORE | NumberConvert}}
+								          	{{else}}
+								          		--
+								          	{{/if}}
+							          	{{/if}}
+							          </td>
+							          <td>
+							          	{{if TERMITEN.SCORE_STATE==='0' || TERMITEN.SCORE_STATE==='1' || TERMITEN.SCORE_STATE==='3'}}
+							          		{{TERMITEN.EXAM_SCORE | NumberConvert}}
+							          	{{else}}
+							          		--
+							          	{{/if}}
+							          </td>
+							          <td>
+							          	{{if TERMITEN.SCORE_STATE==='0' || TERMITEN.SCORE_STATE==='1'}}
+							          		{{TERMITEN.SUM_SCORE | NumberConvert}}
+							          	{{else}}
+							          		--
+							          	{{/if}}
+							          </td>
+							          <td>
+							          	{{TERMITEN.SCORE_STATE | StateNumConvert2Str}}
+							          </td>
+							          <td>{{TERMITEN.EXAM_NUM | NumberConvert}}</td>
+							          <td>
+							          	
+							          	{{if TERMITEN.EXAM_NUM && TERMITEN.EXAM_NUM>0}}
+							          		<a href="#" class="text-blue" data-role="view-history" data-plan-id="{{TERMITEN.TEACH_PLAN_ID}}">查看历史成绩</a>
+							          	{{else}}
+							          		--
+							          	{{/if}}
+							          </td>
+							      <!--1：院校模式-->
+						          {{else}}
+						          	  <td>
+							          	{{if TERMITEN.SCORE_STATE==='0' || TERMITEN.SCORE_STATE==='1'}}
+							          		{{if TERMITEN.XK_PERCENT}}
+							          			{{TERMITEN.XK_PERCENT | NumberConvert}}%
+								          	{{else}}
+								          		--
+								          	{{/if}}
+							          	{{else}}
+							          		--
+							          	{{/if}}
+							          	
+							          </td>
+
+							          {{if schoolModel==1 }}
+								          <td>
+								          	{{if TERMITEN.SCORE_STATE==='4'}}
+								          		--
+								          	{{else}}
+								          		{{if TERMITEN.PROGRESS}}
+								          			{{TERMITEN.PROGRESS | NumberConvert}}%
+									          	{{else}}
+									          		--
+									          	{{/if}}
+								          	{{/if}}
+								          </td>
+							          {{/if}}
+
+							          <td>
+							          	{{if TERMITEN.SCORE_STATE==='4'}}
+							          		--
+							          	{{else}}
+							          		{{if TERMITEN.STUDY_SCORE}}
+							          			{{TERMITEN.STUDY_SCORE | NumberConvert}}
+								          	{{else}}
+								          		--
+								          	{{/if}}
+							          	{{/if}}
+							          </td>
+							          <td>
+							          	{{if TERMITEN.SCORE_STATE==='0' || TERMITEN.SCORE_STATE==='1' || TERMITEN.SCORE_STATE==='3'}}
+							          		{{TERMITEN.EXAM_SCORE | NumberConvert}}
+							          	{{else}}
+							          		--
+							          	{{/if}}
+							          </td>
+							          <td>
+							          	{{if TERMITEN.SCORE_STATE==='0' || TERMITEN.SCORE_STATE==='1'}}
+							          		{{TERMITEN.SUM_SCORE | NumberConvert}}
+							          	{{else}}
+							          		--
+							          	{{/if}}
+							          </td>
+							          <td>
+							          	{{TERMITEN.SCORE_STATE | StateNumConvert2Str}}
+							          </td>
+							          <td>{{TERMITEN.EXAM_NUM | NumberConvert}}</td>
+							          <td>
+							          	
+							          	{{if TERMITEN.EXAM_NUM && TERMITEN.EXAM_NUM>0}}
+							          		<a href="#" class="text-blue" data-role="view-history" data-plan-id="{{TERMITEN.TEACH_PLAN_ID}}">查看历史成绩</a>
+							          	{{else}}
+							          		--
+							          	{{/if}}
+							          </td>
+						          {{/if}}
+						          
+						        </tr>
+				        	{{/each}}
+				        {{/each}}
+			      	</tbody>
+			    </table>
+			    {{if schoolModel==='0' }}
+			    	<a href="/pcenter/course/downGradesExcel" target="_blank" class="btn btn-normal btn-orange position-absolute" style="right: 20px;top: 20px;">导出成绩详情</a>
+			    {{/if}}
+			{{/if}}
+
+    	{{else}}
+    		<div class="text-center margin-t30">
+			  <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/icon-1.png" alt="" class="vertical-middle">
+			  <span class="font24 vertical-middle inline-block margin_l10" style="color:#b2b2b2;">无成绩数据</span>
+			</div>
+        {{/if}}
+    {{else}}
+    	<div class="text-center margin-t30">
+		  <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/icon-1.png" alt="" class="vertical-middle">
+		  <span class="font24 vertical-middle inline-block margin_l10" style="color:#b2b2b2;">{{message}}</span>
+		</div>
+    {{/if}}
+</script>
+
+<!--学分详情 模板-->
+<script type="text/template" id="point-temp">
+	{{if msgCode==200}}
+        {{if data && data.length>0}}
+			<table cellspacing="0" class="table-basic vertical-middle text-center">
+		      <thead>
+		        	<tr>
+		        	  <th>课程模块</th>
+			          <th width="11%">总学分</th>
+			          <th width="13%">最低毕业学分</th>
+			          <th width="11%">已获学分</th>
+			          <th width="11%">课程总数</th>
+			          <th width="11%">未通过课程数</th>
+			          <th width="11%">已通过课程数</th>
+			          <th width="11%">状态</th>
+		        	</tr>
+		        </thead>
+		        <tbody>   
+		        	{{each data}}
+				        <tr>
+				          <td>{{$value.NAME}}</td>
+				          <td>{{$value.XF_COUNT | NumberConvert}}</td>
+				          <td>{{$value.LIMIT_SCORE | NumberConvert}}</td>
+				          <td>{{$value.GET_POINT | NumberConvert}}</td>
+				          <td>{{$value.COUNT_COURSE | NumberConvert}}</td>
+				          <td>{{$value.UN_PASS_COURSE | NumberConvert}}</td>
+				          <td>{{$value.PASS_COURSE | NumberConvert}}</td>
+				          <td>
+				          	{{if $value.GET_POINT>=$value.LIMIT_SCORE}}
+				          		<div class="text-green">
+					          		已达标
+					          	</div>
+				          	{{else}}
+					          	<div class="text-red">
+					          		未达标
+					          	</div>
+				          	{{/if}}
+				          </td>
+				        </tr>
+			        {{/each}}
+		      	</tbody>
+		    </table>
+		    <div class="margin_t5 text-orange">
+		    	注：为了能够顺利毕业，以上各课程模块所得学分都必须满足最低毕业学分要求。
+		    </div>
+    	{{else}}
+    		<div class="text-center margin-t30">
+			  <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/icon-1.png" alt="" class="vertical-middle">
+			  <span class="font24 vertical-middle inline-block margin_l10" style="color:#b2b2b2;">无学分数据</span>
+			</div>
+        {{/if}}
+    {{else}}
+    	<div class="text-center margin-t30">
+		  <img src="http://css.gzedu.com/ouchgzee_com/person_center/v3.0.1/images/icon-1.png" alt="" class="vertical-middle">
+		  <span class="font24 vertical-middle inline-block margin_l10" style="color:#b2b2b2;">{{message}}</span>
+		</div>
+    {{/if}}
+</script>
+
+<!--院校模式下显示的成绩统计表-->
+<script type="text/template" id="score-static-box-temp">
+	<div class="learnCase nomargin" data-role="score-static">
+		<table width="100%">
+			<tbody>
+	            <tr>
+		            <td data-id="score-static-td">
+						{{include 'loading-tips-temp'}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</script>
+
+<script type="text/template" id="score-static-tbl-temp">
+    <table width="100%" class="text-center text-nowrap">
+        <tbody>
+        	{{if schoolModel==1 || schoolModel==2}}
+        		<!--院校模式-->
+	            <tr>
+	                <td width="{{100/6}}%">
+	                    <span class="stat_num">{{PASS_COURSE | NumberConvert}}</span>
+	                    <br>已通过课程
+	                </td>
+	                <td width="{{100/6}}%">
+	                    <span class="stat_num">{{UNPASS_COURSE | NumberConvert}}</span>
+	                    <br>未通过课程
+	                </td>
+	                <td width="{{100/6}}%">
+	                    <span class="stat_num">{{LEARNING_COURSE | NumberConvert}}</span>
+	                    <br>学习中课程
+	                </td>
+	                <td width="{{100/6}}%">
+	                    <span class="stat_num">{{REGING_COURSE | NumberConvert}}</span>
+	                    <br>登记中课程
+	                </td>
+	                <td width="{{100/6}}%">
+	                    <span class="stat_num">{{COUNT_COURSE | NumberConvert}}</span>
+	                    <br>课程总数
+	                </td>
+	                <td width="{{100/6}}%">
+	                    <span class="stat_num position-relative">
+	                        {{STD_RANK | NumberConvert}}
+	                        {{if ORDER_CHANGE>0}}
+	                        	<em class="jump_tips f12">
+	                        		<i class="icon icon-71x93"></i>
+		                            {{ORDER_CHANGE}}名
+		                        </em>
+	                        {{else if ORDER_CHANGE<0}}
+	                        	<em class="jump_tips f12 down_status">
+	                        		<i class="icon icon-71x93"></i>
+		                            {{ORDER_CHANGE*-1}}名
+		                        </em>
+	                        {{/if}}
+	                    </span>
+	                    <br>班级排名
+	                </td>
+	            </tr>
+	        {{else}}
+	        	<!--非院校模式-->
+	        	<tr>
+	        		<td width="8%">
+	                    <span class="stat_num">{{SUM_XF | NumberConvert}}</span>
+	                    <br>总学分
+	                </td>
+	                <td width="">
+	                    <span class="stat_num">{{ZDBYXF | NumberConvert}}</span>
+	                    <br>最低毕业学分
+	                </td>
+	                <td width="10%">
+	                    <span class="stat_num">{{GETED_XF | NumberConvert}}</span>
+	                    <br>已获得学分
+	                </td>
+	                <td width="8%">
+	                    <span class="stat_num">{{COUNT_COURSE | NumberConvert}}</span>
+	                    <br>课程总数
+	                </td>
+	                <td width="10%">
+	                    <span class="stat_num">{{PASS_COURSE | NumberConvert}}</span>
+	                    <br>已通过课程
+	                </td>
+	                <td width="10%">
+	                    <span class="stat_num">{{UNPASS_COURSE | NumberConvert}}</span>
+	                    <br>未通过课程
+	                </td>
+	                <td width="10%">
+	                    <span class="stat_num">{{LEARNING_COURSE | NumberConvert}}</span>
+	                    <br>学习中课程
+	                </td>
+	                <td width="10%">
+	                    <span class="stat_num">{{WXI_COURSE | NumberConvert}}</span>
+	                    <br>未学习课程
+	                </td>
+	                <td width="10%">
+	                    <span class="stat_num">{{REGING_COURSE | NumberConvert}}</span>
+	                    <br>登记中课程
+	                </td>
+	                
+	                <td width="12%">
+	                    <span class="stat_num position-relative">
+	                        {{STD_RANK | NumberConvert}}
+	                        {{if ORDER_CHANGE>0}}
+	                        	<em class="jump_tips f12">
+	                        		<i class="icon icon-71x93"></i>
+		                            {{ORDER_CHANGE}}名
+		                        </em>
+	                        {{else if ORDER_CHANGE<0}}
+	                        	<em class="jump_tips f12 down_status">
+	                        		<i class="icon icon-71x93"></i>
+		                            {{ORDER_CHANGE*-1}}名
+		                        </em>
+	                        {{/if}}
+	                    </span>
+	                    <br>班级排名
+	                </td>
+	            </tr>
+	        {{/if}}
+        </tbody>
+    </table>
+</script>
+
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+
+	template.helper('StateNumConvert2Str', function (orientVal) {
+		var r="";
+		if( !$.isNumeric(orientVal)) return orientVal;
+		else{
+			var n=parseInt(orientVal);
+			r='<div class="{0}">{1}</div>'
+			switch(n){
+				case 1:
+					r=r.format('text-green','已通过');
+					break;
+				case 0:
+					r=r.format('text-red','未通过');
+					break;
+				case 2:
+					r=r.format('text-orange','学习中');
+					break;
+				case 3:
+					r=r.format('text-orange','登记中');
+					break;
+				case 4:
+					r=r.format('gray','未学习');
+					break;
+				default:
+					r=r.format('','--');
+					break;
+			}
+		    return r;
+	    }
+	});
+
+	var $box=$('[data-id="mark-container"]');
+	var $container=$('[data-id="mark-content"]');
+	var $staticBox=$('[data-id="mark-static-data"]');
+
+	$('[data-id="mark-tabs"]').html(
+		template('mark-tabs-temp',{schoolModel:appJSON.schoolModel})
+	)
+
+	//查找数据
+	function queryData(index){
+		index || (index=0);
+
+		$staticBox.children('.overlay').show()
+
+		var url,tempId;
+
+    	if(index==0){//成绩详情
+    		url='/pcenter/course/gradesAndRedits';
+    		tempId="#mark-temp";
+    	}
+    	else if(index==1){//学分成绩
+    		url='/pcenter/course/getCreditDetail';
+    		tempId="#point-temp";  
+    	}
+
+    	ajaxProcess({
+      		url:url,
+      		type:'POST',
+      		success:function(renderData){
+      			var render = template.compile($(tempId).html(),{escape:false});
+	  			var renderHtml = render(
+	  				$.extend(true, renderData, {schoolModel:appJSON.schoolModel})	  				
+	  			);
+                $container.html(renderHtml);		        
+      		}
+      	})
+    	.fail(function(XMLHttpRequest, textStatus, errorThrown){
+    		$container.html( textStatus || errorThrown )
+    	})
+    	.always(function(){
+    		$staticBox.children('.overlay').hide();
+    	});
+	}
+
+	;(function(){
+		//加载成绩统计数据
+		var $staticBox=$('[data-id="score-static-box"]',$box)
+		$staticBox.html( template('score-static-box-temp',{}) );
+		var $td=$('[data-id="score-static-td"]',$staticBox);
+		ajaxProcess({
+			//接口 4.4 成绩总览-(院校模式)
+      		url:'/pcenter/course/getResultsOverview',
+      		type:'POST',
+      		success:function(renderData){
+      			if(renderData.msgCode==200){
+      				if(renderData.data){
+      					var renderHtml = template('score-static-tbl-temp',
+      						$.extend(true, renderData.data, {schoolModel:appJSON.schoolModel})
+      					);
+                		$('[data-role="score-static"]',$staticBox).html(renderHtml);
+      				}
+      				else{
+      					//$td.html(template('error-tips-temp',{message:'无相关数据'}));
+      					$staticBox.addClass('hide');
+      				}
+      			}
+      			else{
+      				$td.html(template('error-tips-temp',{message:renderData.message}));
+      			}        
+      		},
+      		fail:function(err){
+      			$td.html(template('error-tips-temp',{message:err}));
+      		}
+      	});
+	})();
+
+	//选项卡
+    $('[data-id="tabs-box"] > li').click(function(event) {
+    	event.preventDefault();
+    	var self=this;
+    	var index=$(this).index();
+    	
+    	
+    	$(self).addClass('active').siblings().removeClass('active');
+
+    	queryData(index);
+    });
+
+    queryData(0)
+
+    //查看历史成绩
+    $container.on('click', '[data-role="view-history"]', function(event) {
+    	event.preventDefault();
+    	var self=this;
+    	$.mydialog({
+		  id:'view-history',
+		  width:550,
+		  zIndex:1000,
+		  height:440,
+		  urlData:{
+		  	teachPlanId:$(self).data('plan-id')
+		  },
+		  content: 'pop-view-history-score.html'
+		});
+    });
+});
+</script>

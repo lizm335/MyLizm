@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<bean id="parentConfig" class="com.gzedu.xlims.third.sms.jiguang.JiGuangConfig">
+		<property name="url" value="https://api.jpush.cn/v3/push" />
+		<property name="contentType" value="application/json" />
+		<property name="platform" value="all" />
+		<property name="audience" value="all" />
+		<property name="apnsProduction" value="false" />
+	</bean>
+
+	<bean id="smsSenderManager" class="com.gzedu.xlims.third.sms.SmsSenderManager">
+		<property name="smsSenderMap">
+			<map>
+				<entry key="0" value-ref="jpushTestSender" />
+				<!-- 国家开放大学（广州）实验学院 -->
+				<entry key="1" value-ref="guangzhoushiyanxueyuan" />
+				<entry key="11" value-ref="yida" />
+				<entry key="12" value-ref="wanbao" />
+				<entry key="13" value-ref="lianjia" />
+				<entry key="14" value-ref="jinfa" />
+				<entry key="15" value-ref="baijia" />
+				<entry key="16" value-ref="jiumaojiu" />
+				<entry key="17" value-ref="hepai" />
+				<!-- 国家开放大学实验学院 -->
+				<entry key="2" value-ref="guokaishiyanxueyuan" />
+				<entry key="21" value-ref="maibao" />
+			</map>
+		</property>
+	</bean>
+	
+	
+	<!-- 极光推送配置 -->     
+	<!-- JPush推送测试 -->
+	<bean id="jpushTestSender" class="com.gzedu.xlims.third.sms.jiguang.JiGuanSender">
+		<property name="config">
+			<bean class="com.gzedu.xlims.third.sms.jiguang.JiGuangConfig" parent="parentConfig">
+				<property name="appKey" value="69d5bb0a571a75270d95b348" />
+				<property name="masterSecret" value="c760a3409d200f22ad5ebcb0" />
+			</bean>
+		</property>
+	</bean>
+	<!-- 麦胞圆梦大学 -->
+	<bean id="maibao" class="com.gzedu.xlims.third.sms.jiguang.JiGuanSender">
+		<property name="config">
+			<bean class="com.gzedu.xlims.third.sms.jiguang.JiGuangConfig" parent="parentConfig">
+				<property name="appKey" value="bd36dc7cc3187ab64049ebe9" />
+				<property name="masterSecret" value="4e8bbd39a5a43e3a1af14b4d" />
+			</bean>
+		</property>
+	</bean>
+	<!-- 广州实验学院 -->
+	<bean id="guangzhoushiyanxueyuan" class="com.gzedu.xlims.third.sms.jiguang.JiGuanSender">
+		<property name="config">
+			<bean class="com.gzedu.xlims.third.sms.jiguang.JiGuangConfig" parent="parentConfig">
+				<property name="appKey" value="51a19295ec63ffdab67660f2" />
+				<property name="masterSecret" value="90ed29408df8db721530d761" />
+			</bean>
+		</property>
+	</bean>
+	<!-- 溢达圆梦大学 -->
+	<bean id="yida" class="com.gzedu.xlims.third.sms.jiguang.JiGuanSender">
+		<property name="config">
+			<bean class="com.gzedu.xlims.third.sms.jiguang.JiGuangConfig" parent="parentConfig">
+				<property name="appKey" value="cc8fa36654f5a469e63ae43e" />
+				<property name="masterSecret" value="45a0543c728ec7340c84c36b" />
+			</bean>
+		</property>
+	</bean>
+	<!-- 国开实验学院 -->
+	<bean id="guokaishiyanxueyuan" class="com.gzedu.xlims.third.sms.jiguang.JiGuanSender">
+		<property name="config">
+			<bean class="com.gzedu.xlims.third.sms.jiguang.JiGuangConfig" parent="parentConfig">
+				<property name="appKey" value="147c57b036000dd17f3f9195" />
+				<property name="masterSecret" value="09cafbb9ef42ee0fde5b64e8" />
+			</bean>
+		</property>
+	</bean>
+	<!-- 万宝圆梦大学 -->
+	<bean id="wanbao" class="com.gzedu.xlims.third.sms.jiguang.JiGuanSender">
+		<property name="config">
+			<bean class="com.gzedu.xlims.third.sms.jiguang.JiGuangConfig" parent="parentConfig">
+				<property name="appKey" value="2600f0bf9524c61cec52abae" />
+				<property name="masterSecret" value="9475295fb011197e5fff25fd" />
+			</bean>
+		</property>
+	</bean>
+	<!-- 链家圆梦大学 -->
+	<bean id="lianjia" class="com.gzedu.xlims.third.sms.jiguang.JiGuanSender">
+		<property name="config">
+			<bean class="com.gzedu.xlims.third.sms.jiguang.JiGuangConfig" parent="parentConfig">
+				<property name="appKey" value="1bf4eb1e740c099721cf6c26" />
+				<property name="masterSecret" value="5bd6358915b4df42e752b1c7" />
+			</bean>
+		</property>
+	</bean>
+	<!-- 金发圆梦大学 -->
+	<bean id="jinfa" class="com.gzedu.xlims.third.sms.jiguang.JiGuanSender">
+		<property name="config">
+			<bean class="com.gzedu.xlims.third.sms.jiguang.JiGuangConfig" parent="parentConfig">
+				<property name="appKey" value="ebd47b55444cbf2bf9d7cc74" />
+				<property name="masterSecret" value="6ca72288b4fc5af3027e15f7" />
+			</bean>
+		</property>
+	</bean>
+	<!-- 百佳圆梦大学 -->
+	<bean id="baijia" class="com.gzedu.xlims.third.sms.jiguang.JiGuanSender">
+		<property name="config">
+			<bean class="com.gzedu.xlims.third.sms.jiguang.JiGuangConfig" parent="parentConfig">
+				<property name="appKey" value="476135373998cb5c6b8441b9" />
+				<property name="masterSecret" value="491256500abb65954e034d48" />
+			</bean>
+		</property>
+	</bean>
+	<!-- 九毛九圆梦大学 -->
+	<bean id="jiumaojiu" class="com.gzedu.xlims.third.sms.jiguang.JiGuanSender">
+		<property name="config">
+			<bean class="com.gzedu.xlims.third.sms.jiguang.JiGuangConfig" parent="parentConfig">
+				<property name="appKey" value="383c997dfdf39b78f24eace2" />
+				<property name="masterSecret" value="c4ca4fabaf302cb7059d7d2a" />
+			</bean>
+		</property>
+	</bean>
+	<!-- 壳牌圆梦大学 -->
+	<bean id="hepai" class="com.gzedu.xlims.third.sms.jiguang.JiGuanSender">
+		<property name="config">
+			<bean class="com.gzedu.xlims.third.sms.jiguang.JiGuangConfig" parent="parentConfig">
+				<property name="appKey" value="b059e648427e2f8d6a124855" />
+				<property name="masterSecret" value="363e94191c553a68ee9574c3" />
+			</bean>
+		</property>
+	</bean>
+</beans>

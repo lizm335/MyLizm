@@ -1,0 +1,542 @@
+<div class="overlay-wrapper" data-id="textbook-distribute">
+    <div data-role="distribute-plan-box">
+        <h3 class="text-no-bold sub-title f16 margin_b10">教材发放计划</h3>
+        <div data-role="distribute-plan">
+            <table class="table-gray-th text-center margin_t10">
+                <tr>
+                    <td style="padding:10px 0;">
+                        <div class="text-center">
+                            <i class="loading"></i>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <h3 class="text-no-bold sub-title f16 margin_b10 margin_t20">收货地址</h3>
+
+    <div data-id="default-address">
+        <table class="table-gray-th" data-role="address-tbl">
+            <tbody>
+                <tr data-role="nodata">
+                    <td class="text-center">
+                        <div class="text-center"><i class="loading"></i></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+
+    <h3 class="text-no-bold sub-title f16 margin_b10 margin_t20">配送信息</h3>
+    <div data-id="delivery-list">
+        <table class="table-gray-th text-center">
+            <tbody>
+                <tr data-role="nodata">
+                    <td class="text-center">
+                        <div class="text-center"><i class="loading"></i></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+
+    <h3 class="text-no-bold sub-title f16 margin-t30 margin_b10">教材配送</h3>
+    <div data-id="jcps">
+        <table class="table-gray-th text-center">
+            <tbody>
+                <tr data-role="nodata">
+                    <td class="text-center">
+                        <div class="text-center"><i class="loading"></i></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+
+    <div class="overlay bg-center hide"></div>
+</div>
+
+<!--教材发放计划-->
+<script type="text/template" id="delivery-plan-temp">
+    <table class="table-gray-th text-center margin_t10">
+        <thead>
+            <tr>
+                <th width="17%">教材计划</th>
+                <th width="15%">教材发放编排时间</th>
+                <th width="14%">教材订购时间</th>
+                <th width="15%">收货地址确认时间</th>
+                <th width="14%">教材发放时间</th>
+                <th width="15%">教材反馈处理时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{each data}}
+                <tr>
+                    <td>
+                        <ul>
+                          <li>计划编号：{{$value.planCode}}</li>
+                          <li>计划名称：{{$value.planName}}</li>
+                          <li>计划学期：{{$value.gradeName}}</li>
+                        </ul>
+                        
+                    </td>
+                    <td>
+                        {{$value.arrangeSdate}}<br>
+                        ~<br>
+                        {{$value.arrangeEdate}}
+                    </td>
+                    <td>
+                        {{$value.orderSdate}}<br>
+                        ~<br>
+                        {{$value.orderEdate}}
+                    </td>
+                    <td>
+                        {{$value.addressConfirmSdate}}<br>
+                        ~<br>
+                        {{$value.addressConfirmEdate}}
+                    </td>
+                    <td>
+                        {{$value.distributeSdate}}<br>
+                        ~<br>
+                        {{$value.distributeEdate}}
+                    </td>
+                    <td>
+                        {{$value.feedbackSdate}}<br>
+                        ~<br>
+                        {{$value.feedbackEdate}}
+                    </td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>    
+</script>
+
+<!--收货地址-->
+<script type="text/template" id="default-address-temp">
+    <table class="table-gray-th" data-role="address-tbl">
+        <tbody>
+            <tr>
+                <th width="10%" class="text-right">收货人</th>
+                <td>
+                    <span data-role="name">
+                        {{receiver}}
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-right">手机号码</th>
+                <td>
+                    <span data-role="mobile">
+                        {{mobile}}
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <th class="text-right">收货地址</th>
+                <td>
+                    <span data-role="address">
+                        {{province}}{{city}}{{area}}{{address}}
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</script>
+
+<!--配送信息-->
+<script type="text/template" id="delivery-list-temp">
+    {{if studyCenter}}
+        <div class="panel text-646e7d">
+            <div class="panel-body">
+                <dl>
+                    <dt class="f16 margin_b5">本期教材将由您的学习中心为你发放，如有疑问请与学习中心联系</dt>
+                    <dd>学习中心：{{studyCenter.studyCenterName?studyCenter.studyCenterName:'--'}}</dd>
+                    <dd>联系地址：{{studyCenter.officeAddr?studyCenter.officeAddr:'--'}}</dd>
+                    <dd>联系电话：{{studyCenter.linkTel?studyCenter.linkTel:'--'}}</dd>
+                    <dd>固定电话：{{studyCenter.officeTel?studyCenter.officeTel:'--'}}</dd>
+                </dl>
+            </div>
+        </div>
+    {{/if}}
+
+    <!--配送信息列表-->
+    {{if deliveryList && deliveryList.length>0}}
+        <table class="table-gray-th text-center margin_t10">
+            <thead>
+                <th width="10%">配送类型</th>
+                <th width="40%">配送物品</th>
+                <th width="10%">配送状态</th>
+                <th width="18%">配送时间</th>
+                <th width="22%">物流信息</th>
+            </thead>
+            <tbody>
+                {{each deliveryList as item n}}
+                    <tr>
+                        <td>教材</td>
+                        <td>
+                            {{if item.textbookDistributionDetas}}
+                                {{each item.textbookDistributionDetas}}
+                                    {{if $value.textbookName}}
+                                        《{{$value.textbookName}}》
+                                        {{$index!=item.textbookDistributionDetas.length-1?'、':''}}
+                                    {{/if}}
+                                {{/each}}
+                            {{/if}}
+                        </td>
+                        <td>{{item.statusDesc}}</td>
+                        <td>{{item.distributionDt?item.distributionDt:'--'}}</td>
+                        <td>
+                            {{if item.status>1}}
+                                <a href="javascript:void(0);" class="font_blue" data-role="view-express" data-distributeId="{{item.distributeId}}"><u>查看物流</u></a>
+                            {{else}}
+                                --
+                            {{/if}}
+                        </td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    {{else}}
+        <table class="table-gray-th text-center margin_t10">
+            <tbody>
+                <tr data-role="nodata">
+                    <td>
+                        <div class="text-center">
+                            <i class="alert-icon alert-icon-123x63 margin_r10"></i>
+                            <span class="f14">暂无配送信息</span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    {{/if}}
+</script>
+
+<!--教材配送-->
+<script type="text/template" id="jcps-temp">
+    <table class="table-gray-th table-striped text-center">
+        <thead>
+            <tr>
+                <th width="10%">学期</th>
+                <th width="22%">课程名称</th>
+                <th width="12%">教程类型</th>
+                <th width="29%">教材名称</th>
+                <th width="12%">教材价格</th>
+                <th width="15%">配送状况</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{each data}}
+                {{if $value.courses.length>0}} 
+                    {{each $value.courses as courseItem n}}
+
+                        {{if courseItem.textbooks.length>0}}
+
+                            {{each courseItem.textbooks as textBookItem m}}
+                                <tr>
+                                    {{if m==0}}
+                                        {{if n==0}}
+                                            <td rowspan="{{$value.courses | jcpsCountCourse}}" class="bg-white">{{$value.termName}}</td>
+                                        {{/if}}
+                                        <td rowspan="{{courseItem | jcpsCountTextbook}}">{{courseItem.courseName}}</td>
+                                    {{/if}}
+                                    <td>
+                                        {{if textBookItem.textbookType==1}}
+                                            主教材
+                                        {{else if textBookItem.textbookType==2}}
+                                            复习资料
+                                        {{else}}
+                                            {{textBookItem.textbookType}}
+                                        {{/if}}
+                                    </td>
+                                    <td>{{textBookItem.textbookName}}</td>
+                                    <td>
+                                        {{if textBookItem.price===null || textBookItem.price===''}}
+                                            --
+                                        {{else}}
+                                            ￥{{textBookItem.price}}
+                                        {{/if}}
+                                    </td>
+                                    <td>
+                                        <span class="
+                                          {{if textBookItem.status==0}}
+                                            gray
+                                          {{else if textBookItem.status==1}}
+                                            text-red
+                                          {{else if textBookItem.status==2}}
+                                            text-orange
+                                          {{else if textBookItem.status==3}}
+                                            text-green
+                                          {{/if}}
+                                        ">
+                                          {{textBookItem.statusDesc}}
+                                        </span> 
+                                    </td>
+                                </tr>
+                            {{/each}}
+
+                        {{else}}
+                            <tr>
+                                {{if n==0}}
+                                    <td rowspan="{{$value.courses  | jcpsCountCourse}}" class="bg-white">{{$value.termName}}</td>
+                                {{/if}}
+                                    <td rowspan="{{courseItem | jcpsCountTextbook}}">{{courseItem.courseName}}</td>
+                                
+                                <td>--</td>
+                                <td>--</td>
+                                <td>--</td>
+                                <td>--</td>
+                            </tr>
+                        {{/if}}
+                        
+                    {{/each}}
+                    <tr>
+                        <td colspan="3">合计</td>
+                        <td>
+                            {{if $value.totalPrice===null || $value.totalPrice===''}}
+                                --
+                            {{else}}
+                                ￥{{$value.totalPrice}}
+                            {{/if}}
+                        </td>
+                        <td></td>
+                    </tr>
+                {{/if}}  
+            {{/each}}
+        </tbody>
+    </table>
+</script>
+
+<!--查看物流 模板-->
+<script type="text/template" id="logistics-temp">
+    <div class="padding10 position-relative">
+        <div class="padding15 bg-fafafa">
+            <p>货运单号：{#waybillCode#}</p>
+            <p>快递名称：{#logisticsComp#}</p>
+        </div>
+        <div class="logistics-box scroll-box f12">
+            {#each logisticsDetails#}
+                <dl class="{#$index==0?'first':($index==logisticsDetails.length-1?'last':'')#}">
+                    <dt class="{#$index==0?'font_green':''#}">{#$value.context#}</dt>
+                    <dd class="gray">{#$value.time#}</dd>
+                    <dd class="icon-order"></dd>
+                </dl>            
+            {#/each#}
+        </div>
+    </div>
+</script>
+<script type="text/javascript">
+require(['jquery','artTemplate','common'], function ($,template) {
+    template.helper('jcpsCountCourse', function (orientVal) {
+        var n=1;
+        $.each(orientVal, function(index, val) {
+            n+=val.textbooks.length>0?val.textbooks.length:1;
+        });
+        return n;
+    });
+
+    template.helper('jcpsCountTextbook', function (orientVal) {
+        var n=0;
+        return orientVal.textbooks.length>0?orientVal.textbooks.length:1;
+    });
+
+    var $box=$('[data-id="textbook-distribute"]');
+
+    var sTip=[
+            '<div class="text-center">',
+                '<i class="alert-icon alert-icon-123x63 margin_r10"></i>',
+                '<span class="f14">{0}</span>',
+            '</div>'].join('');
+
+    //查看物流
+    $box.on('click','[data-role="view-express"]',function(event) {
+        event.preventDefault();
+        var distributeId=$(this).attr('data-distributeId');
+
+        var pop=$.alertDialog({
+            id : 'express-pop',
+            title: '物流状态',
+            width : 480,
+            height : 400,
+            cancelCss:'btn btn-normal btn-gray min-width-100 margin_r10',
+            okCss:'btn btn-normal btn-orange min-width-100',
+            content:'<div class="overlay bg-center"></div>'
+        });
+
+        ajaxProcess({
+            url:'/pcenter/textbook/queryLogistics',
+            type:'GET',
+            data:{distributeId:distributeId},
+            success:function(renderData){
+                var shtml='';
+                if(renderData.msgCode==200){
+                    if( renderData.data ){
+                        
+                        var render = template.compile($("#logistics-temp").html(),{openTag:'{#',closeTag:'#}'});
+                        var renderHtml = render(renderData.data);
+
+                        shtml=renderHtml;
+                    }
+                    else{
+                        shtml='<div class="text-center padding_t10"><i class="alert-icon alert-icon-123x63"></i> <span class="f14">无数据</span></div>';
+                    }
+                }
+                else{
+                    shtml='<div class="text-center padding_t10"><i class="alert-icon alert-icon-123x63"></i> <span class="f14">'+renderData.message+'</span></div>';
+                }
+
+                $('.u-panel-body',pop).addClass('scroll-box').html(shtml);
+            },
+            always:function(){
+                $('.u-panel-body',pop).children('.overlay').remove();
+            }
+        });
+    });
+
+    //收货地址
+    ;(function(){
+        var $container=$('[data-id="default-address"]');
+        ajaxProcess({
+            url: '/pcenter/textbook/queryDeliveryAddressPC',
+            type: 'GET',
+            success: function(renderData) {
+              if(renderData.msgCode==200){
+                  var data=renderData.data;
+                  var renderHtml='';
+                  
+                  if( data && $.isArray(data.addressList) && data.addressList.length>0 ){
+                      var hasDefault=false;
+                      
+                      $.each(data.addressList, function(index, node) {
+                          if( node.isDefualt==1 ){
+                              renderHtml = template('default-address-temp',
+                                  $.extend(true, node, 
+                                      {
+                                          allowUpdate:data.allowUpdate
+                                      }
+                                  )
+                              );
+                              hasDefault=true;
+                              return false;
+                          }
+                      });
+
+                      //如果未设置默认收货地址，就默认选择第一个地址
+                      if( !hasDefault ){
+                          renderHtml = template('default-address-temp',
+                              $.extend(true, data.addressList[0], 
+                                  {
+                                      allowUpdate:data.allowUpdate
+                                  }
+                              )
+                          );
+                      }
+                  
+                      $container.html(renderHtml);
+                  }
+                  else{
+                      
+                      $('[data-role="nodata"]',$container).children('td').html([
+                          '<div class="text-center">',
+                              '<i class="alert-icon alert-icon-123x63 margin_r10"></i>',
+                              '<span class="f14">暂无收货地址</span>',
+                          '</div>'
+                      ].join(''));
+                  }
+              }
+              else{
+                  $('[data-role="nodata"]',$container).children('td').html( sTip.format(renderData.message) );
+              }
+            }
+        });
+
+    })();
+
+    //教材发放计划
+    ;(function(){
+        var $container=$('[data-role="distribute-plan"]');
+        ajaxProcess({
+            url: '/pcenter/textbook/queryTextbookPlan',
+            type: 'GET',
+            success: function(renderData) {
+              if(renderData.msgCode==200){
+                  var renderHtml='';
+                  if( renderData.data ){
+                      renderHtml = template('delivery-plan-temp',renderData);
+                  
+                      $container.html(renderHtml);
+                  }
+                  else{
+                      $container.html('<div class="panel padding10">'+ sTip.format('暂无发放计划')+'</div>' );
+                  }
+              }
+              else{
+                  
+                  $container.html( sTip.format(renderData.message) );
+              }
+            }
+        });
+    })();
+
+    //配送信息
+    ;(function(){
+        var $container=$('[data-id="delivery-list"]');
+        ajaxProcess({
+            url: '/pcenter/textbook/queryTextbookDeliveryList',
+            type: 'GET',
+            data:{status:0},
+            success: function(renderData) {
+              if(renderData.msgCode==200){
+                  var data=renderData.data;
+                  var renderHtml='';
+
+                  if(renderData.msgCode==200 && data){
+                      renderHtml = template('delivery-list-temp',data);
+                  
+                      $container.html(renderHtml);
+                  }
+                  else{
+                      $('[data-role="nodata"]',$container).children('td').html( sTip.format('暂无配送信息') );
+                  }
+              }
+              else{
+                  
+                  $('[data-role="nodata"]',$container).children('td').html( sTip.format(renderData.message) );
+              }
+            }
+        });
+    })();
+
+    //教材配送
+    ;(function(){
+        var $container=$('[data-id="jcps"]');
+        //1.3.1 教材管理- 查询学员教材发放列表
+        ajaxProcess({
+            url: '/pcenter/textbook/queryTextbookDistributeList',
+            type: 'GET',
+            success: function(renderData) {
+              if(renderData.msgCode==200){
+                  var data=renderData.data;
+                  var renderHtml='';
+
+                  if( $.isArray(data) && data.length>0 ){
+                      renderHtml = template('jcps-temp',renderData);
+                      $container.html(renderHtml);
+                  }
+                  else{
+                      $('[data-role="nodata"]',$container).children('td').html( sTip.format('暂无配送信息') );
+                  }
+              }
+              else{
+                  
+                  $('[data-role="nodata"]',$container).children('td').html( sTip.format(renderData.message) );
+              }
+            }
+        });
+    })();
+});
+</script>
